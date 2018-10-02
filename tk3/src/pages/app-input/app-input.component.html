@@ -1,0 +1,13 @@
+<div *ngIf="!noTracks"> 
+  <form>
+    <h2>Made Progress? Add Time Here</h2>
+    <input  type="tel" name="minutes" id="minutes" [(ngModel)]="minutes" placeholder="Enter {{ hoursOrMinutes }}" autocomplete="off" min="0" max="1440">
+    <input type="checkbox" name="hours" id="hours" (click)="hours()">
+    <label for="hours">Hours</label>
+    <button (click)='addMinutes(minutes)'>Submit</button>
+  </form>
+  <div *ngIf="routeFromCal">
+    <p>Pressing submit will overwrite the <strong>{{ minutesAlreadyEntered }} {{ increment }}</strong> you've already entered for <strong>{{ routeFromCal }}</strong>.</p>
+  </div>
+</div>
+<div *ngIf="noTracks"><h2>Currently there are zero tracks selected. Please select a track or create a new one.</h2></div>

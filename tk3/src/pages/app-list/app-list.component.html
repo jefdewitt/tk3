@@ -1,0 +1,15 @@
+<div *ngIf="!noTracks" class="trackList">
+    <ul>
+        <li *ngFor="let track of tracks" class="hasTracks">
+            <a href="/Input" navPush="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)">
+                <h2>{{ track.name }}</h2>
+                <h2>{{ track.time }} hours</h2>
+                <span class="percent">{{ findPercentCompleted(track.name) }}% done</span>
+            </a>
+            <span id="edit" class="listButtons" (click)="editTrack($event)">edit</span>
+            <span id="delete" class="listButtons" (click)="deleteTrack($event)">delete</span>
+            <span id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</span> 
+        </li>
+    </ul>
+</div>
+<div *ngIf="noTracks" [class.noTracks]="noTracks" ><h2>Currently there are zero tracks selected. Please select a track or create a new one.</h2></div>

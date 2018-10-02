@@ -1,0 +1,27 @@
+<div *ngIf="!noTracks">
+    <h2 id="progressHeader">You've completed {{ percentageDone.toFixed(1) }}%<br> of your goal{{ completed }}!</h2>
+    <div id="progressContainer">   
+        <span class="top">{{ this.mostTime }} hrs</span>
+            <div class="progressBar" [class.monthView]="isMonthView" [class.yearView]="isYearView" *ngFor="let dailyRecordedTime of dailyRecordedTimes; let index = index; let count = count"><span class="before">{{ dailyRecordedTime['date'] }}</span><progress max="{{ this.mostTime }}" value="{{ dailyRecordedTime['time'] }}"></progress></div>
+        <span class="bottom">&nbsp;&nbsp;0 hrs</span>
+    </div>
+    <div id="formContainer">
+        <h3>Your {{ timePeriod }} was
+            {{ dailyMinutes.toFixed(0) }} minutes or
+            {{ dailyPercentage.toFixed(2) }}% completed!
+        </h3>
+        <form action="">            
+            <label for="week">
+                <input type="radio" name="timeFrame" id="week" class="radio" (click)="changeTimeFrame($event)">Week
+            </label>
+            <label for="month">
+                <input type="radio" name="timeFrame" id="month" class="radio" (click)="changeTimeFrame($event)">Month
+            </label>
+            <label for="year">
+                <input type="radio" name="timeFrame" id="year" class="radio" (click)="changeTimeFrame($event)">Year
+            </label>
+        </form>
+    </div>
+</div>
+<div *ngIf="noTracks"><h2>Currently there are zero tracks selected. Please select a track or create a new one.</h2></div>
+

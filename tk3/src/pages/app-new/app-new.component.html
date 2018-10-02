@@ -1,0 +1,8 @@
+<form class="mainWrapper">
+  <h2>Track Name</h2>
+  <input type="text" name="name" [(ngModel)]="name" placeholder="{{editTrackTitle}}" autocomplete="off">
+  <h2>Track Time (in hours)</h2>
+  <input type="tel" name="time" [(ngModel)]="time" placeholder="{{editTrackTime}}" autocomplete="off" min="0" max="10000">
+  <button id="button" (click)='createNewGoal(name, time)'>Submit</button>
+</form>
+
