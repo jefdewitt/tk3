@@ -10,32 +10,52 @@ h1 {
     margin: 0;
 }
 
-h1:first-child {
+/* h1:first-child {
     font-size: 3em;
     opacity: .3;
-}
+} */
 
-.tkTitle h1:first-child {
-    /* font-size: 4.5em; */
-}
+/* .tkTitle h1:first-child {
+    font-size: 4.5em;
+} */
 
-h1:last-child {
+/* h1:last-child {
     position: absolute;
     bottom: -15px;
     left: 50%;
     margin: 0;
-}
+} */
 
-.tkTitle h1:last-child {
-    /* font-size: 3em;
+/* .tkTitle h1:last-child {
+    font-size: 3em;
     top: 45px;
-    left: 40%; */
-}
+    left: 40%;
+} */
 
 ul {
     padding-left: 0;
 }
 
+.trackList ul {
+    padding-left: 0;
+}
+
 li {
     list-style: none;
+}
+
+img {
+    width: 2em;
+}
+
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+nav a {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
 }

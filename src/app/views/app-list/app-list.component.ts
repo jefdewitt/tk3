@@ -9,10 +9,16 @@ import { GoalTrackService } from '../../services/goal-track.service';
 })
 export class AppListComponent implements OnInit {
 
-  tracks : any;
-  noTracks : boolean;
+  public tracks: any;
+  public noTracks: boolean;
+  public example = [{
+    dates: [],
+    name: 'edit me',
+    selected: true,
+    time: '100'
+  }];
 
-  constructor(private goalTrackService : GoalTrackService, private router : Router) { }
+  constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
   ngOnInit() {
     this.getAllTracks();
@@ -22,25 +28,25 @@ export class AppListComponent implements OnInit {
   getAllTracks() {
     try {
       this.tracks = [];
-      for (var i=0; i<localStorage.length; i++) {
-        var track = localStorage.getItem(localStorage.key(i))
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
-        this.tracks.push(track)
+        this.tracks.push(track);
       }
       if (this.tracks.length > 0) {
         return this.tracks;
       } else {
-        this.noTracks = true;
+        this.tracks = this.example;
+        return this.tracks;
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Unable to retrive tracks list. ' + error.message);
     }
   }
-  
+
   /**
-   * 
-   * Loop thru tracks from localstorage and turn the selected key 
+   *
+   * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
   makeSelectedTrack($event) {
@@ -49,7 +55,7 @@ export class AppListComponent implements OnInit {
       if ($event.target.id === 'trackWrapper') {
         clickedTrack = $event.target.firstElementChild.innerText;
       } else {
-        clickedTrack = $event.target.parentElement.children["0"].children['0'].innerText;
+        clickedTrack = $event.target.parentElement.children['0'].children['0'].innerText;
       }
       this.goalTrackService.deselectTracks();
       for (var i=0; i<localStorage.length; i++) {

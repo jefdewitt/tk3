@@ -17,8 +17,8 @@ export class AppComponent implements OnInit {
       try {
         if (event.url) {
           if ( (event.url === '/New%20Track') || (event.url === '/List%20Tracks') ) {
-              this.title = 'Tracker';
-              this.time = 'Keeper';
+              // this.title = 'Tracker';
+              // this.time = 'Keeper';
               this.tkTitle = true;
           } else if ( (event.url != '/New%20Track') || (event.url != '/List%20Tracks') ) {
               this.track = this.goalTrackService.findSelectedTrack();
@@ -29,41 +29,41 @@ export class AppComponent implements OnInit {
                 this.selected = false;
               }
           }
-          if (event.url != '/Input') {
+          if (event.url !== '/Input') {
               this.calendarService.dateFromCal = '';
               this.calendarService.hoursSelected = false;
           }
         }
-      }
-      catch(error) {
+      } catch (error) {
         console.log('Unable to update track title ' + error.message);
       }
     });
 
   }
 
-  track : Object;
-  title : String;
-  time : String;
-  navItem : any;
-  tkTitle : boolean;
-  selected : boolean = true;
+  track: Object;
+  title: String;
+  time: String;
+  navItem: any;
+  tkTitle: boolean;
+  selected = true;
+  // appTitle = 'TrackerKeeper';
+  appTitle = 'Test app';
 
   ngOnInit() {
     this.routeToNewView();
    }
-   
+
   /**
    * If there's no selected tracks (i.e., 0 tracks) go the new track view.
    */
   routeToNewView() {
     try {
-      let selectedTrack = this.goalTrackService.findSelectedTrack();
-      if (selectedTrack['name'] == 'null') {
-        this.router.navigateByUrl('/New Track');
+      const selectedTrack = this.goalTrackService.findSelectedTrack();
+      if (selectedTrack['name'] === 'null') {
+        this.router.navigateByUrl('/List Tracks');
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Unable to reroute to New Track view ' + error.message);
     }
   }
