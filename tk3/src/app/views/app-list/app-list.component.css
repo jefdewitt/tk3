@@ -1,0 +1,67 @@
+.trackList {
+    width: 100%;
+}
+
+li {
+    padding-bottom: 20px;
+    position: relative;
+    border: 5px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+li a {
+    text-decoration: none;
+    display: block;
+    position: relative;
+    padding: 1em 1em 2em;
+}
+
+.hasTracks h2 {
+    color: #b06d06;
+    pointer-events: none;
+}
+
+.hasTracks h2:first-of-type {
+    font-size: 2em;
+    opacity: .4;
+    margin: 0;
+    text-align: left;
+}
+
+h2:first-of-type:after {
+    content: '';
+    border-bottom: 5px solid #ddd;
+    display: inline-block;
+    width: 100%;
+    height: 0;
+    position: absolute;
+    bottom: 6%;
+    left: 0;
+}
+
+.hasTracks h2:last-of-type {
+    position: absolute;
+    bottom: .5em;
+    right: 1em;
+    margin: 0;
+}
+
+span {
+    display: inline-block;
+    width: 32%;
+}
+
+a span.percent {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: .25em;
+    color: #000;
+}
+
+.noTracks h2 {
+    color: #000;
+    font-size: 1.5em;
+}

@@ -1,40 +1,38 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+import { GoalTrackService } from './services/goal-track.service';
+import { CalendarService } from './services/calendar.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import { NgModule } from '@angular/core';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+import { AppComponent } from './app.component';
+import { AppNewComponent } from './views/app-new/app-new.component';
+import { AppInputComponent } from './views/app-input/app-input.component';
+import { AppOutputComponent } from './views/app-output/app-output.component';
+import { AppCalendarComponent } from './views/app-calendar/app-calendar.component';
+import { AppListComponent } from './views/app-list/app-list.component';
 
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
-    MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+    AppComponent,
+    AppNewComponent,
+    AppInputComponent,
+    AppOutputComponent,
+    AppCalendarComponent,
+    AppListComponent
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    AppRoutingModule,
+    FormsModule
   ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    AboutPage,
-    ContactPage,
-    HomePage,
-    TabsPage
+  providers: [ 
+    GoalTrackService,
+    CalendarService
   ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
-  ]
+  bootstrap: [ AppComponent ],
+  exports: [ AppRoutingModule ]
 })
-export class AppModule {}
+export class AppModule { }

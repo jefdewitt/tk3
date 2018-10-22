@@ -1,0 +1,14 @@
+<div id="calendarOptions">
+  <select id="calendar-menu" (change)="onSelected($event)" [(ngModel)]="month">
+    <option *ngFor="let option of options">{{ option }}</option>
+  </select>
+
+  <form>
+    <input type="radio" name="timeFrame" id="minutes" class="radio" (click)="changeToMinutes($event)" checked>
+    <label for="minutes">Minutes</label>
+    <input type="radio" name="timeFrame" id="hours" class="radio" (click)="changeToHours($event)">
+    <label for="hours">Hours</label>
+  </form>
+</div>
+
+<div id="calendar"></div>

@@ -1,7 +1,0 @@
-{
-  "name": "tk3",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "ionic-angular"
-}
