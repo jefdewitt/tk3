@@ -21,28 +21,28 @@ export class AppListComponent implements OnInit {
   constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
   ngOnInit() {
-    this.getAllTracks();
+    this.tracks = this.goalTrackService.getAllTracks();
   }
 
   // Display all the tracks from localstorage
-  getAllTracks() {
-    try {
-      this.tracks = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
-        this.tracks.push(track);
-      }
-      if (this.tracks.length > 0) {
-        return this.tracks;
-      } else {
-        this.tracks = this.example;
-        return this.tracks;
-      }
-    } catch (error) {
-      console.log('Unable to retrive tracks list. ' + error.message);
-    }
-  }
+  // getAllTracks() {
+  //   try {
+  //     this.tracks = [];
+  //     for (let i = 0; i < localStorage.length; i++) {
+  //       let track = localStorage.getItem(localStorage.key(i));
+  //       track = JSON.parse(track);
+  //       this.tracks.push(track);
+  //     }
+  //     if (this.tracks.length > 0) {
+  //       return this.tracks;
+  //     } else {
+  //       this.tracks = this.example;
+  //       return this.tracks;
+  //     }
+  //   } catch (error) {
+  //     console.log('Unable to retrive tracks list. ' + error.message);
+  //   }
+  // }
 
   /**
    *

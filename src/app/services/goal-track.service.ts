@@ -8,6 +8,25 @@ export class GoalTrackService {
 
   constructor() { }
 
+  getAllTracks() {
+    try {
+      this.tracks = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i));
+        track = JSON.parse(track);
+        this.tracks.push(track);
+      }
+      if (this.tracks.length > 0) {
+        return this.tracks;
+      } else {
+        this.tracks = this.example;
+        return this.tracks;
+      }
+    } catch (error) {
+      console.log('Unable to retrive tracks list. ' + error.message);
+    }
+  }
+
   // Returns the current selected track
   findSelectedTrack() {
     try {
