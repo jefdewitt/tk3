@@ -2,6 +2,11 @@
     width: 100%;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+}
+
 li {
     padding-bottom: 20px;
     position: relative;
@@ -64,4 +69,15 @@ a span.percent {
 .noTracks h2 {
     color: #000;
     font-size: 1.5em;
+}
+
+.list-view {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+img.add-button {
+    width: 2rem;
 }

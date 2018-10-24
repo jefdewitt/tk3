@@ -4,24 +4,19 @@ import { Goal } from '../goal';
 @Injectable()
 export class GoalTrackService {
 
-  trackToEdit : string = '';
+  trackToEdit = '';
 
   constructor() { }
 
   getAllTracks() {
     try {
-      this.tracks = [];
+      const tracks = [];
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
-        this.tracks.push(track);
+        tracks.push(track);
       }
-      if (this.tracks.length > 0) {
-        return this.tracks;
-      } else {
-        this.tracks = this.example;
-        return this.tracks;
-      }
+      return tracks;
     } catch (error) {
       console.log('Unable to retrive tracks list. ' + error.message);
     }
@@ -30,8 +25,8 @@ export class GoalTrackService {
   // Returns the current selected track
   findSelectedTrack() {
     try {
-      for (var i=0; i<localStorage.length; i++) {
-        var track = localStorage.getItem(localStorage.key(i))
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i))
         track = JSON.parse(track);
         if (track['selected'] === true) {
           return track;
@@ -39,8 +34,7 @@ export class GoalTrackService {
       }
       // If there's no selected tracks
       return false;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }
   }
@@ -50,8 +44,8 @@ export class GoalTrackService {
     try {
       if (name) {
         if (localStorage.length > 1) {
-          for (var i=0; i<localStorage.length; i++) {
-            var track = localStorage.getItem(localStorage.key(i))
+          for (let i = 0; i < localStorage.length; i++) {
+            let track = localStorage.getItem(localStorage.key(i));
             track = JSON.parse(track);
             if (name === track['name']) {
               alert('This track already exists. Please choose a different name.');
@@ -71,8 +65,7 @@ export class GoalTrackService {
       } else {
         alert('Please enter a name.');
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Name check failed. ' + error.message);
     }
   }
@@ -86,17 +79,16 @@ export class GoalTrackService {
     }
   }
 
-  // Defaults all tracks selected property to false 
+  // Defaults all tracks selected property to false
   deselectTracks() {
     try {
-      for (var i=0; i<localStorage.length; i++) {
-        var track = localStorage.getItem(localStorage.key(i))
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i))
         track = JSON.parse(track);
         track['selected'] = false;
         localStorage.setItem(track['name'], JSON.stringify(track));
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Deselecting tracks failed. ' + error.message);
     }
   }
@@ -104,53 +96,48 @@ export class GoalTrackService {
   // Create a date object with today's date, format YYYY-MM-DD
   createDateObject() {
     const dateObj = new Date();
-    var month;
-    month = dateObj.getMonth() + 1; //months from 1-12
+    let month: any = dateObj.getMonth() + 1; // months from 1-12
     if (month < 10) { month = '0' + month; }
-    var day;
-    day = dateObj.getDate();
+    let day: any = dateObj.getDate();
     if (day < 10) { day = '0' + day; }
     const year = dateObj.getFullYear();
-    const newDate = year + "-" + month + "-" + day;
+    const newDate = year + '-' + month + '-' + day;
     return newDate;
   }
 
   /**
-   * 
-   * @param daysAgo 
-   * 
+   *
+   * @param daysAgo
+   *
    * Pass in a number to return the date from as far
    * back as the time specified.
    */
   dateOfNthDaysAgo(daysAgo) {
     try {
-      var newDate = new Date();
+      const newDate = new Date();
       newDate.setDate(newDate.getDate() - daysAgo);
-      var nthDaysAgo;
-      nthDaysAgo = newDate.getDate();
+      let nthDaysAgo: any = newDate.getDate();
       if (nthDaysAgo < 10) { nthDaysAgo = '0' + nthDaysAgo; }
-      var monthMinusNthDaysAgo;
-      monthMinusNthDaysAgo = newDate.getMonth() + 1;
+      let monthMinusNthDaysAgo: any = newDate.getMonth() + 1;
       if (monthMinusNthDaysAgo < 10) { monthMinusNthDaysAgo = '0' + monthMinusNthDaysAgo; }
-      var yearMinusNthDaysAgo = newDate.getFullYear();
-      var dateNthDaysAgo = yearMinusNthDaysAgo + '-' + monthMinusNthDaysAgo + '-' + nthDaysAgo;
+      const yearMinusNthDaysAgo = newDate.getFullYear();
+      const dateNthDaysAgo = yearMinusNthDaysAgo + '-' + monthMinusNthDaysAgo + '-' + nthDaysAgo;
 
       return dateNthDaysAgo;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find date from ' + daysAgo + ' days ago' + error.message);
     }
   }
-  
+
   /**
-   * 
+   *
    * @param trackName : string
    * @param startTime : number
    * @param endTime   : number
-   * 
+   *
    * The startTime is the number of days from today to begin the maths and the endTime is number of days from today 
    * to end the maths. Set the fourth param to true to return a percentage.
-   * 
+   *
    * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 0); // Returns today's time
    * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 6); // Returns last week's sum of time
    * Example: this.goalTrackService.timeInInterval('firstTrack', 15, 45) // Returns one month of time beginning 15 days ago.
@@ -332,5 +319,41 @@ export class GoalTrackService {
       let secondString = second.recordedDate.replace(/-/g, '');
       return (parseInt(firstString) - parseInt(secondString));
   }
+
+    /**
+     * Handles name and time for goal, and updates the storage service to reflect the change.
+     *
+     * @param {string} name
+     * @param {number} time
+     */
+
+    createNewGoal(goal: any) {
+
+      // const nameCheck = this.nameCheck(this.name);
+      // const timeCheck = this.timeCheck(this.time);
+      // const button = <HTMLInputElement> document.getElementById("button");
+
+      // if (nameCheck && timeCheck) {
+
+      //   if (button.innerText == 'Submit') {
+      //     this.goal = {
+      //       name: this.name,
+      //       time: this.time,
+      //       selected: true,
+      //       dates: []
+      //     }
+          localStorage.setItem(goal.name, JSON.stringify(goal));
+      //   } else {
+      //     this.track['name'] = this.name;
+      //     this.track['time'] = this.time;
+      //     localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+      //     const track = this.findTrackByName(this.goalTrackService.trackToEdit);
+      //     localStorage.removeItem(track['name']);
+      //   }
+      //   this.name = '';
+      //   this.time = null;
+      //   this.router.navigateByUrl('/Input');
+      // }
+    }
 
 }

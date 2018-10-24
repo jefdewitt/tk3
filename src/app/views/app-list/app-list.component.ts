@@ -10,18 +10,28 @@ import { GoalTrackService } from '../../services/goal-track.service';
 export class AppListComponent implements OnInit {
 
   public tracks: any;
-  public noTracks: boolean;
-  public example = [{
+  public noTracks = false;
+  public example = {
     dates: [],
     name: 'edit me',
     selected: true,
-    time: '100'
-  }];
+    time: 100
+  };
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
   ngOnInit() {
     this.tracks = this.goalTrackService.getAllTracks();
+    if (this.tracks.length === 0) {
+      this.noTracks = true;
+    }
+  }
+
+  public createNew() {
+    console.log('click reg');
+    this.goalTrackService.createNewGoal(this.example);
+    this.tracks = this.goalTrackService.getAllTracks();
+    // this.tracks.push(this.example);
   }
 
   // Display all the tracks from localstorage
@@ -78,22 +88,35 @@ export class AppListComponent implements OnInit {
   }
 
   findPercentCompleted(trackName) {
-    let percentCompleted = this.goalTrackService.overallCompleted(trackName);
-    return percentCompleted.toFixed(1);
+    if (trackName) {
+      const percentCompleted = this.goalTrackService.overallCompleted(trackName);
+      return percentCompleted.toFixed(1);
+    }
   }
 
   deleteTrack($event) {
     if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
-      let track = $event.target.parentElement.children["0"].children["0"].innerText;
-      this.goalTrackService.findTrackByName(track);
+      const trackName = $event.target.parentElement.children['0'].children['0'].innerText;
+      const track = this.goalTrackService.findTrackByName(trackName);
       localStorage.removeItem(track);
-      this.getAllTracks();
+
+      for (let i = 0; i < this.tracks.length; i++) {
+        if (trackName === this.tracks[i].name) {
+          this.tracks.splice(i, 1);
+        }
+      }
+
+      // this.tracks.filter(function(track) {
+      //   debugger;
+      //   return track.name === track;
+      // });
+      // this.getAllTracks();
     }
   }
 
   editTrack($event) {
     this.makeSelectedTrack($event);
-    let track = this.goalTrackService.findSelectedTrack();
+    const track = this.goalTrackService.findSelectedTrack();
     this.goalTrackService.trackToEdit = track['name'];
   }
 

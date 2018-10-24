@@ -1,9 +1,12 @@
+<div class="list-view">
+    <p>Create new</p><img class="add-button" (click)="createNew()" src="./assets/new.svg"/>
+</div>
 <div *ngIf="!noTracks" class="trackList">
     <ul>
         <li *ngFor="let track of tracks" class="hasTracks">
             <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)">
                 <h2>{{ track.name }}</h2>
-                <h2>{{ track.time }} hours</h2>
+                <h2>{{ track?.time }} hours</h2>
                 <span class="percent">{{ findPercentCompleted(track.name) }}% done</span>
             </a>
             <span id="edit" class="listButtons" (click)="editTrack($event)">edit</span>
