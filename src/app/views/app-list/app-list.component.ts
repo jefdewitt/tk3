@@ -28,10 +28,8 @@ export class AppListComponent implements OnInit {
   }
 
   public createNew() {
-    console.log('click reg');
     this.goalTrackService.createNewGoal(this.example);
     this.tracks = this.goalTrackService.getAllTracks();
-    // this.tracks.push(this.example);
   }
 
   // Display all the tracks from localstorage
@@ -81,8 +79,7 @@ export class AppListComponent implements OnInit {
           }
         }
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Could not change selected track ' + error.message);
     }
   }
@@ -98,19 +95,16 @@ export class AppListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
       const trackName = $event.target.parentElement.children['0'].children['0'].innerText;
       const track = this.goalTrackService.findTrackByName(trackName);
-      localStorage.removeItem(track);
+      localStorage.removeItem(trackName);
 
       for (let i = 0; i < this.tracks.length; i++) {
         if (trackName === this.tracks[i].name) {
           this.tracks.splice(i, 1);
         }
+        if (i === 0) {
+          this.noTracks = true;
+        }
       }
-
-      // this.tracks.filter(function(track) {
-      //   debugger;
-      //   return track.name === track;
-      // });
-      // this.getAllTracks();
     }
   }
 
