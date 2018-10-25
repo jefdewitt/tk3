@@ -4,11 +4,18 @@
 <div *ngIf="!noTracks" class="trackList">
     <ul>
         <li *ngFor="let track of tracks" class="hasTracks">
-            <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)">
-                <h2 #name>{{ track.name }}</h2>
-                <h2>{{ track?.time }} hours</h2>
-                <span class="percent">{{ findPercentCompleted(track.name) }}% done</span>
-            </a>
+            <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
+            <div id="trackWrapper" (click)="makeSelectedTrack(name)">
+                <div>
+                    <label *ngIf="!nameSelected" (click)="!nameSelected = true" #name>{{ track.name }}</label>
+                    <input *ngIf="nameSelected" (blur)="nameSelected = false; updateTrack(name)"  value="{{ track.name }}" type="text">
+                </div>
+                <div>
+                    <label *ngIf="!timeSelected" (click)="!timeSelected = true"  #time>{{ track?.time }} hours</label>
+                    <input *ngIf="timeSelected" (blur)="timeSelected = false; updateTrack(name)" value="{{ track?.time }}" type="text" >
+                </div>
+                <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
+            </div>
             <span id="edit" class="listButtons" (click)="editTrack($event)">edit</span>
             <span id="delete" class="listButtons" (click)="deleteTrack($event)">delete</span>
             <span id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</span> 

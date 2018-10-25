@@ -11,17 +11,22 @@ export class AppListComponent implements OnInit {
 
   @ViewChild
   ('name') name;
+  @Input()
+  public receiver;
+
   public time;
   public tracks: any;
   public noTracks = false;
+  public nameSelected = false;
+  public timeSelected = false;
+
   public example = {
     dates: [],
     name: 'edit me',
     selected: true,
     time: 100
   };
-  @Input()
-  public receiver;
+
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
@@ -71,13 +76,15 @@ export class AppListComponent implements OnInit {
   makeSelectedTrack($event) {
     try {
       let clickedTrack;
-      if ($event.target.id === 'trackWrapper') {
-        // const test = this.el.nativeElement.classList('.name');
-        // console.log(this.name);
-        clickedTrack = this.name.nativeElement.innerText;
-      } else {
-        clickedTrack = this.name.nativeElement.innerText;
-      }
+      clickedTrack = this.name.nativeElement.innerText;
+      console.log(clickedTrack)
+      // if ($event.target.id === 'trackWrapper') {
+      //   // const test = this.el.nativeElement.classList('.name');
+      //   // console.log(this.name);
+      //   clickedTrack = this.name.nativeElement.innerText;
+      // } else {
+      //   clickedTrack = this.name.nativeElement.innerText;
+      // }
       this.goalTrackService.deselectTracks();
       for (var i=0; i<localStorage.length; i++) {
         var storedTrack = localStorage.getItem(localStorage.key(i))
@@ -85,11 +92,11 @@ export class AppListComponent implements OnInit {
         if (storedTrack['name'] === clickedTrack) {
           storedTrack['selected'] = true;
           localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
-          if ($event.target.id === 'trackWrapper') {
-            this.router.navigateByUrl('/Input');
-          } else {
-            this.router.navigateByUrl('/New Track');
-          }
+          // if ($event.target.id === 'trackWrapper') {
+          //   this.router.navigateByUrl('/Input');
+          // } else {
+          //   this.router.navigateByUrl('/New Track');
+          // }
         }
       }
     } catch (error) {
