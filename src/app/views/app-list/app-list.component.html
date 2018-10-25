@@ -5,20 +5,22 @@
     <ul>
         <li *ngFor="let track of tracks; let i = index;" class="track-{{i}}" (click)="makeSelectedTrack(track.name)">
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
-            <div id="trackWrapper">
+            <div class="track-wrapper">
                 <div>
-                    <label *ngIf="!nameSelected" (click)="!nameSelected = true">{{ track.name }}</label>
-                    <input *ngIf="nameSelected" (blur)="nameSelected = false; updateTrack(track.name)"  value="{{ track.name }}" type="text">
+                    <label *ngIf="!track.editName" (click)="editTrackDetails(track, 'name')">{{ track.name }}</label>
+                    <input *ngIf="track.editName" (blur)="track.editName = false; updateTrack(track.name)" value="{{ track.name }}" type="text">
                 </div>
                 <div>
-                    <label *ngIf="!timeSelected" (click)="!timeSelected = true">{{ track?.time }} hours</label>
-                    <input *ngIf="timeSelected" (blur)="timeSelected = false; updateTrack(track.name)" value="{{ track?.time }}" type="text" >
+                    <label *ngIf="!track.editTime" (click)="editTrackDetails(track, 'time')">{{ track?.time }} hours</label>
+                    <input *ngIf="track.editTime" (blur)="track.editTime = false; updateTrack(track.name)" value="{{ track?.time }}" type="text" >
                 </div>
                 <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
             </div>
-            <span id="edit" class="listButtons" (click)="editTrack($event)">edit</span>
-            <span id="delete" class="listButtons" (click)="deleteTrack($event)">delete</span>
-            <span id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</span> 
+            <div class="button-wrap">
+                <button type="button" id="edit" class="listButtons" (click)="editTrack($event)">edit</button>
+                <button type="button" id="delete" class="listButtons" (click)="deleteTrack($event)">delete</button>
+                <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
+            </div>
         </li>
     </ul>
 </div>

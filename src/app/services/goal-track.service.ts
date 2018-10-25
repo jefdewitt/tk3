@@ -147,29 +147,27 @@ export class GoalTrackService {
    */
   timeInInterval(trackName, startTime, endTime) {
     try {
-      var track = this.findTrackByName(trackName)
-      var startDate : any = this.dateOfNthDaysAgo(startTime);
-      var endDate : any = this.dateOfNthDaysAgo(endTime);
+      const track = this.findTrackByName(trackName);
+      const startDate: any = this.dateOfNthDaysAgo(startTime);
+      const endDate: any = this.dateOfNthDaysAgo(endTime);
       let sum = 0;
 
-      for (var i=0; i<track['dates'].length; i++) {
-        let recordedDate = track['dates'][i].recordedDate;
+      for (let i = 0; i < track['dates'].length; i++) {
+        const recordedDate = track['dates'][i].recordedDate;
         if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
           sum += track['dates'][i].recordedMinutes;
         }
       }
-  
       return sum;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find sum in time interval provided for ' + track + ' track ' + error.message);
     }
   }
 
   /**
-   * 
-   * @param sum 
-   * @param interval 
+   *
+   * @param sum: number;
+   * @param interval: number;
    * 
    * Pass a sum and a time interval (7 = week, 30 = month, etc) to find daily minutes
    */
@@ -230,12 +228,12 @@ export class GoalTrackService {
    */
   findRecentTime(trackName, numberOfDays) {
     try {
-      let selected = this.findTrackByName(trackName);
-      let recentTime : Array<any> = [];
-      for (var i=0; i<numberOfDays; i++) {
-          let timeEntry : any = this.timeInInterval(selected['name'], i, i);
+      const selected = this.findTrackByName(trackName);
+      const recentTime: Array<any> = [];
+      for (let i = 0; i < numberOfDays; i++) {
+          let timeEntry: any = this.timeInInterval(selected['name'], i, i);
           timeEntry = timeEntry / 60;
-          timeEntry = timeEntry.toFixed(1)
+          timeEntry = timeEntry.toFixed(1);
           recentTime.push(timeEntry);
           recentTime.reverse();
       }
@@ -261,15 +259,19 @@ export class GoalTrackService {
 
   overallCompleted(track) {
     try {
-      var thisTrack = this.findTrackByName(track);
+      const thisTrack = this.findTrackByName(track);
       let sum = 0;
-      for (var i=0; i<thisTrack['dates'].length; i++) {
+      for (let i = 0; i < thisTrack['dates'].length; i++) {
         // let recordedDate = thisTrack['dates'][i].recordedDate;
         sum += thisTrack['dates'][i].recordedMinutes;
       }
-      return ( sum / ( thisTrack['time']  * 60) ) * 100;
-    }
-    catch(error) {
+      const percentage = ( sum / ( thisTrack['time']  * 60) ) * 100;
+      if (percentage > 0) {
+        return percentage;
+      } else {
+        return 0;
+      }
+    } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }
   }

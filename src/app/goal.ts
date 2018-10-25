@@ -3,4 +3,5 @@ export class Goal {
     time: number;
     selected: boolean;
     dates: any;
+    edit: boolean;
 }

@@ -14,7 +14,8 @@ export class AppListComponent implements OnInit {
   @Input()
   public receiver;
 
-  public time;
+  public name = false;
+  public time = false;
   public track;
   public tracks: any;
   public noTracks = false;
@@ -25,9 +26,10 @@ export class AppListComponent implements OnInit {
     dates: [],
     name: 'edit me',
     selected: true,
-    time: 100
+    time: 0,
+    editName: false,
+    editTime: false
   };
-
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
@@ -133,13 +135,13 @@ export class AppListComponent implements OnInit {
     }
   }
 
-  editTrack($event) {
+  public editTrack($event) {
     this.makeSelectedTrack($event);
     // const track = this.goalTrackService.findSelectedTrack();
     this.goalTrackService.trackToEdit = this.track['name'];
   }
 
-  exportTrackData(trackName) {
+  public exportTrackData(trackName) {
     this.goalTrackService.exportTrackData(trackName);
   }
 
@@ -148,5 +150,14 @@ export class AppListComponent implements OnInit {
     // console.log(this.track.name);
 
   }
+
+  public editTrackDetails(track: any, property: string) {
+    if (property === 'name') {
+      track.editName = true;
+    } else {
+      track.editTime = true;
+    }
+  }
+
 }
 

@@ -74,10 +74,25 @@ a span.percent {
 .list-view {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: flex-end;
 }
 
 img.add-button {
     width: 2rem;
+}
+
+.track-wrapper {
+    width: 90%;
+    display: inline-block;
+}
+
+.button-wrap {
+    width: 10%;
+    display: inline-block;
+}
+
+.button-wrap button {
+    display: block;
+    width: 100%; 
 }
