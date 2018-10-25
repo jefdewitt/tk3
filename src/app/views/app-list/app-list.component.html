@@ -3,16 +3,16 @@
 </div>
 <div *ngIf="!noTracks" class="trackList">
     <ul>
-        <li *ngFor="let track of tracks" class="hasTracks">
+        <li *ngFor="let track of tracks; let i = index;" class="track-{{i}}" (click)="makeSelectedTrack(track.name)">
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
-            <div id="trackWrapper" (click)="makeSelectedTrack(name)">
+            <div id="trackWrapper">
                 <div>
-                    <label *ngIf="!nameSelected" (click)="!nameSelected = true" #name>{{ track.name }}</label>
-                    <input *ngIf="nameSelected" (blur)="nameSelected = false; updateTrack(name)"  value="{{ track.name }}" type="text">
+                    <label *ngIf="!nameSelected" (click)="!nameSelected = true">{{ track.name }}</label>
+                    <input *ngIf="nameSelected" (blur)="nameSelected = false; updateTrack(track.name)"  value="{{ track.name }}" type="text">
                 </div>
                 <div>
-                    <label *ngIf="!timeSelected" (click)="!timeSelected = true"  #time>{{ track?.time }} hours</label>
-                    <input *ngIf="timeSelected" (blur)="timeSelected = false; updateTrack(name)" value="{{ track?.time }}" type="text" >
+                    <label *ngIf="!timeSelected" (click)="!timeSelected = true">{{ track?.time }} hours</label>
+                    <input *ngIf="timeSelected" (blur)="timeSelected = false; updateTrack(track.name)" value="{{ track?.time }}" type="text" >
                 </div>
                 <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
             </div>

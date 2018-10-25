@@ -9,12 +9,13 @@ import { GoalTrackService } from '../../services/goal-track.service';
 })
 export class AppListComponent implements OnInit {
 
-  @ViewChild
-  ('name') name;
+  // @ViewChild
+  // ('name') name;
   @Input()
   public receiver;
 
   public time;
+  public track;
   public tracks: any;
   public noTracks = false;
   public nameSelected = false;
@@ -39,6 +40,8 @@ export class AppListComponent implements OnInit {
     this.receiver.subscribe( () => {
       this.noTracks = true;
     });
+
+    this.track = this.goalTrackService.findSelectedTrack();
   }
 
   public createNew() {
@@ -73,11 +76,12 @@ export class AppListComponent implements OnInit {
    * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
-  makeSelectedTrack($event) {
+  makeSelectedTrack(name) {
     try {
-      let clickedTrack;
-      clickedTrack = this.name.nativeElement.innerText;
-      console.log(clickedTrack)
+      console.log(name);
+      // let clickedTrack;
+      // clickedTrack = this.name.nativeElement.innerText;
+      // console.log(clickedTrack);
       // if ($event.target.id === 'trackWrapper') {
       //   // const test = this.el.nativeElement.classList('.name');
       //   // console.log(this.name);
@@ -86,10 +90,10 @@ export class AppListComponent implements OnInit {
       //   clickedTrack = this.name.nativeElement.innerText;
       // }
       this.goalTrackService.deselectTracks();
-      for (var i=0; i<localStorage.length; i++) {
-        var storedTrack = localStorage.getItem(localStorage.key(i))
+      for (let i = 0; i < localStorage.length; i++) {
+        let storedTrack = localStorage.getItem(localStorage.key(i));
         storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === clickedTrack) {
+        if (storedTrack['name'] === name) {
           storedTrack['selected'] = true;
           localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
           // if ($event.target.id === 'trackWrapper') {
@@ -131,12 +135,18 @@ export class AppListComponent implements OnInit {
 
   editTrack($event) {
     this.makeSelectedTrack($event);
-    const track = this.goalTrackService.findSelectedTrack();
-    this.goalTrackService.trackToEdit = track['name'];
+    // const track = this.goalTrackService.findSelectedTrack();
+    this.goalTrackService.trackToEdit = this.track['name'];
   }
 
   exportTrackData(trackName) {
     this.goalTrackService.exportTrackData(trackName);
+  }
+
+  public updateTrack() {
+    // const track = this.goalTrackService.findTrackByName(name);
+    // console.log(this.track.name);
+
   }
 }
 
