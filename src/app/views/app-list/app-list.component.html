@@ -5,7 +5,7 @@
     <ul>
         <li *ngFor="let track of tracks" class="hasTracks">
             <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)">
-                <h2>{{ track.name }}</h2>
+                <h2 #name>{{ track.name }}</h2>
                 <h2>{{ track?.time }} hours</h2>
                 <span class="percent">{{ findPercentCompleted(track.name) }}% done</span>
             </a>

@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
 
 @Component({
@@ -9,6 +9,9 @@ import { GoalTrackService } from '../../services/goal-track.service';
 })
 export class AppListComponent implements OnInit {
 
+  @ViewChild
+  ('name') name;
+  public time;
   public tracks: any;
   public noTracks = false;
   public example = {
@@ -17,6 +20,8 @@ export class AppListComponent implements OnInit {
     selected: true,
     time: 100
   };
+  @Input()
+  public receiver;
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
@@ -25,11 +30,17 @@ export class AppListComponent implements OnInit {
     if (this.tracks.length === 0) {
       this.noTracks = true;
     }
+    this.receiver = this.goalTrackService.event;
+    this.receiver.subscribe( () => {
+      this.noTracks = true;
+    });
   }
 
   public createNew() {
+    console.log('add button click');
     this.goalTrackService.createNewGoal(this.example);
     this.tracks = this.goalTrackService.getAllTracks();
+    this.noTracks = false;
   }
 
   // Display all the tracks from localstorage
@@ -61,9 +72,11 @@ export class AppListComponent implements OnInit {
     try {
       let clickedTrack;
       if ($event.target.id === 'trackWrapper') {
-        clickedTrack = $event.target.firstElementChild.innerText;
+        // const test = this.el.nativeElement.classList('.name');
+        // console.log(this.name);
+        clickedTrack = this.name.nativeElement.innerText;
       } else {
-        clickedTrack = $event.target.parentElement.children['0'].children['0'].innerText;
+        clickedTrack = this.name.nativeElement.innerText;
       }
       this.goalTrackService.deselectTracks();
       for (var i=0; i<localStorage.length; i++) {
@@ -101,9 +114,10 @@ export class AppListComponent implements OnInit {
         if (trackName === this.tracks[i].name) {
           this.tracks.splice(i, 1);
         }
-        if (i === 0) {
-          this.noTracks = true;
-        }
+      }
+
+      if (this.tracks.length === 0) {
+        this.noTracks = true;
       }
     }
   }

@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Goal } from '../goal';
+import { Injectable, Output, EventEmitter } from '@angular/core';
+// import { Goal } from '../goal';
 
 @Injectable()
 export class GoalTrackService {
 
-  trackToEdit = '';
+  public trackToEdit = '';
+
+  @Output()
+  public event = new EventEmitter();
 
   constructor() { }
 
@@ -237,13 +240,12 @@ export class GoalTrackService {
           recentTime.reverse();
       }
       return recentTime;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find recent time from ' + numberOfDays + '. ' + error.message);
     }
   }
 
-  findTrackByName(track) {
+  public findTrackByName(track) {
     try {
       for (var i=0; i<localStorage.length; i++) {
         var storedTrack = localStorage.getItem(localStorage.key(i))
@@ -252,8 +254,7 @@ export class GoalTrackService {
           return storedTrack;
         }
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Unable to find ' + track + ' by name ' + error.message);
     }
   }
@@ -342,7 +343,14 @@ export class GoalTrackService {
       //       selected: true,
       //       dates: []
       //     }
-          localStorage.setItem(goal.name, JSON.stringify(goal));
+      const nameCheck = this.findTrackByName(goal.name);
+      if ( nameCheck && goal.name === nameCheck['name']) {
+        goal.name = 'copy of ' + goal.name;
+      }
+
+      localStorage.setItem(goal.name, JSON.stringify(goal));
+      this.event.emit(goal.name);
+
       //   } else {
       //     this.track['name'] = this.name;
       //     this.track['time'] = this.time;
