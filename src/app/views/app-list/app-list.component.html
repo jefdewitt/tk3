@@ -23,8 +23,8 @@
                 <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
             </div>
             <div class="button-wrap">
-                <button type="button" id="edit" class="listButtons" (click)="editTrack($event)">edit</button>
-                <button type="button" id="delete" class="listButtons" (click)="deleteTrack($event)">delete</button>
+                <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>
+                <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
                 <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
             </div>
         </li>

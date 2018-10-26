@@ -78,9 +78,9 @@ export class AppListComponent implements OnInit {
    * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
-  public makeSelectedTrack(name) {
+  public makeSelectedTrack(track) {
     try {
-      console.log(name);
+      console.log(track);
       // let clickedTrack;
       // clickedTrack = this.name.nativeElement.innerText;
       // console.log(clickedTrack);
@@ -95,7 +95,7 @@ export class AppListComponent implements OnInit {
       for (let i = 0; i < localStorage.length; i++) {
         let storedTrack = localStorage.getItem(localStorage.key(i));
         storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === name) {
+        if (storedTrack['name'] === track.name) {
           storedTrack['selected'] = true;
           localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
           // if ($event.target.id === 'trackWrapper') {
@@ -117,14 +117,15 @@ export class AppListComponent implements OnInit {
     }
   }
 
-  deleteTrack($event) {
+  deleteTrack(selectedTrack) {
     if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
-      const trackName = $event.target.parentElement.children['0'].children['0'].innerText;
-      const track = this.goalTrackService.findTrackByName(trackName);
-      localStorage.removeItem(trackName);
+      // const clickedTrack = this.name.nativeElement.innerText;
+      // const trackName = $event.target.parentElement.children['0'].children['0'].innerText;
+      const track: any = this.goalTrackService.findTrackByName(selectedTrack.name);
+      localStorage.removeItem(track.name);
 
       for (let i = 0; i < this.tracks.length; i++) {
-        if (trackName === this.tracks[i].name) {
+        if (track.name === this.tracks[i].name) {
           this.tracks.splice(i, 1);
         }
       }

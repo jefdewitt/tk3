@@ -198,4 +198,8 @@ export class AppInputComponent implements OnInit {
       console.log('Unable to add time from calendar cell click ' + error.message);
     }
   }
+
+  public openCal() {
+    console.log('open calendar.';
+  }
 }
