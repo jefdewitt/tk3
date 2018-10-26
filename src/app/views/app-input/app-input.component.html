@@ -1,6 +1,8 @@
 <div class="input-view">
-  <p>Open calendar </p><img class="cal-button" (click)="openCal()" src="./assets/calendar.svg"/>
+  <!-- <p>Open calendar </p><img class="cal-button" (click)="openCal()" src="./assets/calendar.svg"/> -->
+    <p>Open calendar </p><img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/calendar.svg"/>
 </div>
+<app-calendar #modal></app-calendar>
 <div *ngIf="!noTracks"> 
   <form>
     <h2>Made Progress? Add Time Here</h2>

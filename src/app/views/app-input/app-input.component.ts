@@ -1,6 +1,6 @@
 import { CalendarService } from './../../services/calendar.service';
 import { GoalTrackService } from '../../services/goal-track.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Goal } from '../../goal';
 import { TimeObject } from '../../timeObject';
 import { Router } from '@angular/router';
@@ -13,22 +13,27 @@ import { Router } from '@angular/router';
 
 export class AppInputComponent implements OnInit {
 
-  selected : Object = this.goalTrackService.findSelectedTrack();;
-  minutes : number;
-  timeObject : TimeObject;
-  routeFromCal : string;
-  minutesAlreadyEntered : string;
-  increment : string;
-  noTracks : boolean = false;
-  hoursOrMinutes : string = 'minutes';
-  
-  constructor(private goalTrackService : GoalTrackService, private calendarService : CalendarService, private router : Router) {
+  selected: Object = this.goalTrackService.findSelectedTrack();
+  minutes: number;
+  timeObject: TimeObject;
+  routeFromCal: string;
+  minutesAlreadyEntered: string;
+  increment: string;
+  noTracks = false;
+  public hoursOrMinutes;
+  public toggle = true;
 
-    this.router.events.subscribe((event : any) => {
+  constructor(
+    private goalTrackService: GoalTrackService,
+    private calendarService: CalendarService,
+    private router: Router
+    ) {
+
+    this.router.events.subscribe((event: any) => {
       try {
         if (event.url) {
           if (event.url === '/Input' && this.calendarService.dateFromCal) {
-              let routeFromCal = this.calendarService.dateFromCal;
+              const routeFromCal = this.calendarService.dateFromCal;
               this.setRouteTrigger(routeFromCal);
               if (this.calendarService.hoursSelected) {
                 this.increment = 'hours';
@@ -37,22 +42,21 @@ export class AppInputComponent implements OnInit {
               }
           }
         }
-      }
-      catch(error) {
+      } catch (error) {
         console.log('Unable to display time overwrite message ' + error.message);
       }
     });
   }
-  
+
   ngOnInit() {}
 
-  ngAfterContentInit() {
-    let track = this.goalTrackService.findSelectedTrack();
-    if (!track) {
-      this.noTracks = true;
-    }
-    return;
-  }
+  // ngAfterContentInit() {
+  //   let track = this.goalTrackService.findSelectedTrack();
+  //   if (!track) {
+  //     this.noTracks = true;
+  //   }
+  //   return;
+  // }
 
   setRouteTrigger(routeFromCal) {
     this.minutesAlreadyEntered = this.calendarService.minutesFromCal;
