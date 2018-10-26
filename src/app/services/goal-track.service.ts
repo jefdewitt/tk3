@@ -160,7 +160,7 @@ export class GoalTrackService {
       }
       return sum;
     } catch (error) {
-      console.log('Can\'t find sum in time interval provided for ' + track + ' track ' + error.message);
+      console.log('Can\'t find sum in time interval provided for ' + trackName + ' track ' + error.message);
     }
   }
 

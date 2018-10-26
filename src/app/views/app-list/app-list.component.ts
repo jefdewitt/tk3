@@ -14,8 +14,8 @@ export class AppListComponent implements OnInit {
   @Input()
   public receiver;
 
-  public name = false;
-  public time = false;
+  public name;
+  public time;
   public track;
   public tracks: any;
   public noTracks = false;
@@ -78,7 +78,7 @@ export class AppListComponent implements OnInit {
    * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
-  makeSelectedTrack(name) {
+  public makeSelectedTrack(name) {
     try {
       console.log(name);
       // let clickedTrack;
@@ -145,9 +145,30 @@ export class AppListComponent implements OnInit {
     this.goalTrackService.exportTrackData(trackName);
   }
 
-  public updateTrack() {
+  public updateTrack(track: any, property: any ) {
+
+    localStorage.removeItem(track.name);
+
+    // Check if number starts with 0
+    while (property.charAt(0) === '0') {
+      property = property.substr(1);
+    }
+    const parsed: any = parseFloat(property);
+    // parsed = (typeof parsed === 'number') ? 'number' : 'string';
+    if ( parsed ) {
+      track.time = property;
+    } else {
+      track.name = property;
+    }
+
+    track.selected = true;
+    localStorage.setItem(track['name'], JSON.stringify(track));
     // const track = this.goalTrackService.findTrackByName(name);
     // console.log(this.track.name);
+    // const trackItem = this.goalTrackService.findTrackByName(track.name);
+    // track.name = this.track.name;
+    console.log(track, property);
+
 
   }
 
