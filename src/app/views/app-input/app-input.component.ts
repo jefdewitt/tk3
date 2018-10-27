@@ -113,11 +113,12 @@ export class AppInputComponent implements OnInit {
    * Sets time object minutes key from input field
    */
 
-  setTimeObject(providedDate) {
+  public setTimeObject(providedDate) {
     this.timeObject = {
       recordedMinutes : +this.minutes,
-      recordedDate : providedDate
-    }
+      recordedDate : providedDate,
+      edit: false
+    };
   }
 
   /**

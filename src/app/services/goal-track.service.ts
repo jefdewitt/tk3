@@ -1,15 +1,20 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable, Output, EventEmitter, OnInit } from '@angular/core';
 // import { Goal } from '../goal';
 
 @Injectable()
 export class GoalTrackService {
 
+  public track;
   public trackToEdit = '';
 
   @Output()
   public event = new EventEmitter();
 
   constructor() { }
+
+  OnInit() {
+    this.track = this.findSelectedTrack();
+  }
 
   getAllTracks() {
     try {
@@ -365,5 +370,15 @@ export class GoalTrackService {
       //   this.router.navigateByUrl('/Input');
       // }
     }
+
+    // public findDateEntry(date) {
+    //   for (let i = 0; i < this.track['dates'].length; i++) {
+
+    //     const recordedDate = this.track['dates'][i].recordedDate;
+    //     if (recordedDate === date) {
+    //       return i;
+    //     }
+    //   }
+    // }
 
 }

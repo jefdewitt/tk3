@@ -1,4 +1,4 @@
 export class TimeObject {
-    recordedMinutes : number;
-    recordedDate : any;
+    recordedMinutes: number;
+    recordedDate: any;
 }

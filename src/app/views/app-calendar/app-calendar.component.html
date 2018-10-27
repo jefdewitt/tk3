@@ -11,10 +11,13 @@
           <td *ngFor="let day of weekdays">{{ day }}</td>
       </tr>
       <tr *ngFor="let week of month.weeks"> 
-          <td *ngFor="let day of week" class="{{ checkForToday(day.date) }}" id="{{ curYear }}-{{ formatSingleDigitValues(monthToDisplay + 1) }}-{{ formatSingleDigitValues(day.date) }}"
-            >{{ day.date }}
-            <label (click)="test = !test" *ngIf="day.minutes && test" class="timeStamp-{{ day.date }}">{{ day.minutes }}</label>
-            <input *ngIf="day.minutes && !test" (blur)="test = true && updateStorage(day.date, day.minutes)" tabindex="0" type="text" value="{{ day.minutes }}">
+          <td *ngFor="let day of week" 
+              class="{{ checkForToday(day.date) }}" 
+              id="date-{{ curYear }}-{{ formatSingleDigitValues(monthToDisplay + 1) }}-{{ formatSingleDigitValues(day.date) }}"
+              (click)="editDateEntryTime(day)"
+              >{{ day.date }}
+            <label *ngIf="day.minutes && day.edit" class="timeStamp-{{ day.date }}">{{ day.minutes }}</label>
+            <input *ngIf="day.minutes && !day.edit" (blur)="updateStorage(day.date, time.value)" tabindex="0" type="text" value="{{ day.minutes }}" #time>
           </td>
       </tr>
     </tbody>

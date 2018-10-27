@@ -1,6 +1,6 @@
 import { GoalTrackService } from './../../services/goal-track.service';
 // import { CalendarService } from './services/calendar.service';
-import { Component, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 // interface monthModel {
 //   index: any;
@@ -18,7 +18,7 @@ import { Component, OnInit, ElementRef, Renderer2 } from '@angular/core';
 })
 export class AppCalendarComponent implements OnInit {
 
-  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService) { }
+  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService, private cdr: ChangeDetectorRef) { }
 
   // selector: any;
   // dateFromCal: string;
@@ -56,7 +56,7 @@ export class AppCalendarComponent implements OnInit {
           this.todayDate.getDate() : 0;
   public count = 0;
   public adjustedCount;
-  public test = true;
+  public edit = true;
   public toggle: boolean;
 
   ngOnInit() {
@@ -116,7 +116,8 @@ export class AppCalendarComponent implements OnInit {
 
           this.day = {
            date: firstDay,
-           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1)
+           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1),
+           edit: false
           };
           // We push seven items at a time.
           this.weeks.push(this.day);
@@ -203,20 +204,23 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
-  public updateStorage(date, time) {
-      console.log(date, time);
+  public updateStorage(day, time) {
+      console.log(day, time);
 
-    const compareDate = this.curYear + '-' + this.formatSingleDigitValues(this.curMonth) + '-' + this.formatSingleDigitValues(date);
+    const compareDate = this.curYear + '-' + this.formatSingleDigitValues(this.curMonth) + '-' + this.formatSingleDigitValues(day.date);
 
     for (let i = 0; i < this.track['dates'].length; i++) {
 
-        const recordedDate = this.track['dates'][i].recordedDate;
-        const recordedMinutes = this.track['dates'][i].recordedMinutes;
+        const recordedEntry = this.track['dates'][i];
 
-        if (compareDate === recordedDate) {
+        if (compareDate === recordedEntry.recordedDate) {
+          recordedEntry.recordedMinutes  = time;
+          day.edit = false;
           localStorage.setItem(this.track['name'], JSON.stringify(this.track));
         }
       }
+
+      this.cdr.detectChanges();
   }
 
   public showOrHide(toggle): void {
@@ -237,6 +241,26 @@ export class AppCalendarComponent implements OnInit {
     if ((<HTMLElement>event.target).classList.contains('modal')) {
       this.showOrHide(false);
     }
+  }
+
+  public editDateEntryTime(day) {
+
+    console.log(day);
+    day.edit = true;
+
+    // for (let i = 0; i < this.track['dates'].length; i++) {
+
+    //   const recordedDate = this.track['dates'][i].recordedDate;
+    //   // const recordedMinutes = this.track['dates'][i].recordedMinutes;
+
+    //   if (date === recordedDate) {
+    //     // this.track['dates'][i].recordedMinutes  = time;
+    //     // localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+    //     this.track['dates'][i].edit = true;
+    //   }
+    // }
+
+    // console.log(date);
   }
 
 }
