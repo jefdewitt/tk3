@@ -215,8 +215,9 @@ export class AppCalendarComponent implements OnInit {
 
         if (compareDate === recordedEntry.recordedDate) {
           recordedEntry.recordedMinutes  = time;
-          day.edit = false;
           localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+          day.minutes = time;
+          day.edit = false;
         }
       }
 
@@ -245,10 +246,20 @@ export class AppCalendarComponent implements OnInit {
 
   public editDateEntryTime(day) {
 
-    console.log(day);
-    day.edit = true;
+    // console.log(day);
 
-    // for (let i = 0; i < this.track['dates'].length; i++) {
+    for (let i = 0; i < this.month.weeks.length; i++) {
+      for (let j = 0; j <  this.month.weeks[i].length; j++) {
+        // console.log(this.month.weeks[i].edit);
+        this.month.weeks[i][j].edit = false;
+        // console.log(this.month.weeks[i][j]);
+      }
+    }
+
+    day.edit = true;
+    // console.log(day);
+    // console.log(this.month);
+
 
     //   const recordedDate = this.track['dates'][i].recordedDate;
     //   // const recordedMinutes = this.track['dates'][i].recordedMinutes;

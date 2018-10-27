@@ -16,8 +16,8 @@
               id="date-{{ curYear }}-{{ formatSingleDigitValues(monthToDisplay + 1) }}-{{ formatSingleDigitValues(day.date) }}"
               (click)="editDateEntryTime(day)"
               >{{ day.date }}
-            <label *ngIf="day.minutes && day.edit" class="timeStamp-{{ day.date }}">{{ day.minutes }}</label>
-            <input *ngIf="day.minutes && !day.edit" (blur)="updateStorage(day.date, time.value)" tabindex="0" type="text" value="{{ day.minutes }}" #time>
+            <label *ngIf="!day.edit" class="timeStamp-{{ day.date }}">{{ day.minutes }}</label>
+            <input *ngIf="day.edit" (blur)="updateStorage(day, time.value)" tabindex="0" type="text" value="{{ day.minutes ? day.minutes : 0 }}" #time>
           </td>
       </tr>
     </tbody>
