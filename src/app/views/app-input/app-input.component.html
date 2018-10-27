@@ -1,9 +1,9 @@
 <div class="input-view">
   <!-- <p>Open calendar </p><img class="cal-button" (click)="openCal()" src="./assets/calendar.svg"/> -->
-    <p>Open calendar </p><img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/calendar.svg"/>
+    <p>{{ modal.state }} calendar </p><img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/calendar.svg"/>
 </div>
 <app-calendar #modal></app-calendar>
-<div *ngIf="!noTracks"> 
+<div *ngIf="!noTracks && modal.state === 'Open'"> 
   <form>
     <h2>Made Progress? Add Time Here</h2>
     <input  type="tel" name="minutes" id="minutes" [(ngModel)]="minutes" placeholder="Enter {{ hoursOrMinutes }}" autocomplete="off" min="0" max="1440">

@@ -1,3 +1,4 @@
+import { GoalTrackService } from './../../services/goal-track.service';
 // import { CalendarService } from './services/calendar.service';
 import { Component, OnInit, ElementRef, Renderer2 } from '@angular/core';
 
@@ -17,7 +18,7 @@ import { Component, OnInit, ElementRef, Renderer2 } from '@angular/core';
 })
 export class AppCalendarComponent implements OnInit {
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService) { }
 
   // selector: any;
   // dateFromCal: string;
@@ -27,6 +28,8 @@ export class AppCalendarComponent implements OnInit {
 
   public visible = false;
   public visibleAnimate = false;
+  public state = 'Open';
+  public track;
 
   public todayDate: Date = new Date();
   public curMonth: number = this.todayDate.getMonth() + 1;
@@ -57,6 +60,7 @@ export class AppCalendarComponent implements OnInit {
   public toggle: boolean;
 
   ngOnInit() {
+    this.track = this.goalTrackService.findSelectedTrack();
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
     this.buildCal();
@@ -112,7 +116,7 @@ export class AppCalendarComponent implements OnInit {
 
           this.day = {
            date: firstDay,
-           minutes: this.apiToPopCalWithTime(firstDay, monthIndex)
+           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1)
           };
           // We push seven items at a time.
           this.weeks.push(this.day);
@@ -125,6 +129,7 @@ export class AppCalendarComponent implements OnInit {
             this.weeks = [];
           }
         }
+
     } catch (error) {
       console.log('Unable to build calendar ' + error.message);
     }
@@ -167,32 +172,30 @@ export class AppCalendarComponent implements OnInit {
   }
 
   public apiToPopCalWithTime(day, month) {
-    const selectedTrack = {
-      name: 'test1',
-      selected: true,
-      time: '100',
-      dates:
-      [
-        {
-            recordedDate: '2018-02-19',
-            recordedMinutes: 33
-        },
-        {
-            recordedDate: '2018-10-26',
-            recordedMinutes: 42
-        }
-      ]
-    };
+    // const selectedTrack = {
+    //   name: 'test1',
+    //   selected: true,
+    //   time: '100',
+    //   dates:
+    //   [
+    //     {
+    //         recordedDate: '2018-02-19',
+    //         recordedMinutes: 33
+    //     },
+    //     {
+    //         recordedDate: '2018-10-26',
+    //         recordedMinutes: 42
+    //     }
+    //   ]
+    // };
     // use goal service to get localStorage object
-    // var selectedTrack = this.goalTrackService.findSelectedTrack();
 
     const compareDate = this.curYear + '-' + this.formatSingleDigitValues(month) + '-' + this.formatSingleDigitValues(day);
-    console.log('compareDate', compareDate);
 
-    for (let i = 0; i < selectedTrack['dates'].length; i++) {
+    for (let i = 0; i < this.track['dates'].length; i++) {
 
-        const recordedDate = selectedTrack['dates'][i].recordedDate;
-        const recordedMinutes = selectedTrack['dates'][i].recordedMinutes;
+        const recordedDate = this.track['dates'][i].recordedDate;
+        const recordedMinutes = this.track['dates'][i].recordedMinutes;
 
         if (compareDate === recordedDate) {
           return recordedMinutes;
@@ -203,36 +206,31 @@ export class AppCalendarComponent implements OnInit {
   public updateStorage(date, time) {
       console.log(date, time);
 
-    // use goal service to get localStorage object
-    // var selectedTrack = this.goalTrackService.findSelectedTrack();
-    const selectedTrack = '';
     const compareDate = this.curYear + '-' + this.formatSingleDigitValues(this.curMonth) + '-' + this.formatSingleDigitValues(date);
 
-    for (let i = 0; i < selectedTrack['dates'].length; i++) {
+    for (let i = 0; i < this.track['dates'].length; i++) {
 
-        const recordedDate = selectedTrack['dates'][i].recordedDate;
-        const recordedMinutes = selectedTrack['dates'][i].recordedMinutes;
+        const recordedDate = this.track['dates'][i].recordedDate;
+        const recordedMinutes = this.track['dates'][i].recordedMinutes;
 
         if (compareDate === recordedDate) {
-          // use goal track service to set localStorage object
-          // localStorage.setItem(this.selected['name'], JSON.stringify(this.selected));
+          localStorage.setItem(this.track['name'], JSON.stringify(this.track));
         }
       }
   }
 
   public showOrHide(toggle): void {
 
-    // this.toggle = toggle;
-    // this.toggle = !this.toggle;
     if (toggle) {
       this.visible = true;
       setTimeout(() => this.visibleAnimate = true, 100);
+      this.state = 'Close';
     } else {
       this.visibleAnimate = false;
       setTimeout(() => this.visible = false, 300);
+      this.state = 'Open';
     }
 
-    // toggle = !toggle;
   }
 
   public onContainerClicked(event: MouseEvent): void {
