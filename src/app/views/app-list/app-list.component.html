@@ -13,35 +13,37 @@
                 <div>
                     <span class="percent">{{ findPercentCompleted(track) }}%done</span>
                 </div>
-                <div>
-                    <label *ngIf="!track.editName" 
-                           (click)="editTrackDetails(track, 'name')" 
-                           name="name">{{ track.name }}</label>
-                    <input *ngIf="track.editName" 
-                           (blur)="track.editName = false; updateTrack(track, name.value)"
-                           class="name"
-                           value="{{ track.name }}" 
-                           type="text" 
-                           name="name" 
-                           autofocus #name>
+                <div class="track-details">
+                    <div>
+                        <label *ngIf="!track.editName" 
+                            (click)="editTrackDetails(track, 'name')" 
+                            name="name">{{ track.name }}</label>
+                        <input *ngIf="track.editName" 
+                            (blur)="track.editName = false; updateTrack(track, name.value)"
+                            class="name"
+                            value="{{ track.name }}" 
+                            type="text" 
+                            name="name" 
+                            autofocus #name>
+                    </div>
+                    <div>
+                        <label *ngIf="!track.editTime" 
+                            (click)="editTrackDetails(track, 'time')" 
+                            name="time">{{ track?.time }} hours</label>
+                        <input *ngIf="track.editTime" 
+                            (blur)="track.editTime = false; updateTrack(track, time.value)" 
+                            class="time"
+                            value="{{ track?.time }}" 
+                            type="number" 
+                            name="time" 
+                            autofocus #time>
+                    </div>
                 </div>
-                <div>
-                    <label *ngIf="!track.editTime" 
-                           (click)="editTrackDetails(track, 'time')" 
-                           name="time">{{ track?.time }} hours</label>
-                    <input *ngIf="track.editTime" 
-                           (blur)="track.editTime = false; updateTrack(track, time.value)" 
-                           class="time"
-                           value="{{ track?.time }}" 
-                           type="number" 
-                           name="time" 
-                           autofocus #time>
+                <div class="button-wrap">
+                    <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>
+                    <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
+                    <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
                 </div>
-            </div>
-            <div class="button-wrap">
-                <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>
-                <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
-                <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
             </div>
         </li>
     </ul>

@@ -83,8 +83,17 @@ img.add-button {
 }
 
 .track-wrapper {
-    width: 80%;
-    display: inline-block;
+    width: 100%;
+    display: flex;
+}
+
+.track-wrapper div:first-child,
+.track-wrapper div:last-child {
+    flex: 1;
+}
+
+.track-details {
+    flex: 3;
 }
 
 .button-wrap {
