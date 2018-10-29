@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, Input, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { GoalTrackService } from '../../services/goal-track.service';
   templateUrl: './app-list.component.html',
   styleUrls: ['./app-list.component.css']
 })
-export class AppListComponent implements OnInit {
+export class AppListComponent implements OnInit, AfterViewChecked {
 
   @ViewChildren
   ('name') test: ElementRef;
@@ -33,7 +33,12 @@ export class AppListComponent implements OnInit {
     editTime: false
   };
 
-  constructor(private goalTrackService: GoalTrackService, private router: Router, private el: ElementRef) { }
+  constructor(
+    private goalTrackService: GoalTrackService,
+    private router: Router,
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef
+    ) { }
 
   ngOnInit() {
     this.tracks = this.goalTrackService.getAllTracks();
@@ -101,6 +106,7 @@ export class AppListComponent implements OnInit {
       // } else {
       //   clickedTrack = this.name.nativeElement.innerText;
       // }
+      this.track = track;
       this.goalTrackService.deselectTracks();
       for (let i = 0; i < localStorage.length; i++) {
         let storedTrack = localStorage.getItem(localStorage.key(i));
@@ -115,22 +121,24 @@ export class AppListComponent implements OnInit {
           // }
         }
       }
+      // this.cdr.detectChanges();
     } catch (error) {
       console.log('Could not change selected track ' + error.message);
     }
   }
 
-  findPercentCompleted(trackName) {
-    if (trackName) {
-      const percentCompleted = this.goalTrackService.overallCompleted(trackName);
+  findPercentCompleted(track) {
+    const percentCompleted = this.goalTrackService.overallCompleted(track.name);
+    if (track.name && percentCompleted) {
       return percentCompleted.toFixed(1);
+    } else {
+      return 0;
     }
   }
 
   deleteTrack(selectedTrack) {
     if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
-      // const clickedTrack = this.name.nativeElement.innerText;
-      // const trackName = $event.target.parentElement.children['0'].children['0'].innerText;
+
       const track: any = this.goalTrackService.findTrackByName(selectedTrack.name);
       localStorage.removeItem(track.name);
 
@@ -143,12 +151,16 @@ export class AppListComponent implements OnInit {
       if (this.tracks.length === 0) {
         this.noTracks = true;
       }
+
+      if (this.track.name = selectedTrack.name) {
+        this.track = '';
+      }
+
     }
   }
 
   public editTrack($event) {
     this.makeSelectedTrack($event);
-    // const track = this.goalTrackService.findSelectedTrack();
     this.goalTrackService.trackToEdit = this.track['name'];
   }
 
@@ -160,11 +172,9 @@ export class AppListComponent implements OnInit {
 
     // Check if number starts with 0
     if (property.charAt(0) === '0') {
-      // property = property.substr(1);
       property = parseInt(property, 10);
     }
-    // const parsed: any = parseFloat(property);
-    // parsed = (typeof parsed === 'number') ? 'number' : 'string';
+
     if ( typeof property === 'number' ) {
       track.time = property;
     } else {
@@ -174,13 +184,6 @@ export class AppListComponent implements OnInit {
     track.selected = true;
     localStorage.setItem(track['name'], JSON.stringify(track));
     localStorage.removeItem(track.name);
-    // const track = this.goalTrackService.findTrackByName(name);
-    // console.log(this.track.name);
-    // const trackItem = this.goalTrackService.findTrackByName(track.name);
-    // track.name = this.track.name;
-    console.log(track, property);
-
-
   }
 
   public editTrackDetails(track: any, property: string) {

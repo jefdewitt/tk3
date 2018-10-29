@@ -72,14 +72,14 @@ a span.percent {
 }
 
 .list-view {
-    display: flex;
+    /* display: flex;
     flex-direction: row;
     justify-content: flex-end;
-    align-items: flex-end;
+    align-items: flex-end; */
 }
 
 img.add-button {
-    width: 2rem;
+    /* width: 2rem; */
 }
 
 .track-wrapper {

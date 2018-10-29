@@ -1,11 +1,18 @@
-<div class="list-view">
-    <p>Create new</p><img class="add-button" (click)="createNew()" src="./assets/new.svg"/>
+<div class="list-view sub-header">
+    <h2>Active: {{ track.name }}</h2>
+    <div>
+        <p>Create new</p>
+        <img class="add-button" (click)="createNew()" src="./assets/new.svg"/>
+    </div>
 </div>
 <div *ngIf="!noTracks" class="trackList">
     <ul>
-        <li *ngFor="let track of tracks; let i = index;" class="track-{{i}}" (click)="makeSelectedTrack(track.name)">
+        <li *ngFor="let track of tracks; let i = index;" class="track-{{i}}" (click)="makeSelectedTrack(track)">
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
             <div class="track-wrapper">
+                <div>
+                    <span class="percent">{{ findPercentCompleted(track) }}%done</span>
+                </div>
                 <div>
                     <label *ngIf="!track.editName" 
                            (click)="editTrackDetails(track, 'name')" 
@@ -30,7 +37,6 @@
                            name="time" 
                            autofocus #time>
                 </div>
-                <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
             </div>
             <div class="button-wrap">
                 <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>

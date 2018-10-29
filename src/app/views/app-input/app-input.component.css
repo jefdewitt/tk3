@@ -1,9 +1,9 @@
-.input-view {
+/* .input-view {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-}
+} */
 
 .controls p {
     display: inline-block;

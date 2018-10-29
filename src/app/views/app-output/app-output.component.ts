@@ -12,21 +12,22 @@ import { Router } from '@angular/router';
 export class AppOutputComponent implements OnInit {
 
   timeFrom: string;
-  dailyMinutes : number = null;
-  dailyPercentage : number = null;
-  todayCheckbox : object;
-  percentageDone : number = null;
-  timePeriod : string = 'progress today';
-  completed : string = ' today';
-  dailyRecordedTimes : Array<any> = [];
-  isMonthView : boolean;
+  dailyMinutes: number = null;
+  dailyPercentage: number = null;
+  todayCheckbox: object;
+  percentageDone: number = null;
+  timePeriod: 'progress today';
+  completed: ' today';
+  dailyRecordedTimes: Array<any> = [];
+  isMonthView: boolean;
   isYearView: boolean;
-  dayOfMonth : Array<any>;
-  noTracks : boolean = false;
-  mostTime : any;
+  dayOfMonth: Array<any>;
+  noTracks = false;
+  mostTime: any;
+  public track = this.goalTrackService.findSelectedTrack();
 
   constructor(private goalTrackService : GoalTrackService, private router : Router) { 
-    
+
     let track = this.goalTrackService.findSelectedTrack();
     if (!track) {
       this.noTracks = true;

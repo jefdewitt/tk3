@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+.sub-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sub-header div p {
+    display: inline-block;
+}
+
+.sub-header div img {
+    vertical-align: middle;
+}
+
+img {
+    width: 2em;
+}

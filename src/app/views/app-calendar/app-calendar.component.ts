@@ -215,7 +215,7 @@ export class AppCalendarComponent implements OnInit {
 
         if (compareDate === recordedEntry.recordedDate) {
           recordedEntry.recordedMinutes = time;
-          
+
           // for (let i = 0; i < this.month.weeks.length; i++) {
             //   for (let j = 0; j <  this.month.weeks[i].length; j++) {
               //     // console.log(this.month.weeks[i].edit);
@@ -223,7 +223,7 @@ export class AppCalendarComponent implements OnInit {
               //     // console.log(this.month.weeks[i][j]);
               //   }
               // }
-              
+
         } else {
 
           const timeObject = {
