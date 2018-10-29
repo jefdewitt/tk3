@@ -7,18 +7,28 @@
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
             <div class="track-wrapper">
                 <div>
-                    <label *ngIf="!track.editName" (click)="editTrackDetails(track, 'name')">{{ track.name }}</label>
+                    <label *ngIf="!track.editName" 
+                           (click)="editTrackDetails(track, 'name')" 
+                           name="name">{{ track.name }}</label>
                     <input *ngIf="track.editName" 
                            (blur)="track.editName = false; updateTrack(track, name.value)"
+                           class="name"
                            value="{{ track.name }}" 
-                           type="text" #name>
+                           type="text" 
+                           name="name" 
+                           autofocus #name>
                 </div>
                 <div>
-                    <label *ngIf="!track.editTime" (click)="editTrackDetails(track, 'time')">{{ track?.time }} hours</label>
+                    <label *ngIf="!track.editTime" 
+                           (click)="editTrackDetails(track, 'time')" 
+                           name="time">{{ track?.time }} hours</label>
                     <input *ngIf="track.editTime" 
                            (blur)="track.editTime = false; updateTrack(track, time.value)" 
+                           class="time"
                            value="{{ track?.time }}" 
-                           type="number" #time>
+                           type="number" 
+                           name="time" 
+                           autofocus #time>
                 </div>
                 <span class="percent">{{ findPercentCompleted(track.name) }}%done</span>
             </div>

@@ -1,13 +1,27 @@
 <div class="input-view">
   <!-- <p>Open calendar </p><img class="cal-button" (click)="openCal()" src="./assets/calendar.svg"/> -->
-    <p>{{ modal.state }} calendar </p><img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/calendar.svg"/>
+    <h2>{{ track.name }}</h2>
+    <div class="controls">
+        <p>{{ modal.state }} calendar </p>
+        <img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/calendar.svg"/>
+    </div>
 </div>
 <app-calendar #modal></app-calendar>
-<div *ngIf="!noTracks && modal.state === 'Open'"> 
+<div *ngIf="!noTracks && modal.state === 'Open'" class="manual-input" [class.active]="modal.state === 'Open'"> 
   <form>
-    <h2>Made Progress? Add Time Here</h2>
-    <input  type="tel" name="minutes" id="minutes" [(ngModel)]="minutes" placeholder="Enter {{ hoursOrMinutes }}" autocomplete="off" min="0" max="1440">
-    <input type="checkbox" name="hours" id="hours" (click)="hours()">
+    <h3>Made Progress? Add Time Here</h3>
+    <input type="tel" 
+           name="minutes" 
+           id="minutes" 
+           [(ngModel)]="minutes" 
+           placeholder="Enter {{ hoursOrMinutes }}" 
+           autocomplete="off" 
+           min="0" 
+           max="1440">
+    <input type="checkbox" 
+           name="hours" 
+           id="hours" 
+           (change)="hours = !hours">
     <label for="hours">Hours</label>
     <button (click)='addMinutes(minutes)'>Submit</button>
   </form>

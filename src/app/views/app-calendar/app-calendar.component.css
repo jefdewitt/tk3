@@ -88,9 +88,10 @@ label[class^="timeStamp"] {
 
 input {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 75%;
+    top: 25%;
     transform: translate(-50%, -50%);
     text-align: center;
-    width: 5em;
+    width: 4em;
+    opacity: .7;
 }

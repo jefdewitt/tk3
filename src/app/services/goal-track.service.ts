@@ -102,7 +102,7 @@ export class GoalTrackService {
   }
 
   // Create a date object with today's date, format YYYY-MM-DD
-  createDateObject() {
+  public createDateObject() {
     const dateObj = new Date();
     let month: any = dateObj.getMonth() + 1; // months from 1-12
     if (month < 10) { month = '0' + month; }

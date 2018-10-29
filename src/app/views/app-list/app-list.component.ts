@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChildren, ElementRef } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
 
 @Component({
@@ -9,18 +9,20 @@ import { GoalTrackService } from '../../services/goal-track.service';
 })
 export class AppListComponent implements OnInit {
 
-  // @ViewChild
-  // ('name') name;
+  @ViewChildren
+  ('name') test: ElementRef;
   @Input()
   public receiver;
 
-  public name;
+  // public name;
   public time;
   public track;
   public tracks: any;
   public noTracks = false;
   public nameSelected = false;
   public timeSelected = false;
+  public test2;
+  public name;
 
   public example = {
     dates: [],
@@ -31,7 +33,7 @@ export class AppListComponent implements OnInit {
     editTime: false
   };
 
-  constructor(private goalTrackService: GoalTrackService, private router: Router) { }
+  constructor(private goalTrackService: GoalTrackService, private router: Router, private el: ElementRef) { }
 
   ngOnInit() {
     this.tracks = this.goalTrackService.getAllTracks();
@@ -44,6 +46,11 @@ export class AppListComponent implements OnInit {
     });
 
     this.track = this.goalTrackService.findSelectedTrack();
+  }
+
+  ngAfterViewChecked() {
+      this.test2 = this.test;
+      console.log(this.test2);
   }
 
   public createNew() {
@@ -176,9 +183,13 @@ export class AppListComponent implements OnInit {
   public editTrackDetails(track: any, property: string) {
     if (property === 'name') {
       track.editName = true;
+
     } else {
       track.editTime = true;
     }
+    // const test = this.el.nativeElement.className = '.' + property;
+    // test.focus();
+    console.log(this.test2);
   }
 
 }

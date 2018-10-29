@@ -22,6 +22,8 @@ export class AppInputComponent implements OnInit {
   noTracks = false;
   public hoursOrMinutes;
   public toggle = true;
+  public track;
+  public hours = false;
 
   constructor(
     private goalTrackService: GoalTrackService,
@@ -29,26 +31,29 @@ export class AppInputComponent implements OnInit {
     private router: Router
     ) {
 
-    this.router.events.subscribe((event: any) => {
-      try {
-        if (event.url) {
-          if (event.url === '/Input' && this.calendarService.dateFromCal) {
-              const routeFromCal = this.calendarService.dateFromCal;
-              this.setRouteTrigger(routeFromCal);
-              if (this.calendarService.hoursSelected) {
-                this.increment = 'hours';
-              } else {
-                this.increment = 'minutes';
-              }
-          }
-        }
-      } catch (error) {
-        console.log('Unable to display time overwrite message ' + error.message);
-      }
-    });
+    // this.router.events.subscribe((event: any) => {
+    //   try {
+    //     if (event.url) {
+    //       if (event.url === '/Input' && this.calendarService.dateFromCal) {
+    //           const routeFromCal = this.calendarService.dateFromCal;
+    //           this.setRouteTrigger(routeFromCal);
+    //           if (this.calendarService.hoursSelected) {
+    //             this.increment = 'hours';
+    //           } else {
+    //             this.increment = 'minutes';
+    //           }
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.log('Unable to display time overwrite message ' + error.message);
+    //   }
+    // });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.track = this.goalTrackService.findSelectedTrack();
+  }
 
   // ngAfterContentInit() {
   //   let track = this.goalTrackService.findSelectedTrack();
@@ -71,13 +76,13 @@ export class AppInputComponent implements OnInit {
   }
 
   // Just changes the placeholder string in the input field
-  hours() {
-    if (this.hoursOrMinutes === 'minutes') {
-      this.hoursOrMinutes = 'hours';
-    } else {
-      this.hoursOrMinutes = 'minutes'
-    }
-  }
+  // hours() {
+  //   if (this.hoursOrMinutes === 'minutes') {
+  //     this.hoursOrMinutes = 'hours';
+  //   } else {
+  //     this.hoursOrMinutes = 'minutes'
+  //   }
+  // }
 
   /** 
    * Check to see if user is inputting time in hours.
@@ -85,8 +90,8 @@ export class AppInputComponent implements OnInit {
    * loaded in time for Angular to find them in the DOM otherwise. 
    */
 
-  minutesOrHours() {
-    if (this.hoursOrMinutes === 'hours') {
+  public minutesOrHours() {
+    if (this.hours === true) {
       return this.minutes * 60;
     } else {
       return this.minutes;
@@ -116,11 +121,10 @@ export class AppInputComponent implements OnInit {
   public setTimeObject(providedDate) {
     this.timeObject = {
       recordedMinutes : +this.minutes,
-      recordedDate : providedDate,
-      edit: false
+      recordedDate : providedDate
     };
   }
-
+  
   /**
    * Confirms that a valid time was entered & whether any previous
    * times were entered on that date.
@@ -151,15 +155,15 @@ export class AppInputComponent implements OnInit {
       // Check if minutes or hours
       this.minutes = this.minutesOrHours();
 
-      if (this.routeFromCal) {
-        this.editTimeFromCal(this.routeFromCal);
-      } else {
-        console.log('this.minutes', this.minutes)
+      // if (this.routeFromCal) {
+      //   this.editTimeFromCal(this.routeFromCal);
+      // } else {
+      //   console.log('this.minutes', this.minutes)
         // Create new time object for the dates array
         this.setTimeObject(this.goalTrackService.createDateObject());
         // Check if min > 0 and if there are prev. date entries in dates array
         this.checkForValidMinAndDate();
-      }
+      // }
     }
     catch(error) {
       console.log('Dates array is unavailable ' + error.message);
@@ -205,6 +209,6 @@ export class AppInputComponent implements OnInit {
   }
 
   public openCal() {
-    console.log('open calendar.';
+    console.log('open calendar.');
   }
 }

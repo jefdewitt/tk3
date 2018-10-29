@@ -1,11 +1,37 @@
 .input-view {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controls p {
+    display: inline-block;
+}
+
+.controls img {
+    vertical-align: middle;
 }
 
 img.cal-button {
     margin-left: .5em;
     width: 2rem;
+}
+
+.manual-input {
+    position: absolute;
+}
+
+.active {
+    animation: fadein 1s;
+    animation-delay: 1s;
+}
+
+.manual-input.active {
+    opacity: 1;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

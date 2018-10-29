@@ -1,6 +1,6 @@
 import { GoalTrackService } from './../../services/goal-track.service';
 // import { CalendarService } from './services/calendar.service';
-import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 
 // interface monthModel {
 //   index: any;
@@ -18,7 +18,7 @@ import { Component, OnInit, ElementRef, ChangeDetectorRef } from '@angular/core'
 })
 export class AppCalendarComponent implements OnInit {
 
-  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService, private cdr: ChangeDetectorRef) { }
+  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService) { }
 
   // selector: any;
   // dateFromCal: string;
@@ -116,7 +116,7 @@ export class AppCalendarComponent implements OnInit {
 
           this.day = {
            date: firstDay,
-           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1),
+           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) ? this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) : 0,
            edit: false
           };
           // We push seven items at a time.
@@ -214,14 +214,30 @@ export class AppCalendarComponent implements OnInit {
         const recordedEntry = this.track['dates'][i];
 
         if (compareDate === recordedEntry.recordedDate) {
-          recordedEntry.recordedMinutes  = time;
-          localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-          day.minutes = time;
-          day.edit = false;
-        }
-      }
+          recordedEntry.recordedMinutes = time;
+          
+          // for (let i = 0; i < this.month.weeks.length; i++) {
+            //   for (let j = 0; j <  this.month.weeks[i].length; j++) {
+              //     // console.log(this.month.weeks[i].edit);
+              //     this.month.weeks[i][j].edit = false;
+              //     // console.log(this.month.weeks[i][j]);
+              //   }
+              // }
+              
+        } else {
 
-      this.cdr.detectChanges();
+          const timeObject = {
+            recordedMinutes : time,
+            recordedDate : this.curYear + '-' + this.curMonth + '-' + ( (day.date < 10) ? '0' + day.date : day.date)
+          };
+
+          this.track['dates'].push(timeObject);
+
+        }
+        localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+        day.minutes = time;
+        day.edit = false;
+      }
   }
 
   public showOrHide(toggle): void {
