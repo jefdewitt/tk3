@@ -50,6 +50,9 @@ export class AppListComponent implements OnInit {
 
   ngAfterViewChecked() {
       this.test2 = this.test;
+      if (this.test2.first) {
+        this.test2.first.nativeElement.focus();
+      }
       console.log(this.test2);
   }
 
@@ -155,15 +158,14 @@ export class AppListComponent implements OnInit {
 
   public updateTrack(track: any, property: any ) {
 
-    localStorage.removeItem(track.name);
-
     // Check if number starts with 0
-    while (property.charAt(0) === '0') {
-      property = property.substr(1);
+    if (property.charAt(0) === '0') {
+      // property = property.substr(1);
+      property = parseInt(property, 10);
     }
-    const parsed: any = parseFloat(property);
+    // const parsed: any = parseFloat(property);
     // parsed = (typeof parsed === 'number') ? 'number' : 'string';
-    if ( parsed ) {
+    if ( typeof property === 'number' ) {
       track.time = property;
     } else {
       track.name = property;
@@ -171,6 +173,7 @@ export class AppListComponent implements OnInit {
 
     track.selected = true;
     localStorage.setItem(track['name'], JSON.stringify(track));
+    localStorage.removeItem(track.name);
     // const track = this.goalTrackService.findTrackByName(name);
     // console.log(this.track.name);
     // const trackItem = this.goalTrackService.findTrackByName(track.name);
