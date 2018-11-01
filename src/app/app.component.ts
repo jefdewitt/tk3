@@ -11,19 +11,19 @@ import { Navigation } from 'selenium-webdriver';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private goalTrackService : GoalTrackService, private calendarService : CalendarService, private router : Router){
+  constructor(private goalTrackService: GoalTrackService, private calendarService : CalendarService, private router : Router){
 
-    this.router.events.subscribe((event : any) => {
+    this.router.events.subscribe((event: any) => {
       try {
         if (event.url) {
           if ( (event.url === '/New%20Track') || (event.url === '/List%20Tracks') ) {
               // this.title = 'Tracker';
               // this.time = 'Keeper';
               this.tkTitle = true;
-          } else if ( (event.url != '/New%20Track') || (event.url != '/List%20Tracks') ) {
-              this.track = this.goalTrackService.findSelectedTrack();
-              this.title = (this.track)? this.track['name'] : 'Tracker';
-              this.time = (this.track)? this.track['time'] + ' hrs' : 'Keeper';
+          } else if ( (event.url !== '/New%20Track') || (event.url !== '/List%20Tracks') ) {
+              this.track = this.goalTrackService.track;
+              this.title = (this.track) ? this.track['name'] : 'Tracker';
+              this.time = (this.track) ? this.track['time'] + ' hrs' : 'Keeper';
               this.tkTitle = false;
               if (this.title === 'Tracker') {
                 this.selected = false;
@@ -55,16 +55,16 @@ export class AppComponent implements OnInit {
    }
 
   /**
-   * If there's no selected tracks (i.e., 0 tracks) go the new track view.
+   * If there's no selected tracks (i.e., 0 tracks) go the list track view.
    */
   routeToNewView() {
     try {
-      const selectedTrack = this.goalTrackService.findSelectedTrack();
-      if (selectedTrack['name'] === 'null') {
+      // const selectedTrack = this.goalTrackService.track;
+      // if (!!selectedTrack && selectedTrack['name'] === 'null') {
         this.router.navigateByUrl('/List Tracks');
       }
     } catch (error) {
-      console.log('Unable to reroute to New Track view ' + error.message);
+      console.log('Unable to reroute to List Track view ' + error.message);
     }
   }
 

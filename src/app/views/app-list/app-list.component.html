@@ -1,5 +1,5 @@
 <div class="list-view sub-header">
-    <h2>Active: {{ track.name }}</h2>
+    <h2>Active: {{ track?.name }}</h2>
     <div>
         <p>Create new</p>
         <img class="add-button" (click)="createNew()" src="./assets/new.svg"/>
@@ -11,7 +11,7 @@
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
             <div class="track-wrapper">
                 <div>
-                    <span class="percent">{{ findPercentCompleted(track) }}%done</span>
+                    <span class="percent">{{ findPercentCompleted(track) }}%<br>done</span>
                 </div>
                 <div class="track-details">
                     <div>
@@ -19,11 +19,12 @@
                             (click)="editTrackDetails(track, 'name')" 
                             name="name">{{ track.name }}</label>
                         <input *ngIf="track.editName" 
-                            (blur)="track.editName = false; updateTrack(track, name.value)"
+                            (blur)="track.editName = false; updateTrackName(track, name.value)"
                             class="name"
                             value="{{ track.name }}" 
                             type="text" 
                             name="name" 
+                            pattern="[a-zA-Z\s]+"
                             autofocus #name>
                     </div>
                     <div>
@@ -31,7 +32,7 @@
                             (click)="editTrackDetails(track, 'time')" 
                             name="time">{{ track?.time }} hours</label>
                         <input *ngIf="track.editTime" 
-                            (blur)="track.editTime = false; updateTrack(track, time.value)" 
+                            (blur)="track.editTime = false; updateTrackTime(track, time.value)" 
                             class="time"
                             value="{{ track?.time }}" 
                             type="number" 

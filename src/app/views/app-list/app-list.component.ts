@@ -50,7 +50,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       this.noTracks = true;
     });
 
-    this.track = this.goalTrackService.findSelectedTrack();
+    this.track = this.goalTrackService.track;
   }
 
   ngAfterViewChecked() {
@@ -62,31 +62,14 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   }
 
   public createNew() {
-    console.log('add button click');
-    this.goalTrackService.createNewGoal(this.example);
-    this.tracks = this.goalTrackService.getAllTracks();
-    this.noTracks = false;
+    try {
+      this.goalTrackService.createNewGoal(this.example);
+      this.tracks = this.goalTrackService.getAllTracks();
+      this.noTracks = false;
+    } catch (error) {
+      console.error('Could not create a new track. + error.message');
+    }
   }
-
-  // Display all the tracks from localstorage
-  // getAllTracks() {
-  //   try {
-  //     this.tracks = [];
-  //     for (let i = 0; i < localStorage.length; i++) {
-  //       let track = localStorage.getItem(localStorage.key(i));
-  //       track = JSON.parse(track);
-  //       this.tracks.push(track);
-  //     }
-  //     if (this.tracks.length > 0) {
-  //       return this.tracks;
-  //     } else {
-  //       this.tracks = this.example;
-  //       return this.tracks;
-  //     }
-  //   } catch (error) {
-  //     console.log('Unable to retrive tracks list. ' + error.message);
-  //   }
-  // }
 
   /**
    *
@@ -137,25 +120,29 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   }
 
   deleteTrack(selectedTrack) {
-    if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
+    try {
+      if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
 
-      const track: any = this.goalTrackService.findTrackByName(selectedTrack.name);
-      localStorage.removeItem(track.name);
+        const track: any = this.goalTrackService.findTrackByName(selectedTrack.name);
+        localStorage.removeItem(track.name);
 
-      for (let i = 0; i < this.tracks.length; i++) {
-        if (track.name === this.tracks[i].name) {
-          this.tracks.splice(i, 1);
+        if (this.track.name === selectedTrack.name) {
+          this.track = '';
         }
-      }
 
-      if (this.tracks.length === 0) {
-        this.noTracks = true;
-      }
+        for (let i = 0; i < this.tracks.length; i++) {
+          if (track.name === this.tracks[i].name) {
+            this.tracks.splice(i, 1);
+          }
+        }
 
-      if (this.track.name = selectedTrack.name) {
-        this.track = '';
-      }
+        if (this.tracks.length === 0) {
+          this.noTracks = true;
+        }
 
+      }
+    } catch (error) {
+      console.log('Could not delete track from local storage and/or class property.' + error.message);
     }
   }
 
@@ -168,22 +155,26 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     this.goalTrackService.exportTrackData(trackName);
   }
 
-  public updateTrack(track: any, property: any ) {
+  public updateTrackName(track: any, property: any ) {
 
-    // Check if number starts with 0
-    if (property.charAt(0) === '0') {
-      property = parseInt(property, 10);
-    }
+    const formerName = track.name;
+    track.name = property;
 
-    if ( typeof property === 'number' ) {
-      track.time = property;
-    } else {
-      track.name = property;
-    }
-
-    track.selected = true;
     localStorage.setItem(track['name'], JSON.stringify(track));
-    localStorage.removeItem(track.name);
+    localStorage.removeItem(formerName);
+
+  }
+
+  public updateTrackTime(track: any, property: any ) {
+
+      // Check if number starts with 0
+      if (property.charAt(0) === '0') {
+        property = parseFloat(property);
+      }
+
+      track.time = property;
+      localStorage.setItem(this.track['name'], JSON.stringify(track));
+
   }
 
   public editTrackDetails(track: any, property: string) {
@@ -193,9 +184,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     } else {
       track.editTime = true;
     }
-    // const test = this.el.nativeElement.className = '.' + property;
-    // test.focus();
-    console.log(this.test2);
   }
 
 }

@@ -11,21 +11,21 @@ import { Router } from '@angular/router';
 
 export class AppNewComponent implements OnInit {
 
-  goal : Goal;
-  name : string;
-  time : number;
-  editTrackTitle : string;
-  editTrackTime : string;
-  track : Object;
+  goal: Goal;
+  name: string;
+  time: number;
+  editTrackTitle: string;
+  editTrackTime: string;
+  track: Object;
 
-  constructor(private goalTrackService : GoalTrackService, private router : Router) { }
+  constructor(private goalTrackService: GoalTrackService, private router: Router) { }
 
   ngOnInit() {
     if (this.goalTrackService.trackToEdit) {
-      this.track = this.goalTrackService.findSelectedTrack();
+      this.track = this.goalTrackService.track;
       this.editTrackTitle = 'Edit \'' + this.track['name'] + '\' here';
       this.editTrackTime = 'Edit \'' + this.track['time'] + '\' here';
-      let button = <HTMLInputElement> document.getElementById("button");
+      const button = <HTMLInputElement> document.getElementById('button');
       button.innerText = 'Update';
     }
   }
@@ -42,7 +42,7 @@ export class AppNewComponent implements OnInit {
   //   const nameCheck = this.goalTrackService.nameCheck(this.name);
   //   const timeCheck = this.goalTrackService.timeCheck(this.time);
   //   const button = <HTMLInputElement> document.getElementById("button");
-    
+
   //   if (nameCheck && timeCheck) {
 
   //     if (button.innerText == 'Submit') {

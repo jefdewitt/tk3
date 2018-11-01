@@ -85,6 +85,7 @@ img.add-button {
 .track-wrapper {
     width: 100%;
     display: flex;
+    align-items: center;
 }
 
 .track-wrapper div:first-child,

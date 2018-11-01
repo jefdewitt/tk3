@@ -60,7 +60,7 @@ export class AppCalendarComponent implements OnInit {
   public toggle: boolean;
 
   ngOnInit() {
-    this.track = this.goalTrackService.findSelectedTrack();
+    this.track = this.goalTrackService.track;
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
     this.buildCal();
@@ -209,35 +209,34 @@ export class AppCalendarComponent implements OnInit {
 
     const compareDate = this.curYear + '-' + this.formatSingleDigitValues(this.curMonth) + '-' + this.formatSingleDigitValues(day.date);
 
-    for (let i = 0; i < this.track['dates'].length; i++) {
+    if (this.track['dates'].length > 0) {
 
-        const recordedEntry = this.track['dates'][i];
+      for (let i = 0; i < this.track['dates'].length; i++) {
 
-        if (compareDate === recordedEntry.recordedDate) {
-          recordedEntry.recordedMinutes = time;
+          const recordedEntry = this.track['dates'][i];
 
-          // for (let i = 0; i < this.month.weeks.length; i++) {
-            //   for (let j = 0; j <  this.month.weeks[i].length; j++) {
-              //     // console.log(this.month.weeks[i].edit);
-              //     this.month.weeks[i][j].edit = false;
-              //     // console.log(this.month.weeks[i][j]);
-              //   }
-              // }
-
-        } else {
-
-          const timeObject = {
-            recordedMinutes : time,
-            recordedDate : this.curYear + '-' + this.curMonth + '-' + ( (day.date < 10) ? '0' + day.date : day.date)
-          };
-
-          this.track['dates'].push(timeObject);
-
-        }
-        localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-        day.minutes = time;
-        day.edit = false;
+          if (compareDate === recordedEntry.recordedDate) {
+            recordedEntry.recordedMinutes = time;
+          } else if ( i === this.track['dates'].length - 1 ) {
+            const timeObject = {
+              recordedMinutes : time,
+              recordedDate : this.curYear + '-' + this.curMonth + '-' + this.formatSingleDigitValues(day.date)
+            };
+            this.track['dates'].push(timeObject);
+          }
       }
+    } else {
+      const timeObject = {
+        recordedMinutes : time,
+        recordedDate : this.curYear + '-' + this.curMonth + '-' + this.formatSingleDigitValues(day.date)
+      };
+      this.track['dates'].push(timeObject);
+    }
+
+    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+    day.minutes = time;
+    day.edit = false;
+
   }
 
   public showOrHide(toggle): void {

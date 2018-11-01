@@ -10,10 +10,11 @@ export class GoalTrackService {
   @Output()
   public event = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+    this.track = this.findSelectedTrack();
+   }
 
   OnInit() {
-    this.track = this.findSelectedTrack();
   }
 
   getAllTracks() {
@@ -31,10 +32,10 @@ export class GoalTrackService {
   }
 
   // Returns the current selected track
-  findSelectedTrack() {
+ private findSelectedTrack() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i))
+        let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
         if (track['selected'] === true) {
           return track;
@@ -48,7 +49,7 @@ export class GoalTrackService {
   }
 
   // Confirms no other tracks exist with desired name
-  nameCheck(name) {
+  public nameCheck(name) {
     try {
       if (name) {
         if (localStorage.length > 1) {
@@ -79,7 +80,7 @@ export class GoalTrackService {
   }
 
   // Confirms if time was actually entered
-  timeCheck(time) {
+  public timeCheck(time) {
     if (time > 0) {
       return true;
     } else {
@@ -88,7 +89,7 @@ export class GoalTrackService {
   }
 
   // Defaults all tracks selected property to false
-  deselectTracks() {
+  public deselectTracks() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i))
@@ -173,61 +174,58 @@ export class GoalTrackService {
    *
    * @param sum: number;
    * @param interval: number;
-   * 
+   *
    * Pass a sum and a time interval (7 = week, 30 = month, etc) to find daily minutes
    */
   dailyMinutes(sum, interval) {
     try {
-      let percent : number = ( sum === 0 || interval === 0 )? 0 : sum / interval;
+      const percent: number = ( sum === 0 || interval === 0 )? 0 : sum / interval;
       return percent;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
     }
   }
 
   /**
-   * 
-   * @param trackName 
-   * @param sum 
-   * @param interval 
+   *
+   * @param trackName string
+   * @param sum number
+   * @param interval number
    */
   dailyPercentage(trackName, sum, interval) {
     try {
-      let track = this.findTrackByName(trackName);
-      let timeGoal = track['time'];
-      let percent = ( sum / timeGoal ) * 100;
-      let dailyPercent : number = ( percent === 0 || interval === 0 )? 0 : percent / interval;
+      const track = this.findTrackByName(trackName);
+      const timeGoal = track['time'];
+      const percent = ( sum / timeGoal ) * 100;
+      const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
       return dailyPercent;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find daily percentage from ' + trackName + ', ' + sum + ' & ' + interval + '. ' + error.message);
     }
   }
 
   /**
-   * 
-   * @param trackName 
-   * @param sum 
-   * 
+   *
+   * @param trackName string
+   * @param sum string
+   *
    * Pass a track name and sum to find the overall percentage of the track completed.
    */
   percentOfEntireGoal(trackName, sum) {
     try {
-      let track = this.findTrackByName(trackName);
-      let timeGoal = track['time'] * 60;
-      let percent : number = ( sum / timeGoal ) * 100;
+      const track = this.findTrackByName(trackName);
+      const timeGoal = track['time'] * 60;
+      const percent: number = ( sum / timeGoal ) * 100;
       return percent;
-    }
-    catch(error) {
+    } catch (error) {
       console.log('Can\'t find daily percentage from ' + trackName['name'] + ' & ' + sum + '. ' + error.message);
     }
   }
 
   /**
-   * 
-   * @param numberOfDays 
-   * 
+   *
+   * @param numberOfDays: number
+   *
    * Pass the number of days you want data on and the time completed for each day will be 
    * returned in a tidy array;
    */
@@ -250,8 +248,8 @@ export class GoalTrackService {
 
   public findTrackByName(track) {
     try {
-      for (var i=0; i<localStorage.length; i++) {
-        var storedTrack = localStorage.getItem(localStorage.key(i))
+      for (let i = 0; i < localStorage.length; i++) {
+        let storedTrack = localStorage.getItem(localStorage.key(i))
         storedTrack = JSON.parse(storedTrack);
         if (storedTrack['name'] === track) {
           return storedTrack;
@@ -282,30 +280,30 @@ export class GoalTrackService {
   }
 
   exportTrackData(trackName) {
-    const email = prompt("Provide an email address to send this data to.");
+    const email = prompt('Provide an email address to send this data to.');
 
-    let trackData = this.formatTrackData(trackName);
+    const trackData = this.formatTrackData(trackName);
     window.location.href = "mailto:" + email + "?subject=" + trackName + " Data&body=" + trackData + "";    
   }
 
   /**
-   * 
-   * @param trackName 
-   * 
+   *
+   * @param trackName: string
+   *
    * Get the track minutes and export them in an easy to read JSON file.
    */
   formatTrackData(trackName) {
-    let trackDataOutput = 'Track name = ' + trackName + '%0D%0A%0D%0A';
-    let track = localStorage.getItem(localStorage.key(trackName));
-    let parsedTrack = JSON.parse(track);
-    let trackDates = parsedTrack['dates'];
+    const trackDataOutput = 'Track name = ' + trackName + '%0D%0A%0D%0A';
+    const track = localStorage.getItem(localStorage.key(trackName));
+    const parsedTrack = JSON.parse(track);
+    const trackDates = parsedTrack['dates'];
 
-    let sortTrackDates = trackDates.sort(this.compareFunction);
+    const sortTrackDates = trackDates.sort(this.compareFunction);
 
-    for (var i=0; i<trackDates.length; i++) {
+    for (let i = 0; i < trackDates.length; i++) {
 
-      let itemDate = parsedTrack['dates'][i]['recordedDate'];
-      let itemTime = parsedTrack['dates'][i]['recordedMinutes'];
+      const itemDate = parsedTrack['dates'][i]['recordedDate'];
+      const itemTime = parsedTrack['dates'][i]['recordedMinutes'];
 
       let trackDataString = itemDate + ' = ' + itemTime + '%0D%0A';
       trackDataOutput += trackDataString;
@@ -313,26 +311,26 @@ export class GoalTrackService {
     trackDataOutput += '%0D%0A' + track;
     return trackDataOutput;
   }
-  
+
   /**
-   * 
-   * @param first 
-   * @param second 
-   * 
+   *
+   * @param first: number
+   * @param second: number
+   *
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
    */
   compareFunction(first, second) {
-      let firstString = first.recordedDate.replace(/-/g, '');
-      let secondString = second.recordedDate.replace(/-/g, '');
-      return (parseInt(firstString) - parseInt(secondString));
+      const firstString = first.recordedDate.replace(/-/g, '');
+      const secondString = second.recordedDate.replace(/-/g, '');
+      return (parseInt(firstString, 10) - parseInt(secondString, 10));
   }
 
     /**
      * Handles name and time for goal, and updates the storage service to reflect the change.
      *
-     * @param {string} name
-     * @param {number} time
+     * @param name: string
+     * @param time: number
      */
 
     createNewGoal(goal: any) {

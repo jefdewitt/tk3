@@ -131,7 +131,7 @@ export class CalendarService {
       let calendarMenu = <HTMLInputElement> document.getElementById("calendar-menu");
       if (calendarMenu) {
         const main = document.querySelector('.main:last-of-type');
-        var selectedTrack = this.goalTrackService.findSelectedTrack();
+        var selectedTrack = this.goalTrackService.track;
 
         for (let i=0; i<selectedTrack['dates'].length; i++) {
 
