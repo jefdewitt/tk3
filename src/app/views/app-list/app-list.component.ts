@@ -21,17 +21,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public noTracks = false;
   public nameSelected = false;
   public timeSelected = false;
-  public test2;
+  public focusedElement;
   public name;
-
-  public example = {
-    dates: [],
-    name: 'edit me',
-    selected: true,
-    time: 0,
-    editName: false,
-    editTime: false
-  };
 
   constructor(
     private goalTrackService: GoalTrackService,
@@ -54,16 +45,15 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-      this.test2 = this.test;
-      if (this.test2.first) {
-        this.test2.first.nativeElement.focus();
+      this.focusedElement = this.test;
+      if (this.focusedElement.first) {
+        this.focusedElement.first.nativeElement.focus();
       }
-      console.log(this.test2);
   }
 
   public createNew() {
     try {
-      this.goalTrackService.createNewGoal(this.example);
+      this.goalTrackService.createNewTrack();
       this.tracks = this.goalTrackService.getAllTracks();
       this.noTracks = false;
     } catch (error) {
@@ -71,62 +61,22 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  /**
-   *
-   * Loop thru tracks from localstorage and turn the selected key
-   * for the track clicked to true
-   */
-  public makeSelectedTrack(track) {
-    try {
-      console.log(track);
-      // let clickedTrack;
-      // clickedTrack = this.name.nativeElement.innerText;
-      // console.log(clickedTrack);
-      // if ($event.target.id === 'trackWrapper') {
-      //   // const test = this.el.nativeElement.classList('.name');
-      //   // console.log(this.name);
-      //   clickedTrack = this.name.nativeElement.innerText;
-      // } else {
-      //   clickedTrack = this.name.nativeElement.innerText;
-      // }
-      this.track = track;
-      this.goalTrackService.deselectTracks();
-      for (let i = 0; i < localStorage.length; i++) {
-        let storedTrack = localStorage.getItem(localStorage.key(i));
-        storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === track.name) {
-          storedTrack['selected'] = true;
-          localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
-          // if ($event.target.id === 'trackWrapper') {
-          //   this.router.navigateByUrl('/Input');
-          // } else {
-          //   this.router.navigateByUrl('/New Track');
-          // }
-        }
-      }
-      // this.cdr.detectChanges();
-    } catch (error) {
-      console.log('Could not change selected track ' + error.message);
-    }
-  }
-
   findPercentCompleted(track) {
-    const percentCompleted = this.goalTrackService.overallCompleted(track.name);
-    if (track.name && percentCompleted) {
-      return percentCompleted.toFixed(1);
-    } else {
-      return 0;
-    }
+    return this.goalTrackService.overallCompleted(track);
   }
 
-  deleteTrack(selectedTrack) {
+  public makeSelectedTrack(track) {
+    this.goalTrackService.makeSelectedTrack(track);
+  }
+
+  public deleteTrack(track) {
     try {
       if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
 
-        const track: any = this.goalTrackService.findTrackByName(selectedTrack.name);
-        localStorage.removeItem(track.name);
+        this.goalTrackService.deleteTrack(track);
 
-        if (this.track.name === selectedTrack.name) {
+        // Update class member to maintain localStorage sync.
+        if (this.track.name === track.name) {
           this.track = '';
         }
 
@@ -142,7 +92,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
       }
     } catch (error) {
-      console.log('Could not delete track from local storage and/or class property.' + error.message);
+      console.log('Could not delete track from localStorage and/or class property.' + error.message);
     }
   }
 

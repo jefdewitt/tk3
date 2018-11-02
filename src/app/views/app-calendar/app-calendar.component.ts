@@ -38,7 +38,7 @@ export class AppCalendarComponent implements OnInit {
   public twelveMonths: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
    'August', 'September', 'October', 'November', 'December'];
   public lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  public monthString = this.twelveMonths[this.curMonth - 1];
+  // public curMonthString = this.twelveMonths[this.curMonth - 1];
   public newMonthDate = new Date(this.curYear, this.curMonth - 1, 1);
   public monthToDisplay;
   public weekdayThatMonthStartsOn;
@@ -116,7 +116,8 @@ export class AppCalendarComponent implements OnInit {
 
           this.day = {
            date: firstDay,
-           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) ? this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) : 0,
+           minutes: this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) ?
+            this.apiToPopCalWithTime(firstDay, this.monthToDisplay + 1) : 0,
            edit: false
           };
           // We push seven items at a time.
@@ -173,23 +174,6 @@ export class AppCalendarComponent implements OnInit {
   }
 
   public apiToPopCalWithTime(day, month) {
-    // const selectedTrack = {
-    //   name: 'test1',
-    //   selected: true,
-    //   time: '100',
-    //   dates:
-    //   [
-    //     {
-    //         recordedDate: '2018-02-19',
-    //         recordedMinutes: 33
-    //     },
-    //     {
-    //         recordedDate: '2018-10-26',
-    //         recordedMinutes: 42
-    //     }
-    //   ]
-    // };
-    // use goal service to get localStorage object
 
     const compareDate = this.curYear + '-' + this.formatSingleDigitValues(month) + '-' + this.formatSingleDigitValues(day);
 
@@ -204,36 +188,18 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
-  public updateStorage(day, time) {
-      console.log(day, time);
+  /**
+   *
+   * @param date: string = actual formatted year, month, day
+   * @param day: number = day of month
+   * @param time: string = time entred
+   */
+  public updateStorage(date, day, time) {
 
-    const compareDate = this.curYear + '-' + this.formatSingleDigitValues(this.curMonth) + '-' + this.formatSingleDigitValues(day.date);
+    console.log('this.track', this.track);
 
-    if (this.track['dates'].length > 0) {
+    this.goalTrackService.updateTrackTimeInStorage(date, time);
 
-      for (let i = 0; i < this.track['dates'].length; i++) {
-
-          const recordedEntry = this.track['dates'][i];
-
-          if (compareDate === recordedEntry.recordedDate) {
-            recordedEntry.recordedMinutes = time;
-          } else if ( i === this.track['dates'].length - 1 ) {
-            const timeObject = {
-              recordedMinutes : time,
-              recordedDate : this.curYear + '-' + this.curMonth + '-' + this.formatSingleDigitValues(day.date)
-            };
-            this.track['dates'].push(timeObject);
-          }
-      }
-    } else {
-      const timeObject = {
-        recordedMinutes : time,
-        recordedDate : this.curYear + '-' + this.curMonth + '-' + this.formatSingleDigitValues(day.date)
-      };
-      this.track['dates'].push(timeObject);
-    }
-
-    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
     day.minutes = time;
     day.edit = false;
 

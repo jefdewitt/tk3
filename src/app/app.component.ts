@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { GoalTrackService } from '../app/services/goal-track.service';
-import { CalendarService } from './services/calendar.service';
 import { Router, Event } from '@angular/router';
 import { Navigation } from 'selenium-webdriver';
 
@@ -11,7 +10,7 @@ import { Navigation } from 'selenium-webdriver';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private goalTrackService: GoalTrackService, private calendarService : CalendarService, private router : Router){
+  constructor(private goalTrackService: GoalTrackService, private router: Router) {
 
     this.router.events.subscribe((event: any) => {
       try {
@@ -28,10 +27,6 @@ export class AppComponent implements OnInit {
               if (this.title === 'Tracker') {
                 this.selected = false;
               }
-          }
-          if (event.url !== '/Input') {
-              this.calendarService.dateFromCal = '';
-              this.calendarService.hoursSelected = false;
           }
         }
       } catch (error) {

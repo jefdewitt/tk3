@@ -1,4 +1,3 @@
-import { CalendarService } from './../../services/calendar.service';
 import { GoalTrackService } from '../../services/goal-track.service';
 import { Component, OnInit } from '@angular/core';
 import { Goal } from '../../goal';
@@ -27,62 +26,17 @@ export class AppInputComponent implements OnInit {
 
   constructor(
     private goalTrackService: GoalTrackService,
-    private calendarService: CalendarService,
     private router: Router
-    ) {
-
-    // this.router.events.subscribe((event: any) => {
-    //   try {
-    //     if (event.url) {
-    //       if (event.url === '/Input' && this.calendarService.dateFromCal) {
-    //           const routeFromCal = this.calendarService.dateFromCal;
-    //           this.setRouteTrigger(routeFromCal);
-    //           if (this.calendarService.hoursSelected) {
-    //             this.increment = 'hours';
-    //           } else {
-    //             this.increment = 'minutes';
-    //           }
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.log('Unable to display time overwrite message ' + error.message);
-    //   }
-    // });
-  }
+    ) {}
 
   ngOnInit() {
 
     this.track = this.goalTrackService.track;
   }
 
-  // ngAfterContentInit() {
-  //   let track = this.goalTrackService.track;
-  //   if (!track) {
-  //     this.noTracks = true;
-  //   }
-  //   return;
-  // }
-
-  setRouteTrigger(routeFromCal) {
-    this.minutesAlreadyEntered = this.calendarService.minutesFromCal;
-    this.routeFromCal = routeFromCal;
-  }
-
   disableRouteTrigger() {
-    this.calendarService.dateFromCal = '';
-    this.routeFromCal = '';
-    this.calendarService.minutesFromCal = '';
     this.minutesAlreadyEntered = '';
   }
-
-  // Just changes the placeholder string in the input field
-  // hours() {
-  //   if (this.hoursOrMinutes === 'minutes') {
-  //     this.hoursOrMinutes = 'hours';
-  //   } else {
-  //     this.hoursOrMinutes = 'minutes'
-  //   }
-  // }
 
   /**
    * Check to see if user is inputting time in hours.
@@ -154,10 +108,6 @@ export class AppInputComponent implements OnInit {
       // Check if minutes or hours
       this.minutes = this.minutesOrHours();
 
-      // if (this.routeFromCal) {
-      //   this.editTimeFromCal(this.routeFromCal);
-      // } else {
-      //   console.log('this.minutes', this.minutes)
         // Create new time object for the dates array
         this.setTimeObject(this.goalTrackService.createDateObject());
         // Check if min > 0 and if there are prev. date entries in dates array
@@ -179,9 +129,9 @@ export class AppInputComponent implements OnInit {
    *
    * routeFromCal is the id value of the calendar cell that was clicked
    *
-   * Preloads the time completed (if any) for the date clicked on from 
+   * Preloads the time completed (if any) for the date clicked on from
    * the calendar view & triggers a message to be displayed re: that any
-   * new submit button clicks will overwrite any previous time entered 
+   * new submit button clicks will overwrite any previous time entered
    * for that date.
    */
 

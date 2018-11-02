@@ -6,6 +6,14 @@ export class GoalTrackService {
 
   public track;
   public trackToEdit = '';
+  public example = {
+    dates: [],
+    name: 'new track',
+    selected: true,
+    time: 0,
+    editName: false,
+    editTime: false
+  };
 
   @Output()
   public event = new EventEmitter();
@@ -14,10 +22,36 @@ export class GoalTrackService {
     this.track = this.findSelectedTrack();
    }
 
-  OnInit() {
+  public updateTrackTimeInStorage(date, time) {
+
+    if (this.track['dates'].length > 0) {
+
+      for (let i = 0; i < this.track['dates'].length; i++) {
+
+          const recordedEntry = this.track['dates'][i];
+
+          if ( date === recordedEntry.recordedDate) {
+            recordedEntry.recordedMinutes = time;
+          } else if ( i === this.track['dates'].length - 1 ) {
+            const timeObject = {
+              recordedMinutes : time,
+              recordedDate : date
+            };
+            this.track['dates'].push(timeObject);
+          }
+      }
+    } else {
+      const timeObject = {
+        recordedMinutes : time,
+        recordedDate : date
+      };
+      this.track['dates'].push(timeObject);
+    }
+    this.track['dates'].sort(this.compareFunction);
+    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
   }
 
-  getAllTracks() {
+  public getAllTracks() {
     try {
       const tracks = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -31,7 +65,7 @@ export class GoalTrackService {
     }
   }
 
-  // Returns the current selected track
+ // Returns the current selected track
  private findSelectedTrack() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
@@ -92,7 +126,7 @@ export class GoalTrackService {
   public deselectTracks() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i))
+        let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
         track['selected'] = false;
         localStorage.setItem(track['name'], JSON.stringify(track));
@@ -105,7 +139,7 @@ export class GoalTrackService {
   // Create a date object with today's date, format YYYY-MM-DD
   public createDateObject() {
     const dateObj = new Date();
-    let month: any = dateObj.getMonth() + 1; // months from 1-12
+    let month: any = dateObj.getMonth() + 1; // getMonth is 0-based
     if (month < 10) { month = '0' + month; }
     let day: any = dateObj.getDate();
     if (day < 10) { day = '0' + day; }
@@ -131,7 +165,6 @@ export class GoalTrackService {
       if (monthMinusNthDaysAgo < 10) { monthMinusNthDaysAgo = '0' + monthMinusNthDaysAgo; }
       const yearMinusNthDaysAgo = newDate.getFullYear();
       const dateNthDaysAgo = yearMinusNthDaysAgo + '-' + monthMinusNthDaysAgo + '-' + nthDaysAgo;
-
       return dateNthDaysAgo;
     } catch (error) {
       console.log('Can\'t find date from ' + daysAgo + ' days ago' + error.message);
@@ -144,8 +177,8 @@ export class GoalTrackService {
    * @param startTime : number
    * @param endTime   : number
    *
-   * The startTime is the number of days from today to begin the maths and the endTime is number of days from today 
-   * to end the maths. Set the fourth param to true to return a percentage.
+   * The startTime is the number of days from today to begin the maths and the endTime is number of days from today
+   * to end the maths.
    *
    * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 0); // Returns today's time
    * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 6); // Returns last week's sum of time
@@ -154,8 +187,8 @@ export class GoalTrackService {
   timeInInterval(trackName, startTime, endTime) {
     try {
       const track = this.findTrackByName(trackName);
-      const startDate: any = this.dateOfNthDaysAgo(startTime);
-      const endDate: any = this.dateOfNthDaysAgo(endTime);
+      const startDate = this.dateOfNthDaysAgo(startTime);
+      const endDate = this.dateOfNthDaysAgo(endTime);
       let sum = 0;
 
       for (let i = 0; i < track['dates'].length; i++) {
@@ -179,7 +212,7 @@ export class GoalTrackService {
    */
   dailyMinutes(sum, interval) {
     try {
-      const percent: number = ( sum === 0 || interval === 0 )? 0 : sum / interval;
+      const percent: number = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
       return percent;
     } catch (error) {
       console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
@@ -226,7 +259,7 @@ export class GoalTrackService {
    *
    * @param numberOfDays: number
    *
-   * Pass the number of days you want data on and the time completed for each day will be 
+   * Pass the number of days you want data on and the time completed for each day will be
    * returned in a tidy array;
    */
   findRecentTime(trackName, numberOfDays) {
@@ -260,17 +293,16 @@ export class GoalTrackService {
     }
   }
 
-  overallCompleted(track) {
+  public overallCompleted(track) {
     try {
-      const thisTrack = this.findTrackByName(track);
       let sum = 0;
-      for (let i = 0; i < thisTrack['dates'].length; i++) {
-        // let recordedDate = thisTrack['dates'][i].recordedDate;
-        sum += thisTrack['dates'][i].recordedMinutes;
+      for (let i = 0; i < track['dates'].length; i++) {
+
+        sum += Number(track['dates'][i].recordedMinutes);
       }
-      const percentage = ( sum / ( thisTrack['time']  * 60) ) * 100;
+      const percentage = track['time'].length > 0 ? ( sum / ( track['time']  * 60 ) ) * 100 : 0;
       if (percentage > 0) {
-        return percentage;
+        return percentage.toFixed(2);
       } else {
         return 0;
       }
@@ -283,7 +315,7 @@ export class GoalTrackService {
     const email = prompt('Provide an email address to send this data to.');
 
     const trackData = this.formatTrackData(trackName);
-    window.location.href = "mailto:" + email + "?subject=" + trackName + " Data&body=" + trackData + "";    
+    window.location.href = 'mailto:' + email + '?subject=' + trackName + ' Data&body=' + trackData + '';
   }
 
   /**
@@ -320,63 +352,56 @@ export class GoalTrackService {
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
    */
-  compareFunction(first, second) {
+  public compareFunction(first, second) {
       const firstString = first.recordedDate.replace(/-/g, '');
       const secondString = second.recordedDate.replace(/-/g, '');
       return (parseInt(firstString, 10) - parseInt(secondString, 10));
   }
 
     /**
-     * Handles name and time for goal, and updates the storage service to reflect the change.
+     * Creates a new track, and updates localStorage to reflect the change.
      *
      * @param name: string
      * @param time: number
      */
 
-    createNewGoal(goal: any) {
-
-      // const nameCheck = this.nameCheck(this.name);
-      // const timeCheck = this.timeCheck(this.time);
-      // const button = <HTMLInputElement> document.getElementById("button");
-
-      // if (nameCheck && timeCheck) {
-
-      //   if (button.innerText == 'Submit') {
-      //     this.goal = {
-      //       name: this.name,
-      //       time: this.time,
-      //       selected: true,
-      //       dates: []
-      //     }
-      const nameCheck = this.findTrackByName(goal.name);
-      if ( nameCheck && goal.name === nameCheck['name']) {
-        goal.name = 'copy of ' + goal.name;
+    public createNewTrack() {
+      if (this.findTrackByName('new track')) {
+        const nameCheck = this.findTrackByName(this.example.name);
+        if ( nameCheck && this.example.name === nameCheck['name']) {
+          this.example.name = 'copy of ' + this.example.name;
+        }
       }
 
-      localStorage.setItem(goal.name, JSON.stringify(goal));
-      this.event.emit(goal.name);
-
-      //   } else {
-      //     this.track['name'] = this.name;
-      //     this.track['time'] = this.time;
-      //     localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-      //     const track = this.findTrackByName(this.goalTrackService.trackToEdit);
-      //     localStorage.removeItem(track['name']);
-      //   }
-      //   this.name = '';
-      //   this.time = null;
-      //   this.router.navigateByUrl('/Input');
-      // }
+      localStorage.setItem(this.example.name, JSON.stringify(this.example));
+      this.event.emit(this.example.name);
     }
 
-    // public findDateEntry(date) {
-    //   for (let i = 0; i < this.track['dates'].length; i++) {
+  /**
+   *
+   * Loop thru tracks from localstorage and turn the selected key
+   * for the track clicked to true
+   */
+  public makeSelectedTrack(track) {
+    try {
+      this.track = track;
+      this.deselectTracks();
+      for (let i = 0; i < localStorage.length; i++) {
+        let storedTrack = localStorage.getItem(localStorage.key(i));
+        storedTrack = JSON.parse(storedTrack);
+        if (storedTrack['name'] === track.name) {
+          storedTrack['selected'] = true;
+          localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
+        }
+      }
+    } catch (error) {
+      console.log('Could not change selected track ' + error.message);
+    }
+  }
 
-    //     const recordedDate = this.track['dates'][i].recordedDate;
-    //     if (recordedDate === date) {
-    //       return i;
-    //     }
-    //   }
-    // }
+  public deleteTrack(track) {
+    // const selectedTrack: any = this.findTrackByName(track.name);
+    localStorage.removeItem(track.name);
+  }
 
 }
