@@ -22,33 +22,62 @@ export class GoalTrackService {
     this.track = this.findSelectedTrack();
    }
 
-  public updateTrackTimeInStorage(date, time) {
+  /**
+   *
+   * @param time: string | number
+   *
+   * Remove leading 0 and convert string to number.
+   */
+  private convertToNumber(time) {
+    const convertedTime = parseInt(time, 10);
+    return convertedTime;
+  }
 
-    if (this.track['dates'].length > 0) {
+  /**
+   *
+   * @param date string
+   * @param day number
+   * @param time string | number
+   *
+   * This method is called when clicking on a calendar data cell.
+   *
+   * Takes an actual formatted year/month/day date string, a day
+   * that represents the number of the day in that month, and the
+   * entered when you click on a calendar cell.
+   */
+  public updateTrackTimeInStorage(date, day, time) {
 
-      for (let i = 0; i < this.track['dates'].length; i++) {
+    const convertedTime = this.convertToNumber(time);
+    const isTimeValid = this.timeCheck(convertedTime);
 
-          const recordedEntry = this.track['dates'][i];
+    if (isTimeValid && day !== '') {
 
-          if ( date === recordedEntry.recordedDate) {
-            recordedEntry.recordedMinutes = time;
-          } else if ( i === this.track['dates'].length - 1 ) {
-            const timeObject = {
-              recordedMinutes : time,
-              recordedDate : date
-            };
-            this.track['dates'].push(timeObject);
-          }
+      if (this.track['dates'].length > 0) {
+
+        for (let i = 0; i < this.track['dates'].length; i++) {
+
+            const recordedEntry = this.track['dates'][i];
+
+            if ( date === recordedEntry.recordedDate) {
+              recordedEntry.recordedMinutes = convertedTime;
+            } else if ( i === this.track['dates'].length - 1 ) {
+              const timeObject = {
+                recordedMinutes : convertedTime,
+                recordedDate : date
+              };
+              this.track['dates'].push(timeObject);
+            }
+        }
+      } else {
+        const timeObject = {
+          recordedMinutes : convertedTime,
+          recordedDate : date
+        };
+        this.track['dates'].push(timeObject);
       }
-    } else {
-      const timeObject = {
-        recordedMinutes : time,
-        recordedDate : date
-      };
-      this.track['dates'].push(timeObject);
+      this.track['dates'].sort(this.compareFunction);
+      localStorage.setItem(this.track['name'], JSON.stringify(this.track));
     }
-    this.track['dates'].sort(this.compareFunction);
-    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
   }
 
   public getAllTracks() {
@@ -114,7 +143,7 @@ export class GoalTrackService {
   }
 
   // Confirms if time was actually entered
-  public timeCheck(time) {
+  private timeCheck(time) {
     if (time > 0) {
       return true;
     } else {

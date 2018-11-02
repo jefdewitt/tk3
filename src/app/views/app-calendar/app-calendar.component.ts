@@ -190,15 +190,21 @@ export class AppCalendarComponent implements OnInit {
 
   /**
    *
-   * @param date: string = actual formatted year, month, day
-   * @param day: number = day of month
-   * @param time: string = time entred
+   * @param date string
+   * @param day number
+   * @param time string
+   *
+   * This method is called when clicking on a calendar data cell.
+   *
+   * Takes an actual formatted year/month/day date string, a day
+   * that represents the number of the day in that month, and the
+   * entered when you click on a calendar cell.
    */
   public updateStorage(date, day, time) {
 
     console.log('this.track', this.track);
 
-    this.goalTrackService.updateTrackTimeInStorage(date, time);
+    this.goalTrackService.updateTrackTimeInStorage(date, day, time);
 
     day.minutes = time;
     day.edit = false;
