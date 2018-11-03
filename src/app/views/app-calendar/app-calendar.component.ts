@@ -233,32 +233,15 @@ export class AppCalendarComponent implements OnInit {
 
   public editDateEntryTime(day) {
 
-    // console.log(day);
+    if (day.date !== '') {
 
-    for (let i = 0; i < this.month.weeks.length; i++) {
-      for (let j = 0; j <  this.month.weeks[i].length; j++) {
-        // console.log(this.month.weeks[i].edit);
-        this.month.weeks[i][j].edit = false;
-        // console.log(this.month.weeks[i][j]);
+      for (let i = 0; i < this.month.weeks.length; i++) {
+        for (let j = 0; j <  this.month.weeks[i].length; j++) {
+          this.month.weeks[i][j].edit = false;
+        }
       }
+      day.edit = true;
     }
-
-    day.edit = true;
-    // console.log(day);
-    // console.log(this.month);
-
-
-    //   const recordedDate = this.track['dates'][i].recordedDate;
-    //   // const recordedMinutes = this.track['dates'][i].recordedMinutes;
-
-    //   if (date === recordedDate) {
-    //     // this.track['dates'][i].recordedMinutes  = time;
-    //     // localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-    //     this.track['dates'][i].edit = true;
-    //   }
-    // }
-
-    // console.log(date);
   }
 
 }
