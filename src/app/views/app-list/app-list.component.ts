@@ -14,7 +14,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   @Input()
   public receiver;
 
-  // public name;
   public time;
   public track;
   public tracks: any;

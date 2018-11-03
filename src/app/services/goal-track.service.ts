@@ -6,14 +6,16 @@ export class GoalTrackService {
 
   public track;
   public trackToEdit = '';
-  public example = {
+
+  private example = {
     dates: [],
-    name: 'new track',
+    name: '',
     selected: true,
     time: 0,
     editName: false,
     editTime: false
   };
+  private count = 1;
 
   @Output()
   public event = new EventEmitter();
@@ -395,12 +397,8 @@ export class GoalTrackService {
      */
 
     public createNewTrack() {
-      if (this.findTrackByName('new track')) {
-        const nameCheck = this.findTrackByName(this.example.name);
-        if ( nameCheck && this.example.name === nameCheck['name']) {
-          this.example.name = 'copy of ' + this.example.name;
-        }
-      }
+
+      this.example.name = 'new track ' + this.count++;
 
       localStorage.setItem(this.example.name, JSON.stringify(this.example));
       this.event.emit(this.example.name);
