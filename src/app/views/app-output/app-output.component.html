@@ -18,14 +18,14 @@
             {{ dailyPercentage.toFixed(2) }}% completed!
         </h3>
         <form action="">            
-            <label for="week">
-                <input type="radio" name="timeFrame" id="week" class="radio" (click)="changeTimeFrame($event)">Week
+            <label for="1-month">
+                <input type="radio" name="timeFrame" id="1-month" class="radio" (click)="changeTimeFrame($event)">1-month
             </label>
-            <label for="month">
-                <input type="radio" name="timeFrame" id="month" class="radio" (click)="changeTimeFrame($event)">Month
+            <label for="3-month">
+                <input type="radio" name="timeFrame" id="3-month" class="radio" (click)="changeTimeFrame($event)">3-month
             </label>
-            <label for="year">
-                <input type="radio" name="timeFrame" id="year" class="radio" (click)="changeTimeFrame($event)">Year
+            <label for="6-month">
+                <input type="radio" name="timeFrame" id="6-month" class="radio" (click)="changeTimeFrame($event)">6-month
             </label>
         </form>
     </div>

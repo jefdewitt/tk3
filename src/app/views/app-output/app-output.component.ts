@@ -76,27 +76,27 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
       this.isYearView = false;
 
       switch (timeValue) {
-        case 'week':
-            let sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 6);
-            this.dailyMinAndPerc(this.track, sumInInterval, 7);
+        case '1-month':
+            let sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 29);
+            this.dailyMinAndPerc(this.track, sumInInterval, 29);
             this.timePeriod = 'daily average this week';
-            this.completed = ' this week';
-            this.dailyRecordedTimes = this.populateProgressBars(7);
-            break;
-        case 'month':
-            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 29);
-            this.dailyMinAndPerc(this.track, sumInInterval, 30);
-            this.timePeriod = 'daily average this month';
             this.completed = ' this month';
             this.dailyRecordedTimes = this.populateProgressBars(30);
+            break;
+        case '3-month':
+            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 91);
+            this.dailyMinAndPerc(this.track, sumInInterval, 91);
+            this.timePeriod = 'daily average this month';
+            this.completed = ' these 90 days';
+            this.dailyRecordedTimes = this.populateProgressBars(92);
             this.isMonthView = true;
             break;
-        case 'year':
-            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 364);
-            this.dailyMinAndPerc(this.track, sumInInterval, 365);
+        case '6-month':
+            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 183);
+            this.dailyMinAndPerc(this.track, sumInInterval, 183);
             this.timePeriod = 'daily average this year';
-            this.completed = ' this year';
-            this.dailyRecordedTimes = this.populateProgressBars(365);
+            this.completed = ' these 6 months';
+            this.dailyRecordedTimes = this.populateProgressBars(184);
             this.isYearView = true;
             break;
       }
