@@ -56,7 +56,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       this.tracks = this.goalTrackService.getAllTracks();
       this.noTracks = false;
     } catch (error) {
-      console.error('Could not create a new track. + error.message');
+      console.error('Could not create a new track.' + error.message);
     }
   }
 

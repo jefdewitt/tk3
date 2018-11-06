@@ -57,7 +57,6 @@ export class AppComponent implements OnInit {
       // const selectedTrack = this.goalTrackService.track;
       // if (!!selectedTrack && selectedTrack['name'] === 'null') {
         this.router.navigateByUrl('/List Tracks');
-      }
     } catch (error) {
       console.log('Unable to reroute to List Track view ' + error.message);
     }

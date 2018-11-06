@@ -20,18 +20,23 @@ img.cal-button {
 
 .manual-input {
     position: absolute;
+        top: 20%;
+    /* transition: opacity 1s; */
+    opacity: 0;
 }
 
-.active {
-    animation: fadein 1s;
+/* .active {
+    animation: fadein .25s;
     animation-delay: 1s;
-}
+} */
 
 .manual-input.active {
     opacity: 1;
+    /* animation: fadein .25s;
+    animation-delay: 1s; */
 }
 
-@keyframes fadein {
+/* @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
-}
+} */

@@ -7,7 +7,7 @@
     </div>
 </div>
 <app-calendar #modal></app-calendar>
-<div *ngIf="!noTracks && modal.state === 'Open'" class="manual-input" [class.active]="modal.state === 'Open'"> 
+<div *ngIf="!noTracks" class="manual-input" [class.active]="modal.state === 'Open'"> 
   <form>
     <h3>Made Progress? Add Time Here</h3>
     <input type="tel" 

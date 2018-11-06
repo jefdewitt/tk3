@@ -119,7 +119,7 @@ export class AppInputComponent implements OnInit {
 
     localStorage.setItem(this.selected['name'], JSON.stringify(this.selected));
     this.minutes = null;
-    this.routeFromCal = '';
+    // this.routeFromCal = '';
     this.router.navigateByUrl('/Track Output');
   }
 

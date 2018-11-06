@@ -9,13 +9,13 @@ export class GoalTrackService {
 
   private example = {
     dates: [],
-    name: '',
+    name: 'new track ',
     selected: true,
     time: 0,
     editName: false,
     editTime: false
   };
-  private count = 1;
+  private count = 2;
 
   @Output()
   public event = new EventEmitter();
@@ -61,7 +61,8 @@ export class GoalTrackService {
             const recordedEntry = this.track['dates'][i];
 
             if ( date === recordedEntry.recordedDate) {
-              recordedEntry.recordedMinutes = convertedTime;
+              this.track['dates'][i].recordedMinutes = convertedTime;
+              break;
             } else if ( i === this.track['dates'].length - 1 ) {
               const timeObject = {
                 recordedMinutes : convertedTime,
@@ -356,7 +357,7 @@ export class GoalTrackService {
    * Get the track minutes and export them in an easy to read JSON file.
    */
   formatTrackData(trackName) {
-    const trackDataOutput = 'Track name = ' + trackName + '%0D%0A%0D%0A';
+    let trackDataOutput = 'Track name = ' + trackName + '%0D%0A%0D%0A';
     const track = localStorage.getItem(localStorage.key(trackName));
     const parsedTrack = JSON.parse(track);
     const trackDates = parsedTrack['dates'];
@@ -368,7 +369,7 @@ export class GoalTrackService {
       const itemDate = parsedTrack['dates'][i]['recordedDate'];
       const itemTime = parsedTrack['dates'][i]['recordedMinutes'];
 
-      let trackDataString = itemDate + ' = ' + itemTime + '%0D%0A';
+      const trackDataString = itemDate + ' = ' + itemTime + '%0D%0A';
       trackDataOutput += trackDataString;
     }
     trackDataOutput += '%0D%0A' + track;
@@ -398,7 +399,37 @@ export class GoalTrackService {
 
     public createNewTrack() {
 
-      this.example.name = 'new track ' + this.count++;
+      const tracks = this.getAllTracks();
+      const newTrackName = 'new track';
+      let newTrackArray = [];
+
+      for (let i = 0; i < tracks.length; i++) {
+
+        const name = tracks[i].name;
+
+        //.indexOf is a older/clunkier (ES5) version of .includes
+        if (name.indexOf(newTrackName) !== -1) {
+          newTrackArray.push(name);
+        }
+
+      }
+
+      let newestTrack;
+
+      if ( newTrackArray.length > 0 ) {
+        newestTrack = newTrackArray.pop();
+      }
+
+      let number = newestTrack.match(/\d/g);
+
+      if ( newestTrack && number ) {
+        number = number.join("");
+        number = parseInt(number, 10);
+      }
+
+      if (number || newestTrack) {
+        this.example.name = 'new track ' + (number + 1);
+      }
 
       localStorage.setItem(this.example.name, JSON.stringify(this.example));
       this.event.emit(this.example.name);
