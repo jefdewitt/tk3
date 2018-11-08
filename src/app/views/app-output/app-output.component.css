@@ -3,8 +3,9 @@
     min-height: 100px;
     justify-content: center;
     align-items: center;
-    max-width: 330px;
-    margin: 0 auto 50px;
+    /* max-width: 330px; */
+    /* margin: 0 auto 50px; */
+    margin: 3em auto 4em;
     position: relative;
     border-left: 1px solid;
     border-right: 1px solid;
@@ -100,8 +101,8 @@ progress[value] {
     display: inline-block;
     -webkit-appearance: none;
     appearance: none;
-    opacity: .5;
-    height: 47px;
+    opacity: .75;
+    height: 11px;
     width: 100px;
 }
 
@@ -113,9 +114,9 @@ progress[value]::-webkit-progress-bar {
 .before {
     content: '';
     position: absolute;
-    left: -65px;
-    top: 50%;
-    transform: translatey(-50%) rotate(90deg);
+    left: -75px;
+    top: -155%;
+    transform: rotate(25deg);
     width: 100%;
     height: 100%;
 }
@@ -139,7 +140,6 @@ form {
     justify-content: space-around;
 }
 
-
 ul {
     display: flex;
 }
@@ -151,24 +151,47 @@ li {
     width: 20px;
 }
 
+progress.progress-bar:before {
+    content: '';
+    display: inline-block;
+    width: .5em;
+    height: 1px;
+    background:#000;
+    position: absolute;
+        top: 50%;
+        right: 100%;
+    transform: translatey(-50%);
+}
+
 .monthView progress{
     height: 11px;
 }
 
-.monthView .before,
-.yearView .before {
-    display: none;
+.three-month-view progress{
+    height: 5px;
 }
 
-.monthView:nth-of-type(4n-1) .before {
-    display: inline-block;
-}
-
-.yearView progress{
-    height: 1px;
+.six-month-view progress{
+    height: 2px;
     border-bottom: none;
 }
 
-.yearView:nth-of-type(52n-36) .before {
+.monthView .before,
+.three-month-view .before,
+.six-month-view .before,
+.before  + progress.progress-bar:before {
+    display: none;
+}
+
+.monthView:nth-of-type(3n-1) .before,
+.three-month-view:nth-of-type(9n-1) .before,
+.six-month-view:nth-of-type(18n-1) .before,
+.monthView:nth-of-type(3n-1) .before  + progress.progress-bar:before,
+.three-month-view:nth-of-type(9n-1) .before  + progress.progress-bar:before, 
+.six-month-view:nth-of-type(18n-1) .before  + progress.progress-bar:before {
     display: inline-block;
+}
+
+span.before {
+    font-size: 8px;
 }
