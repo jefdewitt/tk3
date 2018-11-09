@@ -1,10 +1,14 @@
 import { Injectable, Output, EventEmitter, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs';
 // import { Goal } from '../goal';
 
 @Injectable()
 export class GoalTrackService {
 
+  // public track: Object;
   public track;
+
   public trackToEdit = '';
 
   private example = {
@@ -21,6 +25,11 @@ export class GoalTrackService {
   public event = new EventEmitter();
 
   constructor() {
+    // this.findSelectedTrack().subscribe((track) => {
+    //   console.log('emit');
+    //   this.track = track;
+    //   return track;
+    // })
     this.track = this.findSelectedTrack();
    }
 
@@ -98,16 +107,19 @@ export class GoalTrackService {
   }
 
  // Returns the current selected track
- private findSelectedTrack() {
+//  public findSelectedTrack(): Observable<Object> {
+  private findSelectedTrack() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
         if (track['selected'] === true) {
+          // return of(track);
           return track;
         }
       }
       // If there's no selected tracks
+      // return of(false);
       return false;
     } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
@@ -414,7 +426,7 @@ export class GoalTrackService {
 
       }
 
-      let newestTrack;
+      let newestTrack: any  = '';
 
       if ( newTrackArray.length > 0 ) {
         newestTrack = newTrackArray.pop();
@@ -450,6 +462,7 @@ export class GoalTrackService {
         if (storedTrack['name'] === track.name) {
           storedTrack['selected'] = true;
           localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
+          // this.findSelectedTrack();
         }
       }
     } catch (error) {
