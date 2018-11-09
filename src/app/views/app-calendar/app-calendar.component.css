@@ -67,6 +67,7 @@ td {
     top: 8px;
     border-top: solid 5px #444;
     border-left: solid 5px #444;
+    z-index: 1;
 }
 
 .arrow.left {

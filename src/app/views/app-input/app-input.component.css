@@ -5,9 +5,9 @@
     align-items: center;
 } */
 
-.controls p {
+/* .controls p {
     display: inline-block;
-}
+} */
 
 .controls img {
     vertical-align: middle;
@@ -20,7 +20,7 @@ img.cal-button {
 
 .manual-input {
     position: absolute;
-        top: 20%;
+        top: 25%;
     /* transition: opacity 1s; */
     opacity: 0;
 }

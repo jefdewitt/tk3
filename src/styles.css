@@ -6,9 +6,9 @@
     align-items: center;
 }
 
-.sub-header div p {
+/* .sub-header div p {
     display: inline-block;
-}
+} */
 
 .sub-header div img {
     vertical-align: middle;
@@ -16,4 +16,8 @@
 
 img {
     width: 2em;
+}
+
+.controls p {
+    display: none;
 }
