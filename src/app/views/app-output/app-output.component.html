@@ -1,14 +1,12 @@
-<div class="list-view sub-header">
+<div class="output-view sub-header">
     <h2>Active: {{ track.name }}</h2>
     <div>
-        <!-- <p>Create new</p>
-        <img class="add-button" (click)="createNew()" src="./assets/new.svg"/> -->
     </div>
 </div>
 <div *ngIf="!noTracks">
     <h3 id="progressHeader">
-        You've completed {{ percentageDone.toFixed(2) }}%
-        of your goal. Your {{ timePeriod }} was
+        <span *ngIf="showTotalCompleted">You've completed {{ percentageDone.toFixed(2) }}%
+        of your goal {{ completed }}.</span> Your {{ timePeriod }} is
         {{ dailyMinutes.toFixed(0) }} minutes or
         {{ dailyPercentage.toFixed(2) }}%.
     </h3>

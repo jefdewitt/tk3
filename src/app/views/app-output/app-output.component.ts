@@ -26,6 +26,7 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
   noTracks = false;
   mostTime: any;
   public track = this.goalTrackService.track;
+  public showTotalCompleted = false;
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) {
 
@@ -46,18 +47,11 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
   }
 
   /**
-   *
-   * @param interval: number
-   * @param timeFrame
-   *
-   * The interval param is the same as the one in this.percentCompleted(interval).
-   * The timeFrame param is the range, or the total number of days we use to 
-   * divide the sum of the times we collected since the date we provided above.
+   * 
    */
   dailyMinAndPerc(track, sumInInterval, daysInInterval) {
     this.dailyMinutes = this.goalTrackService.dailyMinutes(sumInInterval, daysInInterval);
-    this.dailyPercentage = this.goalTrackService.dailyPercentage(track['name'], sumInInterval, daysInInterval);
-    this.dailyPercentage = this.dailyPercentage / 60;
+    this.dailyPercentage = ( this.goalTrackService.dailyPercentage(track['name'], sumInInterval, daysInInterval) ) / 60;
     this.dailyRecordedTimes = this.goalTrackService.findRecentTime(track['name'], 1);
     this.percentageDone = this.goalTrackService.percentOfEntireGoal(track['name'], sumInInterval);
   }
@@ -77,28 +71,27 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
       this.isMonthView = false;
       this.isThreeMonthView = false;
       this.isSixMonthView = false;
+      this.showTotalCompleted = true;
+      this.timePeriod = 'daily average';
 
       switch (timeValue) {
         case '1-month':
             let sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 29);
             this.dailyMinAndPerc(this.track, sumInInterval, 29);
-            this.timePeriod = 'daily average this month';
             this.completed = ' this month';
             this.dailyRecordedTimes = this.populateProgressBars(30);
             this.isMonthView = true;
             break;
         case '3-month':
-            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 91);
-            this.dailyMinAndPerc(this.track, sumInInterval, 91);
-            this.timePeriod = 'daily average over 3 months';
+            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 89);
+            this.dailyMinAndPerc(this.track, sumInInterval, 89);
             this.completed = ' in the last 90 days';
-            this.dailyRecordedTimes = this.populateProgressBars(92);
+            this.dailyRecordedTimes = this.populateProgressBars(90);
             this.isThreeMonthView = true;
             break;
         case '6-month':
             sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 183);
             this.dailyMinAndPerc(this.track, sumInInterval, 183);
-            this.timePeriod = 'daily average over 6 months';
             this.completed = ' in the last 6 months';
             this.dailyRecordedTimes = this.populateProgressBars(184);
             this.isSixMonthView = true;

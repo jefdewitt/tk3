@@ -25,12 +25,11 @@ export class GoalTrackService {
   public event = new EventEmitter();
 
   constructor() {
-    // this.findSelectedTrack().subscribe((track) => {
-    //   console.log('emit');
-    //   this.track = track;
-    //   return track;
-    // })
-    this.track = this.findSelectedTrack();
+    this.findSelectedTrack().subscribe((track) => {
+      this.track = track;
+      return track;
+    })
+    // this.track = this.findSelectedTrack();
    }
 
   /**
@@ -107,20 +106,20 @@ export class GoalTrackService {
   }
 
  // Returns the current selected track
-//  public findSelectedTrack(): Observable<Object> {
-  private findSelectedTrack() {
+ public findSelectedTrack(): Observable<Object> {
+  // private findSelectedTrack() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
         if (track['selected'] === true) {
-          // return of(track);
-          return track;
+          return of(track);
+          // return track;
         }
       }
       // If there's no selected tracks
-      // return of(false);
-      return false;
+      return of(false);
+      // return false;
     } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }
@@ -272,8 +271,8 @@ export class GoalTrackService {
   dailyPercentage(trackName, sum, interval) {
     try {
       const track = this.findTrackByName(trackName);
-      const timeGoal = track['time'];
-      const percent = ( sum / timeGoal ) * 100;
+      const timeGoal = ( track['time'] !== 0 ) ? track['time'] : 0;
+      const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
       const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
       return dailyPercent;
     } catch (error) {
@@ -292,7 +291,7 @@ export class GoalTrackService {
     try {
       const track = this.findTrackByName(trackName);
       const timeGoal = track['time'] * 60;
-      const percent: number = ( sum / timeGoal ) * 100;
+      const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
       return percent;
     } catch (error) {
       console.log('Can\'t find daily percentage from ' + trackName['name'] + ' & ' + sum + '. ' + error.message);

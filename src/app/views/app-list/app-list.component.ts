@@ -1,5 +1,5 @@
-import { Router } from '@angular/router';
-import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked, ChangeDetectorRef, NgZone } from '@angular/core';
+// import { Router } from '@angular/router';
+import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
 
 @Component({
@@ -25,10 +25,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private goalTrackService: GoalTrackService,
-    // private router: Router,
-    // private el: ElementRef,
-    private cdr: ChangeDetectorRef,
-    private zone: NgZone
     ) { }
 
   ngOnInit() {
@@ -41,7 +37,9 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       this.noTracks = true;
     });
 
-    this.track = this.goalTrackService.track;
+    this.goalTrackService.findSelectedTrack().subscribe((track) => {
+      this.track = track;
+    });
   }
 
   ngAfterViewChecked() {
@@ -66,8 +64,10 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   }
 
   public makeSelectedTrack(track) {
-    this.goalTrackService.makeSelectedTrack(track);
-    this.track = track;
+    if (this.track !== track) {
+      this.goalTrackService.makeSelectedTrack(track);
+      this.track = track;
+    }
   }
 
   public deleteTrack(track) {
