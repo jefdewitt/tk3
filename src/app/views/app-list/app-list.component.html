@@ -40,7 +40,7 @@
                             autofocus #time>
                     </div>
                 </div>
-                <div class="button-wrap">
+                <div class="buttons-wrapper">
                     <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>
                     <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
                     <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
@@ -53,5 +53,5 @@
     <h2>Currently there are zero tracks selected. Please select a track or create a new one.</h2>
 </div> -->
 <div *ngIf="noTracks" [class.noTracks]="noTracks" >
-    <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempo</h2>
+    <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempo</h3>
 </div>

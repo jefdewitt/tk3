@@ -20,7 +20,7 @@ img.cal-button {
 
 .manual-input {
     position: absolute;
-        top: 25%;
+        top: 10em;
     /* transition: opacity 1s; */
     opacity: 0;
 }

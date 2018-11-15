@@ -1,6 +1,6 @@
 import { GoalTrackService } from './../../services/goal-track.service';
 // import { CalendarService } from './services/calendar.service';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChildren } from '@angular/core';
 
 // interface monthModel {
 //   index: any;
@@ -59,12 +59,30 @@ export class AppCalendarComponent implements OnInit {
   public edit = true;
   public toggle: boolean;
 
+  @ViewChildren
+  ('time') focusedTime: ElementRef;
+  public focusedTimeInput
+
   ngOnInit() {
     this.track = this.goalTrackService.track;
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
     this.buildCal();
   }
+
+  /**
+   * The logic contained in this lifecycle hook is related
+   * to adding instant focus to an input field when its
+   * label is clicked. We replace the label with an input 
+   * field for editing but since the input field had not 
+   * existed before it was difficult to add focus. 
+   */ 
+  ngAfterViewChecked() {
+    this.focusedTimeInput = this.focusedTime;
+    if (this.focusedTimeInput.first) {
+      this.focusedTimeInput.first.nativeElement.focus();
+    }
+}
 
   // This determines what cell in first row the month starts on (1-7)
   public determineWeekdayThatMonthStartsOn(year = this.curYear, month = this.curMonth) {

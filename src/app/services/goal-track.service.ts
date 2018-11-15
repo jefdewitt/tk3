@@ -26,6 +26,7 @@ export class GoalTrackService {
 
   constructor() {
     this.findSelectedTrack().subscribe((track) => {
+      console.log('this.track', this.track)
       this.track = track;
       return track;
     })
