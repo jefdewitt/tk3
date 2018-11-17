@@ -21,6 +21,7 @@
             </label>
             <input *ngIf="day.edit" 
                    (blur)="updateStorage(curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date), day, time.value)" 
+                   (keypress)="updateTime($event, curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date), day, time.value)"
                    tabindex="0" 
                    type="text" 
                    value="{{ day.minutes ? day.minutes : 0 }}" 

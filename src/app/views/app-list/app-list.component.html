@@ -19,7 +19,8 @@
                             (click)="editTrackDetails(track, 'name')" 
                             name="name">{{ track.name }}</label>
                         <input *ngIf="track.editName" 
-                            (blur)="track.editName = false; updateTrackName(track, name.value)"
+                            (blur)="track.editName = false; updateTrackName($event, track, name.value)"
+                            (keyup)="updateName($event, track, name.value)"
                             class="name"
                             value="{{ track.name }}" 
                             type="text" 
@@ -33,10 +34,12 @@
                             name="time">{{ track?.time }} hours</label>
                         <input *ngIf="track.editTime" 
                             (blur)="track.editTime = false; updateTrackTime(track, time.value)" 
+                            (keypress)="updateTime($event, track, time.value)"
                             class="time"
                             value="{{ track?.time }}" 
-                            type="number" 
+                            type="text" 
                             name="time" 
+                            pattern="/^\d*\.?\d*$/"
                             autofocus #time>
                     </div>
                 </div>

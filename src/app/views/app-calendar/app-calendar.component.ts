@@ -262,4 +262,10 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
+  public updateTime(event, date, day, time) {
+    if (event.keyCode === 13) {
+      this.updateStorage(date, day, time)
+    }
+  }
+
 }

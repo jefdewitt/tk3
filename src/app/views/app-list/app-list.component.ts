@@ -17,7 +17,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public receiver;
 
   public time;
-  public track;
+  public track = this.goalTrackService.track;
   public tracks: any;
   public noTracks = false;
   public nameSelected = false;
@@ -25,15 +25,11 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public focusedNameInput;
   public focusedTimeInput;
   public name;
+  private nameVetted;
 
   constructor(
     private goalTrackService: GoalTrackService,
-    ) { 
-      // this.focusedElement = this.focusedName;
-      // if (!!this.focusedElement) {
-      //   this.focusedElement.first.nativeElement.focus();
-      // }
-    }
+    ) { }
 
   ngOnInit() {
     this.tracks = this.goalTrackService.getAllTracks();
@@ -43,10 +39,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     this.receiver = this.goalTrackService.event;
     this.receiver.subscribe( () => {
       this.noTracks = true;
-    });
-
-    this.goalTrackService.findSelectedTrack().subscribe((track) => {
-      this.track = track;
     });
   }
 
@@ -126,26 +118,35 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     this.goalTrackService.exportTrackData(trackName);
   }
 
-  public updateTrackName(track: any, property: any ) {
+  public updateTrackName(event, track: any, property: any ) {
 
-    const formerName = track.name;
-    track.name = property;
+    let nameIsNotTaken;
 
-    localStorage.setItem(track['name'], JSON.stringify(track));
-    localStorage.removeItem(formerName);
+    if (event.type === 'blur') {
+      nameIsNotTaken = this.goalTrackService.nameCheck(property);
+    }
 
+    if (nameIsNotTaken) {
+      const formerName = track.name;
+      track.name = property === '' ? formerName : property;
+
+      localStorage.setItem(track['name'], JSON.stringify(track));
+      localStorage.removeItem(formerName);
+    }
+
+    track.editName = false;
   }
 
   public updateTrackTime(track: any, property: any ) {
-
       // Check if number starts with 0
       if (property.charAt(0) === '0') {
         property = parseFloat(property);
       }
 
-      track.time = property;
+      track.time = property > 0 ? property : 0;
       localStorage.setItem(this.track['name'], JSON.stringify(track));
 
+      track.editTime = false;
   }
 
   public editTrackDetails(track: any, property: string) {
@@ -154,6 +155,18 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
     } else {
       track.editTime = true;
+    }
+  }
+
+  public updateName(event, track, name) {
+    if (event.keyCode === 13) {
+      this.updateTrackName(event, track, name);
+    }
+  }
+
+  public updateTime(event, track, time) {
+    if (event.keyCode === 13) {
+      this.updateTrackTime(track, time);
     }
   }
 

@@ -1,5 +1,6 @@
 .trackList {
     width: 100%;
+    padding-bottom: 3em;
 }
 
 ul {
@@ -73,6 +74,7 @@ a span.percent {
 
 .track-details {
     flex: 3;
+    padding-left: 1em;
 }
 
 .buttons-wrapper {

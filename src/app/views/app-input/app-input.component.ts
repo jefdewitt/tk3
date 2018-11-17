@@ -21,8 +21,9 @@ export class AppInputComponent implements OnInit {
   noTracks = false;
   public hoursOrMinutes;
   public toggle = true;
-  public track;
+  // public track;
   public hours = false;
+  public track = this.goalTrackService.track;
 
   constructor(
     private goalTrackService: GoalTrackService,
@@ -30,8 +31,8 @@ export class AppInputComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-
-    this.track = this.goalTrackService.track;
+    // console.log('this.track', this.track)
+    // this.track = this.goalTrackService.track;
   }
 
   disableRouteTrigger() {
@@ -83,7 +84,6 @@ export class AppInputComponent implements OnInit {
    * Confirms that a valid time was entered & whether any previous
    * times were entered on that date.
    */
-
   checkForValidMinAndDate() {
     try {
       if (this.timeObject.recordedMinutes > 0) {
@@ -93,9 +93,10 @@ export class AppInputComponent implements OnInit {
         } else {
           this.track['dates'].push(this.timeObject);
         }
+        return true;
       } else {
         alert('Please provide a time greater than 0.');
-        return;
+        return false;
       }
     } catch (error) {
       console.log('Minutes & dates validation failed ' + error.message);
@@ -107,20 +108,20 @@ export class AppInputComponent implements OnInit {
     try {
       // Check if minutes or hours
       this.minutes = this.minutesOrHours();
+      // Create new time object for the dates array
+      this.setTimeObject(this.goalTrackService.createDateObject());
+      // Check if min > 0 and if there are prev. date entries in dates array
+      const timeCheck = this.checkForValidMinAndDate();
 
-        // Create new time object for the dates array
-        this.setTimeObject(this.goalTrackService.createDateObject());
-        // Check if min > 0 and if there are prev. date entries in dates array
-        this.checkForValidMinAndDate();
-      // }
+      if (timeCheck) {
+        localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+        this.minutes = null;
+        this.router.navigateByUrl('/Track Output');
+      }
+
     } catch (error) {
       console.log('Dates array is unavailable ' + error.message);
     }
-
-    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-    this.minutes = null;
-    // this.routeFromCal = '';
-    this.router.navigateByUrl('/Track Output');
   }
 
   /**

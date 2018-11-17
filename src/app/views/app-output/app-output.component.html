@@ -12,7 +12,10 @@
     </h3>
     <div id="progressContainer">
         <span class="top">{{ this.mostTime }} hrs</span>
-            <div class="progressBar" [class.monthView]="isMonthView" [class.three-month-view]="isThreeMonthView" [class.six-month-view]="isSixMonthView" *ngFor="let dailyRecordedTime of dailyRecordedTimes; let index = index; let count = count">
+            <div class="progressBar" [class.monthView]="isMonthView" 
+                                     [class.three-month-view]="isThreeMonthView" 
+                                     [class.six-month-view]="isSixMonthView" 
+                                     *ngFor="let dailyRecordedTime of dailyRecordedTimes; let index = index; let count = count">
                 <span class="before">{{ dailyRecordedTime['date'] }}</span>
                 <progress class="progress-bar" max="{{ this.mostTime }}" value="{{ dailyRecordedTime['time'] }}"></progress>
             </div>
