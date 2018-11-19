@@ -25,10 +25,12 @@ form label {
     position: absolute;
         top: 7.5em;
     opacity: 0;
+    pointer-events: none;
 }
 
 .manual-input.active {
     opacity: 1;
+    pointer-events: initial;
 }
 
 button {

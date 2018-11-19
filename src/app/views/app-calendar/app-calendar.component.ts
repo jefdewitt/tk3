@@ -1,15 +1,5 @@
 import { GoalTrackService } from './../../services/goal-track.service';
-// import { CalendarService } from './services/calendar.service';
 import { Component, OnInit, ElementRef, ViewChildren } from '@angular/core';
-
-// interface monthModel {
-//   index: any;
-//   weeks: Array<any>;
-// }
-// interface WeekDay {
-//   date: any,
-//   minutes: number
-// }
 
 @Component({
   selector: 'app-calendar',
@@ -18,50 +8,46 @@ import { Component, OnInit, ElementRef, ViewChildren } from '@angular/core';
 })
 export class AppCalendarComponent implements OnInit {
 
-  constructor(private elementRef: ElementRef, private goalTrackService: GoalTrackService) { }
+  constructor(
+    private elementRef: ElementRef,
+    private goalTrackService: GoalTrackService)
+    { }
 
-  // selector: any;
-  // dateFromCal: string;
-  // minutesFromCal: string;
-  // hoursSelected: boolean;
-  // options: Array<any>;
-
-  public visible = false;
-  public visibleAnimate = false;
-  public state = 'Open';
-  public track;
-
-  public todayDate: Date = new Date();
-  public curMonth: number = this.todayDate.getMonth() + 1;
-  public curYear: number = this.todayDate.getFullYear();
-  public weekdays: Array<any> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  public twelveMonths: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-   'August', 'September', 'October', 'November', 'December'];
-  public lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  // public curMonthString = this.twelveMonths[this.curMonth - 1];
-  public newMonthDate = new Date(this.curYear, this.curMonth - 1, 1);
+  private todayDate: Date = new Date();
   public monthToDisplay;
-  public weekdayThatMonthStartsOn;
-  public weeks: Array<any> = [];
-  public tableRows: Array<any> = [];
-  public day;
-  public month = {
+  public curYear: number = this.todayDate.getFullYear();
+
+  private visible = false;
+  private visibleAnimate = false;
+  private state = 'Open';
+  private track;
+  private curMonth: number = this.todayDate.getMonth() + 1;
+  private weekdays: Array<any> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  private twelveMonths: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+   'August', 'September', 'October', 'November', 'December'];
+  private lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  private newMonthDate = new Date(this.curYear, this.curMonth - 1, 1);
+  private weekdayThatMonthStartsOn;
+  private weeks: Array<any> = [];
+  private tableRows: Array<any> = [];
+  private day;
+  private month = {
     index: '',
     weeks: []
   };
-  public displayMonth;
-  public displayYear;
-  public formattedMonth;
-  public scanForToday = (this.curYear === this.todayDate.getFullYear() && this.curMonth === this.todayDate.getMonth() + 1 ) ?
+  private displayMonth;
+  private displayYear;
+  private formattedMonth;
+  private scanForToday = (this.curYear === this.todayDate.getFullYear() && this.curMonth === this.todayDate.getMonth() + 1 ) ?
           this.todayDate.getDate() : 0;
-  public count = 0;
-  public adjustedCount;
-  public edit = true;
-  public toggle: boolean;
+  private count = 0;
+  private adjustedCount;
+  private edit = true;
+  private toggle: boolean;
 
   @ViewChildren
   ('time') focusedTime: ElementRef;
-  public focusedTimeInput
+  private focusedTimeInput
 
   ngOnInit() {
     this.track = this.goalTrackService.track;

@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 
 export class AppInputComponent implements OnInit {
 
-  // selected: Object = this.goalTrackService.track;
   minutes: number;
   timeObject: TimeObject;
   routeFromCal: string;
@@ -21,7 +20,6 @@ export class AppInputComponent implements OnInit {
   noTracks = false;
   public hoursOrMinutes;
   public toggle = true;
-  // public track;
   public hours = false;
   public track = this.goalTrackService.track;
 
@@ -30,10 +28,7 @@ export class AppInputComponent implements OnInit {
     private router: Router
     ) {}
 
-  ngOnInit() {
-    // console.log('this.track', this.track)
-    // this.track = this.goalTrackService.track;
-  }
+  ngOnInit() { }
 
   disableRouteTrigger() {
     this.minutesAlreadyEntered = '';
@@ -44,7 +39,6 @@ export class AppInputComponent implements OnInit {
    * We declares these as lets instead of class properties cuz they aren't
    * loaded in time for Angular to find them in the DOM otherwise.
    */
-
   public minutesOrHours() {
     if (this.hours === true) {
       return this.minutes * 60;
