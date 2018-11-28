@@ -1,24 +1,15 @@
 import { Injectable, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs';
-// import { Goal } from '../goal';
+import { Track } from './../interfaces/track.interface';
 
 @Injectable()
 export class GoalTrackService {
 
-  // public track: Object;
   public track;
-
   public trackToEdit = '';
 
-  private example = {
-    dates: [],
-    name: 'new track ',
-    selected: true,
-    time: 0,
-    editName: false,
-    editTime: false
-  };
+  private example: Track;
   private count = 2;
 
   @Output()

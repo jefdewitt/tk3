@@ -13,30 +13,34 @@ export class AppCalendarComponent implements OnInit {
     private goalTrackService: GoalTrackService)
     { }
 
-  private todayDate: Date = new Date();
-  public monthToDisplay;
+  public todayDate: Date = new Date();
+
+  // Template bound vars
+  public displayMonth;
+  public displayYear;
+  public weekdays: Array<string> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  public month = {
+    index: '',
+    weeks: []
+  };
   public curYear: number = this.todayDate.getFullYear();
+  public monthToDisplay;
+
+  // Used in main calendar build method
+  private weeks: Array<any> = [];
+  private tableRows: Array<any> = [];
+  private weekdayThatMonthStartsOn;
+  private lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  private day;
 
   private visible = false;
   private visibleAnimate = false;
   private state = 'Open';
   private track;
   private curMonth: number = this.todayDate.getMonth() + 1;
-  private weekdays: Array<any> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   private twelveMonths: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
    'August', 'September', 'October', 'November', 'December'];
-  private lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   private newMonthDate = new Date(this.curYear, this.curMonth - 1, 1);
-  private weekdayThatMonthStartsOn;
-  private weeks: Array<any> = [];
-  private tableRows: Array<any> = [];
-  private day;
-  private month = {
-    index: '',
-    weeks: []
-  };
-  private displayMonth;
-  private displayYear;
   private formattedMonth;
   private scanForToday = (this.curYear === this.todayDate.getFullYear() && this.curMonth === this.todayDate.getMonth() + 1 ) ?
           this.todayDate.getDate() : 0;
@@ -45,6 +49,7 @@ export class AppCalendarComponent implements OnInit {
   private edit = true;
   private toggle: boolean;
 
+  // Used exclusively for adding focus to an input on init (input init not class init).
   @ViewChildren
   ('time') focusedTime: ElementRef;
   private focusedTimeInput
@@ -68,19 +73,37 @@ export class AppCalendarComponent implements OnInit {
     if (this.focusedTimeInput.first) {
       this.focusedTimeInput.first.nativeElement.focus();
     }
-}
+  }
 
-  // This determines what cell in first row the month starts on (1-7)
+  /**
+   * 
+   * @param year 
+   * @param month
+   * 
+   * This determines what cell in first row the month starts on (1-7). 
+   */
   public determineWeekdayThatMonthStartsOn(year = this.curYear, month = this.curMonth) {
+    // Get first day of month as a new date object.
     const newMonthDate = new Date(year, month - 1, 1);
+    // Get the day (1-7) that the first day of the month starts on.
     this.weekdayThatMonthStartsOn = newMonthDate.getDay() + 1;
   }
 
+  /**
+   * 
+   * @param yearIndex 
+   * @param monthIndex 
+   * 
+   * Determines what strings to show in the template.
+   */
   public monthAndYearOnDisplay(yearIndex = 0, monthIndex = 1) {
     this.displayMonth = this.twelveMonths[this.curMonth - monthIndex];
     this.displayYear = this.curYear - yearIndex;
   }
 
+  /**
+   * Yep, just calculate the # of days in February for the year in question.
+   */
   public calcDaysInFeb() {
     return this.lastDayOfMonths[1] =
     ( ( (this.newMonthDate.getFullYear() % 100 !== 0)
@@ -88,6 +111,12 @@ export class AppCalendarComponent implements OnInit {
     || (this.newMonthDate.getFullYear() % 400 === 0) ) ? 29 : 28;
   }
 
+  /**
+   * 
+   * @param day 
+   * 
+   * Just lookin' for the td in the calendar that matches today's date.
+   */
   public checkForToday(day) {
     if (day === this.scanForToday) {
       return 'today';
@@ -96,7 +125,11 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
-  // If the date is under 10 then add a 0 for proper date formatting
+  /**
+   * If the date is under 10 then add a 0 for proper date formatting.
+   * This method is used in the template multiple times and is not
+   * great for optimiation/efficiency.
+   */
   public formatSingleDigitValues(value) {
     if (value > 0 && value < 10) {
       value = '0' + value;
@@ -106,6 +139,13 @@ export class AppCalendarComponent implements OnInit {
     return value;
   }
 
+  /**
+   * 
+   * @param monthIndex 
+   * 
+   * This builds the flippin calendar. It's one parameter is used
+   * when cycling between months.
+   */
   public buildCal(monthIndex = 1) {
     try {
       this.calcDaysInFeb();
@@ -141,6 +181,9 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
+  /**
+   * Cleans the slate for building a new month.
+   */
   public resetAndChecks() {
     this.month.index = '';
     this.month.weeks = [];
@@ -149,6 +192,7 @@ export class AppCalendarComponent implements OnInit {
     this.determineWeekdayThatMonthStartsOn(this.curYear, this.curMonth - this.count);
   }
 
+  // Last month
   public prevMonth() {
     this.count++;
     this.resetAndChecks();
@@ -156,6 +200,7 @@ export class AppCalendarComponent implements OnInit {
     this.buildCal(this.count + 1);
   }
 
+  // Next month
   public nextMonth() {
     this.count--;
     this.resetAndChecks();
@@ -165,6 +210,14 @@ export class AppCalendarComponent implements OnInit {
     this.buildCal(this.adjustedCount);
   }
 
+  /**
+   * 
+   * @param month 
+   * @param count 
+   * 
+   * When moving forward/backwards thru months, determine if we're
+   * in another year -- last year/next year, etc.
+   */
   public checkForYearRollover (month: number, count: number) {
     if (month - count > 12) {
         this.curYear++;
@@ -177,6 +230,14 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
+  /**
+   * 
+   * @param day 
+   * @param month
+   * 
+   * This guy hooks into the local storage object. Pass a day and month
+   * to it to build the proper days/weeks/month.
+   */
   public apiToPopCalWithTime(day, month) {
 
     const compareDate = this.curYear + '-' + this.formatSingleDigitValues(month) + '-' + this.formatSingleDigitValues(day);
@@ -202,7 +263,7 @@ export class AppCalendarComponent implements OnInit {
    *
    * Takes an actual formatted year/month/day date string, a day
    * that represents the number of the day in that month, and the
-   * entered when you click on a calendar cell.
+   * time entered when you click on a calendar cell.
    */
   public updateStorage(date, day, time) {
 
@@ -215,6 +276,29 @@ export class AppCalendarComponent implements OnInit {
 
   }
 
+    /**
+   * 
+   * @param event 
+   * @param date 
+   * @param day 
+   * @param time 
+   * 
+   * On Enter key presses, update storage.
+   */
+  public updateTime(event, date, day, time) {
+    if (event.keyCode === 13) {
+      this.updateStorage(date, day, time)
+    }
+  }
+
+  /** CALENDAR TOGGLE LOGIC */
+
+  /**
+   * 
+   * @param toggle 
+   * 
+   * Toggle the calendar open/close.
+   */
   public showOrHide(toggle): void {
 
     if (toggle) {
@@ -229,12 +313,24 @@ export class AppCalendarComponent implements OnInit {
 
   }
 
+  /**
+   * 
+   * @param event 
+   * 
+   * Listen for modal clicks.
+   */
   public onContainerClicked(event: MouseEvent): void {
     if ((<HTMLElement>event.target).classList.contains('modal')) {
       this.showOrHide(false);
     }
   }
 
+  /**
+   * 
+   * @param day 
+   * 
+   * Show the input field on the the clicked calendar cell.
+   */
   public editDateEntryTime(day) {
 
     if (day.date !== '') {
@@ -245,12 +341,6 @@ export class AppCalendarComponent implements OnInit {
         }
       }
       day.edit = true;
-    }
-  }
-
-  public updateTime(event, date, day, time) {
-    if (event.keyCode === 13) {
-      this.updateStorage(date, day, time)
     }
   }
 
