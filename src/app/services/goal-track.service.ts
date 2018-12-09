@@ -1,27 +1,36 @@
 import { Injectable, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs';
-import { Track } from './../interfaces/track.interface';
+import { Track } from '../interfaces/track.interface';
 
 @Injectable()
 export class GoalTrackService {
 
-  public track;
-  public trackToEdit = '';
+  public track: Track;
+  public trackToEdit: string = '';
 
   private example: Track;
-  private count = 2;
+  private count: number = 2;
 
   @Output()
   public event = new EventEmitter();
 
   constructor() {
-    this.findSelectedTrack().subscribe((track) => {
+    this.findSelectedTrack().subscribe((track: Track): Track => {
       console.log('this.track', this.track)
       this.track = track;
       return track;
     })
-    // this.track = this.findSelectedTrack();
+
+    // The Track object needs to be initialized with values
+    this.example = {
+      dates: [],
+      name: 'new track ',
+      selected: true,
+      time: 0,
+      editName: false,
+      editTime: false
+    }
    }
 
   /**
@@ -30,7 +39,7 @@ export class GoalTrackService {
    *
    * Remove leading 0 and convert string to number.
    */
-  private convertToNumber(time) {
+  private convertToNumber(time: string): number {
     const convertedTime = parseInt(time, 10);
     return convertedTime;
   }
@@ -38,8 +47,8 @@ export class GoalTrackService {
   /**
    *
    * @param date string
-   * @param day number
-   * @param time string | number
+   * @param day number | string
+   * @param time string
    *
    * This method is called when clicking on a calendar data cell.
    *
@@ -47,7 +56,7 @@ export class GoalTrackService {
    * that represents the number of the day in that month, and the
    * entered when you click on a calendar cell.
    */
-  public updateTrackTimeInStorage(date, day, time) {
+  public updateTrackTimeInStorage(date: string, day: number | string, time: string): void {
 
     const convertedTime = this.convertToNumber(time);
     const isTimeValid = this.timeCheck(convertedTime);
@@ -83,7 +92,7 @@ export class GoalTrackService {
     }
   }
 
-  public getAllTracks() {
+  public getAllTracks(): Track[] {
     try {
       const tracks = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -118,7 +127,7 @@ export class GoalTrackService {
   }
 
   // Confirms no other tracks exist with desired name
-  public nameCheck(name) {
+  public nameCheck(name: string): boolean {
     try {
       if (name) {
         if (localStorage.length > 1) {
@@ -149,7 +158,7 @@ export class GoalTrackService {
   }
 
   // Confirms if time was actually entered
-  private timeCheck(time) {
+  private timeCheck(time: number): boolean {
     if (time > 0) {
       return true;
     } else {
@@ -158,7 +167,7 @@ export class GoalTrackService {
   }
 
   // Defaults all tracks selected property to false
-  public deselectTracks() {
+  public deselectTracks(): void {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i));
@@ -171,8 +180,8 @@ export class GoalTrackService {
     }
   }
 
-  // Create a date object with today's date, format YYYY-MM-DD
-  public createDateObject() {
+  // Create a string from a Date object with today's date, format YYYY-MM-DD
+  public createDateObject(): string {
     const dateObj = new Date();
     let month: any = dateObj.getMonth() + 1; // getMonth is 0-based
     if (month < 10) { month = '0' + month; }
@@ -190,7 +199,7 @@ export class GoalTrackService {
    * Pass in a number to return the date from as far
    * back as the time specified.
    */
-  dateOfNthDaysAgo(daysAgo) {
+  dateOfNthDaysAgo(daysAgo: number): string {
     try {
       const newDate = new Date();
       newDate.setDate(newDate.getDate() - daysAgo);
@@ -219,7 +228,7 @@ export class GoalTrackService {
    * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 6); // Returns last week's sum of time
    * Example: this.goalTrackService.timeInInterval('firstTrack', 15, 45) // Returns one month of time beginning 15 days ago.
    */
-  timeInInterval(trackName, startTime, endTime) {
+  timeInInterval(trackName: string, startTime: number, endTime: number) {
     try {
       const track = this.findTrackByName(trackName);
       const startDate = this.dateOfNthDaysAgo(startTime);
@@ -403,35 +412,35 @@ export class GoalTrackService {
     public createNewTrack() {
 
       const tracks = this.getAllTracks();
-      const newTrackName = 'new track';
-      let newTrackArray = [];
+      const newTrackName = 'new track ';
 
-      for (let i = 0; i < tracks.length; i++) {
+      // FYI -- .indexOf is a older/clunkier (ES5) version of .includes()
+      let newTrackArray = tracks.filter( item => 
+        item.name.includes(newTrackName)
+      )
 
-        const name = tracks[i].name;
-
-        //.indexOf is a older/clunkier (ES5) version of .includes
-        if (name.indexOf(newTrackName) !== -1) {
-          newTrackArray.push(name);
-        }
-
-      }
-
-      let newestTrack: any  = '';
+      let newestTrack: Track;
 
       if ( newTrackArray.length > 0 ) {
         newestTrack = newTrackArray.pop();
       }
 
-      let number = newestTrack.match(/\d/g);
+      // .match() returns an array matching the regex; in this case, any numbers
+      let number: any = newestTrack.name.match(/\d/g);
 
+      // Is there a number in the track name?
       if ( newestTrack && number ) {
+        // .join returns a string from the number array
         number = number.join("");
+        // Get the number from the string
         number = parseInt(number, 10);
       }
 
+      // If there's a number in the track name, iterate the number, else just create a 'new track'
       if (number || newestTrack) {
         this.example.name = 'new track ' + (number + 1);
+      } else {
+        this.example.name = 'new track ';
       }
 
       localStorage.setItem(this.example.name, JSON.stringify(this.example));

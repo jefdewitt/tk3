@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   tkTitle: boolean;
   selected = true;
   // appTitle = 'TrackerKeeper';
-  appTitle = 'Test app';
+  appTitle = 'TK3';
 
   ngOnInit() {
     this.routeToNewView();

@@ -6,6 +6,20 @@ body {
 
 body {
     position: relative;
+    max-width: 768px;
+    margin: 0 10px 10px 10px;
+}
+
+@media only screen and (min-width: 499px) {
+    body {
+        margin-bottom: 150px;
+    }
+}
+
+@media only screen and (min-width: 767px) {
+    body {
+        margin: auto;
+    }
 }
 
 .sub-header {
@@ -20,7 +34,7 @@ body {
 }
 
 img {
-    width: 2em;
+    width: 1.5em;
 }
 
 .controls p {
@@ -31,4 +45,46 @@ button {
     width: 100%;
     border: 3px solid #ddd;
     margin-bottom: 3px;
+}
+
+#titleContainer {
+    position: relative;
+    margin-top: 1em;
+    background: #fff;
+}
+
+h1 {
+    color: #b06d06;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+
+ul {
+    padding-left: 0;
+}
+
+.trackList ul {
+    padding-left: 0;
+}
+
+li {
+    list-style: none;
+}
+
+nav {
+    position: fixed;
+        bottom: 0;
+        left: 50%;
+    width: 100%;
+    padding-top: 1em;
+    transform: translatex(-50%);
+    max-width: 768px;
+    background: #fff;
+    z-index: 10;
+}
+
+nav a {
+    width: 33%;
+    display: inline-block;
+    text-align: center;
 }

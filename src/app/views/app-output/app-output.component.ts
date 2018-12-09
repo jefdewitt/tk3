@@ -1,6 +1,5 @@
 import { GoalTrackService } from '../../services/goal-track.service';
 import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
-import { Goal } from '../../goal';
 import { TimeObject } from '../../timeObject';
 import { Router } from '@angular/router';
 

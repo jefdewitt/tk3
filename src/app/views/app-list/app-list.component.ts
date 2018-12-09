@@ -1,6 +1,7 @@
 // import { Router } from '@angular/router';
 import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
+import { Track } from '../../interfaces/track.interface';
 
 @Component({
   selector: 'app-app-list',
@@ -17,7 +18,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public receiver;
 
   public time;
-  public track = this.goalTrackService.track;
+  public track: Track;
   public tracks: any;
   public noTracks = false;
   public nameSelected = false;
@@ -32,6 +33,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     ) { }
 
   ngOnInit() {
+    this.track = this.goalTrackService.track;
     this.tracks = this.goalTrackService.getAllTracks();
     if (this.tracks.length === 0) {
       this.noTracks = true;
@@ -67,7 +69,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       this.tracks = this.goalTrackService.getAllTracks();
       this.noTracks = false;
     } catch (error) {
-      console.error('Could not create a new track.' + error.message);
+      console.error('Could not create a new track. ' + error.message);
     }
   }
 
@@ -82,7 +84,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public deleteTrack(track) {
+  public deleteTrack(track: Track) {
     try {
       if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
 
@@ -90,7 +92,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
         // Update class member to maintain localStorage sync.
         if (this.track.name === track.name) {
-          this.track = '';
+          this.track = null;
         }
 
         for (let i = 0; i < this.tracks.length; i++) {
@@ -105,7 +107,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
       }
     } catch (error) {
-      console.log('Could not delete track from localStorage and/or class property.' + error.message);
+      console.log('Could not delete track from localStorage and/or class property. ' + error.message);
     }
   }
 
