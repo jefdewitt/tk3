@@ -426,7 +426,7 @@ export class GoalTrackService {
       }
 
       // .match() returns an array matching the regex; in this case, any numbers
-      let number: any = newestTrack.name.match(/\d/g);
+      let number: any = newestTrack ? newestTrack.name.match(/\d/g) : null;
 
       // Is there a number in the track name?
       if ( newestTrack && number ) {
