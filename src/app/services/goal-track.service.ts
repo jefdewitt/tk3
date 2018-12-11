@@ -344,7 +344,7 @@ export class GoalTrackService {
 
         sum += Number(track['dates'][i].recordedMinutes);
       }
-      const percentage = track['time'].length > 0 ? ( sum / ( track['time']  * 60 ) ) * 100 : 0;
+      const percentage = track['time'] > 0 ? ( sum / ( track['time']  * 60 ) ) * 100 : 0;
       if (percentage > 0) {
         return percentage.toFixed(2);
       } else {

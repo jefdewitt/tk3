@@ -1,10 +1,5 @@
 .controls img {
-    vertical-align: middle;
-}
-
-img.cal-button {
-    margin-left: .5em;
-    width: 2rem;
+    vertical-align: super;
 }
 
 form div {
@@ -15,6 +10,8 @@ form div > input {
     border: #ddd solid 3px;
     padding: 1em;
     flex: 4;
+    border-radius: 0;
+    border-top: #ddd solid 1px;
 }
 
 form label {
@@ -23,7 +20,7 @@ form label {
 
 .manual-input {
     position: absolute;
-        top: 7.5em;
+        top: 6em;
     opacity: 0;
     pointer-events: none;
 }
@@ -31,6 +28,10 @@ form label {
 .manual-input.active {
     opacity: 1;
     pointer-events: initial;
+}
+
+.manual-input h3 {
+    margin-top: 0;
 }
 
 button {

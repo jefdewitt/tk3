@@ -3,7 +3,7 @@
     min-height: 100px;
     justify-content: center;
     align-items: center;
-    margin: 3em auto 4em;
+    margin: 0 auto 3rem;
     position: relative;
     border-left: 1px solid;
     border-right: 1px solid;
@@ -77,7 +77,7 @@
 }
 
 #progressHeader {
-    margin-bottom: 1em;
+    margin: 0 0 1rem;
 }
 
 .progressBar {
@@ -164,7 +164,7 @@ progress.progress-bar:before {
 }
 
 .monthView progress{
-    height: 11px;
+    height: 10px;
 }
 
 .three-month-view progress{
