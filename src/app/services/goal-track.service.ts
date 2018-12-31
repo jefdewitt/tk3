@@ -162,7 +162,7 @@ export class GoalTrackService {
     if (time > 0) {
       return true;
     } else {
-      alert('Please enter a time greater than 0.');
+      // alert('Please enter a time greater than 0.');
     }
   }
 

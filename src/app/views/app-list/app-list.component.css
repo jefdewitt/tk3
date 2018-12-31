@@ -86,3 +86,7 @@ a span.percent {
     width: 100%;
     white-space: nowrap; 
 }
+
+/* .disabled {
+    pointer-events: none;
+} */

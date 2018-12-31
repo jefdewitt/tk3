@@ -267,8 +267,6 @@ export class AppCalendarComponent implements OnInit {
    */
   public updateStorage(date, day, time) {
 
-    console.log('this.track', this.track);
-
     this.goalTrackService.updateTrackTimeInStorage(date, day, time);
 
     day.minutes = time;

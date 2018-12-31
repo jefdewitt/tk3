@@ -7,7 +7,12 @@
 </div>
 <div *ngIf="!noTracks" class="trackList">
     <ul>
-        <li *ngFor="let track of tracks; let i = index;" class="track-{{i}}" (click)="makeSelectedTrack(track)">
+        <li *ngFor="let track of tracks; let i = index;" 
+            class="track-{{i}}"
+            [class.disabled]="disabled"
+            (click)="makeSelectedTrack(track)"
+            [routerLink]="!disabled ? ['/Input'] : null"
+            >
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
             <div class="track-wrapper">
                 <div>
@@ -44,7 +49,7 @@
                     </div>
                 </div>
                 <div class="buttons-wrapper">
-                    <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button>
+                    <!-- <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button> -->
                     <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
                     <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track.name)">export</button> 
                 </div>

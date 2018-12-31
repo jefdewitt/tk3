@@ -26,7 +26,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public focusedNameInput;
   public focusedTimeInput;
   public name;
-  private nameVetted;
+  public disabled = false;
+  // private nameVetted;
 
   constructor(
     private goalTrackService: GoalTrackService,
@@ -137,6 +138,10 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
 
     track.editName = false;
+
+    setTimeout( () => {
+      this.disabled = false;
+    }), 500
   }
 
   public updateTrackTime(track: any, property: any ) {
@@ -149,9 +154,15 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       localStorage.setItem(this.track['name'], JSON.stringify(track));
 
       track.editTime = false;
+      
+      setTimeout( () => {
+        this.disabled = false;
+      }), 500
   }
 
   public editTrackDetails(track: any, property: string) {
+    this.disabled = true;
+    
     if (property === 'name') {
       track.editName = true;
 
