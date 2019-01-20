@@ -33,19 +33,6 @@ export class AppInputComponent implements OnInit {
     this.minutesAlreadyEntered = '';
   }
 
-  /**
-   * Check to see if user is inputting time in hours.
-   * We declares these as lets instead of class properties cuz they aren't
-   * loaded in time for Angular to find them in the DOM otherwise.
-   */
-  public minutesOrHours() {
-    if (this.hours === true) {
-      return this.minutes * 60;
-    } else {
-      return this.minutes;
-    }
-  }
-
   // Have previous times been entered for the date being checked?
   sameDateCheck() {
     for (let i = 0; i < this.track['dates'].length; i++) {
@@ -88,7 +75,7 @@ export class AppInputComponent implements OnInit {
         }
         return true;
       } else {
-        alert('Please provide a time greater than 0.');
+        alert('Please enter an actual amount of time, dummy.');
         return false;
       }
     } catch (error) {
@@ -100,7 +87,7 @@ export class AppInputComponent implements OnInit {
   addMinutes() {
     try {
       // Check if minutes or hours
-      this.minutes = this.minutesOrHours();
+      this.minutes = this.goalTrackService.minutesOrHours(this.hours, this.minutes);
       // Create new time object for the dates array
       this.setTimeObject(this.goalTrackService.createDateObject());
       // Check if min > 0 and if there are prev. date entries in dates array

@@ -17,7 +17,6 @@ export class GoalTrackService {
 
   constructor() {
     this.findSelectedTrack().subscribe((track: Track): Track => {
-      console.log('this.track', this.track)
       this.track = track;
       return track;
     })
@@ -162,7 +161,22 @@ export class GoalTrackService {
     if (time > 0) {
       return true;
     } else {
-      // alert('Please enter a time greater than 0.');
+      return;
+    }
+  }
+
+   /**
+   * Check to see if user is inputting time in hours.
+   * We declare these as lets instead of class properties cuz they aren't
+   * loaded in time for Angular to find them in the DOM otherwise.
+   */
+  public minutesOrHours(hours, minutes) {
+    if (hours === true && minutes <= 24) {
+      return minutes * 60;
+    } else if (hours === false && minutes <= 1440) {
+      return minutes;
+    } else {
+      return;
     }
   }
 
@@ -355,11 +369,16 @@ export class GoalTrackService {
     }
   }
 
-  exportTrackData(trackName) {
+  exportTrackData(track) {
     const email = prompt('Provide an email address to send this data to.');
 
-    const trackData = this.formatTrackData(trackName);
-    window.location.href = 'mailto:' + email + '?subject=' + trackName + ' Data&body=' + trackData + '';
+    // Was email address provided?
+    if ( email === null || email === '' || !email ) { 
+      return false;
+    } else {
+      const trackData = this.formatTrackData(track);
+      window.location.href = 'mailto:' + email + '?subject=' + track.name + ' Data&body=' + trackData + '';
+    }
   }
 
   /**
@@ -368,10 +387,10 @@ export class GoalTrackService {
    *
    * Get the track minutes and export them in an easy to read JSON file.
    */
-  formatTrackData(trackName) {
-    let trackDataOutput = 'Track name = ' + trackName + '%0D%0A%0D%0A';
-    const track = localStorage.getItem(localStorage.key(trackName));
-    const parsedTrack = JSON.parse(track);
+  formatTrackData(track) {
+    let trackDataOutput = 'Track name = ' + track.name + '%0D%0A%0D%0A';
+    const selectedTrack = localStorage.getItem(track.name);
+    const parsedTrack = JSON.parse(selectedTrack);
     const trackDates = parsedTrack['dates'];
 
     const sortTrackDates = trackDates.sort(this.compareFunction);
@@ -384,7 +403,7 @@ export class GoalTrackService {
       const trackDataString = itemDate + ' = ' + itemTime + '%0D%0A';
       trackDataOutput += trackDataString;
     }
-    trackDataOutput += '%0D%0A' + track;
+    trackDataOutput += '%0D%0A' + selectedTrack;
     return trackDataOutput;
   }
 

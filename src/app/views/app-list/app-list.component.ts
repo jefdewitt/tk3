@@ -117,8 +117,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     this.goalTrackService.trackToEdit = this.track['name'];
   }
 
-  public exportTrackData(trackName) {
-    this.goalTrackService.exportTrackData(trackName);
+  public exportTrackData(track) {
+    this.goalTrackService.exportTrackData(track);
   }
 
   public updateTrackName(event, track: any, property: any ) {

@@ -40,7 +40,7 @@ label[class^="timeStamp"] {
         left: 75%;
 }
 
-input {
+td input {
     position: absolute;
     left: 75%;
     top: 25%;
@@ -48,4 +48,9 @@ input {
     text-align: center;
     width: 4em;
     opacity: .7;
+}
+
+.hours-button {
+    display: block;
+    text-align: right;
 }

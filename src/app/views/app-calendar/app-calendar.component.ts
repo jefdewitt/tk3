@@ -25,6 +25,7 @@ export class AppCalendarComponent implements OnInit {
   };
   public curYear: number = this.todayDate.getFullYear();
   public monthToDisplay;
+  public hours = false;
 
   // Used in main calendar build method
   private weeks: Array<any> = [];
@@ -141,12 +142,12 @@ export class AppCalendarComponent implements OnInit {
 
   /**
    * 
-   * @param monthIndex 
+   * @param monthIndex number;
    * 
-   * This builds the flippin calendar. It's one parameter is used
+   * This builds the flippin calendar. Its one parameter is used
    * when cycling between months.
    */
-  public buildCal(monthIndex = 1) {
+  public buildCal(monthIndex: number = 1) {
     try {
       this.calcDaysInFeb();
       this.monthToDisplay = this.curMonth - monthIndex;
@@ -267,10 +268,12 @@ export class AppCalendarComponent implements OnInit {
    */
   public updateStorage(date, day, time) {
 
-    this.goalTrackService.updateTrackTimeInStorage(date, day, time);
-
-    day.minutes = time;
-    day.edit = false;
+    const minutes = this.goalTrackService.minutesOrHours(this.hours, time);
+    if (minutes) {
+      this.goalTrackService.updateTrackTimeInStorage(date, day, minutes);
+      day.minutes = time;
+      day.edit = false;
+    }
 
   }
 
@@ -340,6 +343,18 @@ export class AppCalendarComponent implements OnInit {
       }
       day.edit = true;
     }
+  }
+
+  public changeTimeFrame(hours: boolean) {
+    this.month.weeks.forEach(element => {
+      element.forEach(item => {
+        if (item.minutes > 0 && hours) {
+          item.minutes = item.minutes / 60;
+        } else {
+          item.minutes = item.minutes * 60;
+        }
+      })
+    });
   }
 
 }
