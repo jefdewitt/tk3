@@ -404,8 +404,7 @@ export class GoalTrackService {
 
       let trackDataString = '';
 
-      // store 2 items
-      debugger;
+      // grab 2 entries for date comparison
       let item1 = parsedTrack['dates'][i - 1];
       item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
       let item2 = parsedTrack['dates'][i];
