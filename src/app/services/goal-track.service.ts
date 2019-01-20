@@ -107,19 +107,16 @@ export class GoalTrackService {
 
  // Returns the current selected track
  public findSelectedTrack(): Observable<Object> {
-  // private findSelectedTrack() {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let track = localStorage.getItem(localStorage.key(i));
         track = JSON.parse(track);
         if (track['selected'] === true) {
           return of(track);
-          // return track;
         }
       }
       // If there's no selected tracks
       return of(false);
-      // return false;
     } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }
@@ -422,11 +419,9 @@ export class GoalTrackService {
         for (let j = numberOfDays - 1; j > 0 ; j--) {
           const timePeriod = oneDay * j;
           const adjustedTime = item2 - timePeriod;
-          // item2 = item2 - timePeriod;
           const placeHolder = new Date(adjustedTime);
           itemDate = this.createDateObject(placeHolder);
           itemTime = '0';
-          // trackDates.push({'recordedMinutes': itemTime, 'recordedDate': itemDate});
           trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
         }
         itemDate = parsedTrack['dates'][i]['recordedDate'];
