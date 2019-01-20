@@ -52,7 +52,6 @@ export class AppInputComponent implements OnInit {
    *
    * Sets time object minutes key from input field
    */
-
   public setTimeObject(providedDate) {
     this.timeObject = {
       recordedMinutes : +this.minutes,
@@ -84,7 +83,7 @@ export class AppInputComponent implements OnInit {
   }
 
   // Adds minutes to local storage for submit button clicks
-  addMinutes() {
+  public addMinutes(): void {
     try {
       // Check if minutes or hours
       this.minutes = this.goalTrackService.minutesOrHours(this.hours, this.minutes);

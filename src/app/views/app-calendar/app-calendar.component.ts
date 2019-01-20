@@ -345,7 +345,15 @@ export class AppCalendarComponent implements OnInit {
     }
   }
 
-  public changeTimeFrame(hours: boolean) {
+  /**
+   * 
+   * @param hours 
+   * 
+   * All we're doing here is converting the time displayed in the 
+   * cal from min to hrs & vice versa. Hours is a boolean set by
+   * selecting a checkbox.
+   */
+  public changeTimeFrame(hours: boolean): void {
     this.month.weeks.forEach(element => {
       element.forEach(item => {
         if (item.minutes > 0 && hours) {

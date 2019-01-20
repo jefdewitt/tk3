@@ -53,7 +53,7 @@ export class GoalTrackService {
    *
    * Takes an actual formatted year/month/day date string, a day
    * that represents the number of the day in that month, and the
-   * entered when you click on a calendar cell.
+   * time entered when you click on a calendar cell.
    */
   public updateTrackTimeInStorage(date: string, day: number | string, time: string): void {
 
@@ -195,8 +195,8 @@ export class GoalTrackService {
   }
 
   // Create a string from a Date object with today's date, format YYYY-MM-DD
-  public createDateObject(): string {
-    const dateObj = new Date();
+  public createDateObject(date?: Date): string {
+    const dateObj = date ? date : new Date();
     let month: any = dateObj.getMonth() + 1; // getMonth is 0-based
     if (month < 10) { month = '0' + month; }
     let day: any = dateObj.getDate();
@@ -369,7 +369,14 @@ export class GoalTrackService {
     }
   }
 
-  exportTrackData(track) {
+  /**
+   * 
+   * @param track 
+   * 
+   * Takes a track object and prompts a user for an email address
+   * to send the track data (dates & times entered).
+   */
+  exportTrackData(track: Track): void | boolean {
     const email = prompt('Provide an email address to send this data to.');
 
     // Was email address provided?
@@ -383,24 +390,53 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName: string
+   * @param trackName
    *
    * Get the track minutes and export them in an easy to read JSON file.
    */
-  formatTrackData(track) {
+  formatTrackData(track: Track): Object {
     let trackDataOutput = 'Track name = ' + track.name + '%0D%0A%0D%0A';
     const selectedTrack = localStorage.getItem(track.name);
     const parsedTrack = JSON.parse(selectedTrack);
-    const trackDates = parsedTrack['dates'];
+    let trackDates = parsedTrack['dates'];
+    const oneDay = 86400000;
 
-    const sortTrackDates = trackDates.sort(this.compareFunction);
+    trackDates.sort(this.compareFunction);
 
     for (let i = 0; i < trackDates.length; i++) {
 
-      const itemDate = parsedTrack['dates'][i]['recordedDate'];
-      const itemTime = parsedTrack['dates'][i]['recordedMinutes'];
+      let trackDataString = '';
 
-      const trackDataString = itemDate + ' = ' + itemTime + '%0D%0A';
+      // store 2 items
+      debugger;
+      let item1 = parsedTrack['dates'][i - 1];
+      item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
+      let item2 = parsedTrack['dates'][i];
+      item2 = item2 ? new Date(item2.recordedDate.replace('-', '/')) : null;
+      let itemDate: string;
+      let itemTime: string;
+
+      // compute how many days are in between entries
+      const numberOfDays = (item2 - item1) / oneDay;
+      if ((item1 && item2) && (numberOfDays)) {
+        for (let j = numberOfDays - 1; j > 0 ; j--) {
+          const timePeriod = oneDay * j;
+          const adjustedTime = item2 - timePeriod;
+          // item2 = item2 - timePeriod;
+          const placeHolder = new Date(adjustedTime);
+          itemDate = this.createDateObject(placeHolder);
+          itemTime = '0';
+          // trackDates.push({'recordedMinutes': itemTime, 'recordedDate': itemDate});
+          trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
+        }
+        itemDate = parsedTrack['dates'][i]['recordedDate'];
+        itemTime = parsedTrack['dates'][i]['recordedMinutes'];
+      } else {
+        itemDate = parsedTrack['dates'][i]['recordedDate'];
+        itemTime = parsedTrack['dates'][i]['recordedMinutes'];
+      }
+
+      trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
       trackDataOutput += trackDataString;
     }
     trackDataOutput += '%0D%0A' + selectedTrack;
