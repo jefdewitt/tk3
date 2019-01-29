@@ -1,14 +1,15 @@
-import { GoalTrackService } from '../../services/goal-track.service';
-import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
-import { TimeObject } from '../../timeObject';
+import { Component, AfterContentInit } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { GoalTrackService } from '../../services/goal-track.service';
+import { Track } from '../../interfaces/track.interface';
 
 @Component({
   selector: 'app-app-output',
   templateUrl: './app-output.component.html',
   styleUrls: ['./app-output.component.css']
 })
-export class AppOutputComponent implements OnInit, AfterContentInit {
+export class AppOutputComponent implements AfterContentInit {
 
   timeFrom: string;
   dailyMinutes: number = null;
@@ -17,6 +18,7 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
   percentageDone: number = null;
   public timePeriod = 'progress today';
   public completed = ' today';
+  public noTimeFrameChosen = ' Select an option below to view a different time frame.'
   dailyRecordedTimes: Array<any> = [];
   isMonthView: boolean;
   isThreeMonthView: boolean;
@@ -26,6 +28,10 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
   mostTime: any;
   public track = this.goalTrackService.track;
   public showTotalCompleted = false;
+  public width: number;
+
+  private newerTrackCheckArray: Array<any>;
+  private mobileDeviceWidth = 300;
 
   constructor(private goalTrackService: GoalTrackService, private router: Router) {
 
@@ -34,28 +40,31 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
       this.noTracks = true;
     } else {
       const sumInInterval = this.goalTrackService.timeInInterval(track['name'], 0, 0);
+      this.newerTrackCheckArray = this.goalTrackService.verifyNewerTrackInfo();
       this.dailyMinAndPerc(track, sumInInterval, 1);
     }
   }
 
-  ngOnInit() {}
-
   ngAfterContentInit() {
-    this.dailyRecordedTimes = this.populateProgressBars(30);
+    this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ? this.populateProgressBars(30) : this.populateProgressBars(this.newerTrackCheckArray[1]);
+    this.width = this.newerTrackCheckArray[1] >= 29 ? 10 : Math.floor(this.mobileDeviceWidth / this.newerTrackCheckArray[1]);
     this.isMonthView = true;
   }
 
-  /**
-   * 
-   */
-  dailyMinAndPerc(track, sumInInterval, daysInInterval) {
-    this.dailyMinutes = this.goalTrackService.dailyMinutes(sumInInterval, daysInInterval);
-    this.dailyPercentage = ( this.goalTrackService.dailyPercentage(track['name'], sumInInterval, daysInInterval) ) / 60;
+ /**
+  * 
+  * @param track 
+  * @param sumInInterval 
+  * @param daysInInterval 
+  */
+  dailyMinAndPerc(track: Track, sumInInterval: number, daysInInterval: number): void {
+    this.dailyMinutes = this.newerTrackCheckArray[1] > daysInInterval ? this.goalTrackService.dailyMinutes(sumInInterval, daysInInterval) : this.newerTrackCheckArray[0];
+    this.dailyPercentage = this.newerTrackCheckArray[1] > daysInInterval ? ( this.goalTrackService.dailyPercentage(track['name'], sumInInterval, daysInInterval) ) / 60 : this.newerTrackCheckArray[0];
     this.dailyRecordedTimes = this.goalTrackService.findRecentTime(track['name'], 1);
     this.percentageDone = this.goalTrackService.percentOfEntireGoal(track['name'], sumInInterval);
   }
 
-  addDayOfMonth(index) {
+  addDayOfMonth(index: number): string {
     let date: any = this.goalTrackService.dateOfNthDaysAgo(index);
     date = date.split('-');
     date = date[2];
@@ -64,7 +73,7 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
   }
 
   // Check to see if user is selecting checkboxes
-  changeTimeFrame($event) {
+  public changeTimeFrame($event: any): void {
     const timeValue = $event.target.id;
     try {
       this.isMonthView = false;
@@ -76,24 +85,27 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
       switch (timeValue) {
         case '1-month':
             let sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 29);
-            this.dailyMinAndPerc(this.track, sumInInterval, 29);
             this.completed = ' this month';
-            this.dailyRecordedTimes = this.populateProgressBars(30);
+            this.dailyMinAndPerc(this.track, sumInInterval, 29);
+            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ? this.populateProgressBars(30) : this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.isMonthView = true;
+            this.width = this.newerTrackCheckArray[1] >= 29 ? 10 : Math.floor(this.mobileDeviceWidth / this.newerTrackCheckArray[1]);
             break;
         case '3-month':
             sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 89);
-            this.dailyMinAndPerc(this.track, sumInInterval, 89);
             this.completed = ' in the last 90 days';
-            this.dailyRecordedTimes = this.populateProgressBars(90);
+            this.dailyMinAndPerc(this.track, sumInInterval, 89);
+            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ? this.populateProgressBars(90) : this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.isThreeMonthView = true;
+            this.width = this.newerTrackCheckArray[1] >= 89 ? 3.33 : Math.floor(this.mobileDeviceWidth / this.newerTrackCheckArray[1]);
             break;
         case '6-month':
-            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 183);
-            this.dailyMinAndPerc(this.track, sumInInterval, 183);
+            sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 179);
             this.completed = ' in the last 6 months';
-            this.dailyRecordedTimes = this.populateProgressBars(184);
+            this.dailyMinAndPerc(this.track, sumInInterval, 179);
+            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ? this.populateProgressBars(179) : this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.isSixMonthView = true;
+            this.width = this.newerTrackCheckArray[1] >= 179 ? 1.66 : Math.floor(this.mobileDeviceWidth / this.newerTrackCheckArray[1]);
             break;
       }
     } catch (error) {
@@ -103,15 +115,15 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
 
   /**
    *
-   * @param time: number
+   * @param time
    *
    * Take a date with format YYYY-MM-DD and reformat it to M/DD
    */
 
-  trimmedDate(time) {
-    time = time.split('-');
-    let trimmedDayDate = time[1];
-    let trimmedMonthDate = time[2];
+  trimmedDate(time: string): string {
+    const splitTime = time.split('-');
+    let trimmedDayDate = splitTime[1];
+    let trimmedMonthDate = splitTime[2];
     if (trimmedDayDate.startsWith('0')) {
       trimmedDayDate = trimmedDayDate[1];
     }
@@ -124,14 +136,14 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
 
   /**
    *
-   * @param track: object
+   * @param track
    * @param datePlaceholder
    *
    * This simply loops thru a track's dates property for matching dates provided from
    * the populateProgressBars function below and returns the time from that date.
    */
 
-  timeFinder(track, datePlaceholder) {
+  timeFinder(track: Track, datePlaceholder: string): string {
     let time;
     // loop thru selected track's dates property
     for (let i = 0; i < track['dates'].length; i++) {
@@ -149,7 +161,7 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
 
   /**
    *
-   * @param timeInterval: number
+   * @param timeInterval
    *
    * Pass the number of date objects you want returned in a new progress bar array.
    * If time already exists inside the dates property of the track object for the
@@ -158,33 +170,32 @@ export class AppOutputComponent implements OnInit, AfterContentInit {
    * you want created.
    */
 
-  populateProgressBars(timeInterval) {
+  populateProgressBars(timeInterval: number): Array<Object> {
     try {
       // create new array
-      const progressArray: Array<any> = [];
+      const progressArray: Array<Object> = [];
       // create objects to populate new array (equal to number passed as arg)
       for (let i = 0; i < timeInterval; i++) {
         // create new date object for comparison
         const datePlaceholder = this.goalTrackService.dateOfNthDaysAgo(i);
-        const progressBarObject: any = {
+        const progressBarObject = {
           'date' : this.trimmedDate(datePlaceholder),
           'time' : this.timeFinder(this.track, datePlaceholder)
         };
         progressArray.push(progressBarObject);
       }
       this.findMostTime(progressArray);
-      // this.bottomTime = this.findBottomTime(progressArray);
       return progressArray.reverse();
     } catch (error) {
       console.log('Unable to populate progress bar array ' + error.message);
     }
   }
 
-  compareFunction(a, b) {
+  compareFunction(a: number, b: number): number {
     return a - b;
   }
 
-  findMostTime(progressArray) {
+  findMostTime(progressArray: Array<any>): void {
     try {
       const timeArray: Array<any> = [];
       for (let i = 0; i < progressArray.length; i++) {

@@ -10,6 +10,7 @@ export class GoalTrackService {
   public trackToEdit: string = '';
 
   private example: Track;
+  private oneDay = 86400000;
   private count: number = 2;
 
   @Output()
@@ -228,9 +229,9 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName : string
-   * @param startTime : number
-   * @param endTime   : number
+   * @param trackName
+   * @param startTime
+   * @param endTime
    *
    * The startTime is the number of days from today to begin the maths and the endTime is number of days from today
    * to end the maths.
@@ -260,14 +261,14 @@ export class GoalTrackService {
 
   /**
    *
-   * @param sum: number;
-   * @param interval: number;
+   * @param sum
+   * @param interval
    *
    * Pass a sum and a time interval (7 = week, 30 = month, etc) to find daily minutes
    */
-  dailyMinutes(sum, interval) {
+  dailyMinutes(sum: number, interval: number): number {
     try {
-      const percent: number = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
+      const percent = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
       return percent;
     } catch (error) {
       console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
@@ -276,12 +277,18 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName string
-   * @param sum number
-   * @param interval number
+   * @param trackName
+   * @param sum
+   * @param interval
    */
-  dailyPercentage(trackName, sum, interval) {
+  dailyPercentage(trackName: string, sum: number, interval: number): number {
     try {
+      // First, is this a new(er) track? If so, there may not be enough data
+      const today = new Date();
+
+      this.verifyNewerTrackInfo();
+
+
       const track = this.findTrackByName(trackName);
       const timeGoal = ( track['time'] !== 0 ) ? track['time'] : 0;
       const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
@@ -312,12 +319,12 @@ export class GoalTrackService {
 
   /**
    *
-   * @param numberOfDays: number
+   * @param numberOfDays
    *
    * Pass the number of days you want data on and the time completed for each day will be
    * returned in a tidy array;
    */
-  findRecentTime(trackName, numberOfDays) {
+  findRecentTime(trackName: string, numberOfDays: number): Array<any> {
     try {
       const selected = this.findTrackByName(trackName);
       const recentTime: Array<any> = [];
@@ -396,7 +403,6 @@ export class GoalTrackService {
     const selectedTrack = localStorage.getItem(track.name);
     const parsedTrack = JSON.parse(selectedTrack);
     let trackDates = parsedTrack['dates'];
-    const oneDay = 86400000;
 
     trackDates.sort(this.compareFunction);
 
@@ -404,7 +410,7 @@ export class GoalTrackService {
 
       let trackDataString = '';
 
-      // grab 2 entries for date comparison
+      // Grab 2 entries for date comparison
       let item1 = parsedTrack['dates'][i - 1];
       item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
       let item2 = parsedTrack['dates'][i];
@@ -412,11 +418,16 @@ export class GoalTrackService {
       let itemDate: string;
       let itemTime: string;
 
-      // compute how many days are in between entries
-      const numberOfDays = (item2 - item1) / oneDay;
+      /** 
+       * Compute how many days are in between entries. If there are any
+       * gaps, create placeholder date objects with 0 minutes to fill them.
+       * This is so the emailed dates are sequential and there are no 
+       * missing dates (makes it easier to average out times later).
+      */
+      const numberOfDays = (item2 - item1) / this.oneDay;
       if ((item1 && item2) && (numberOfDays)) {
         for (let j = numberOfDays - 1; j > 0 ; j--) {
-          const timePeriod = oneDay * j;
+          const timePeriod = this.oneDay * j;
           const adjustedTime = item2 - timePeriod;
           const placeHolder = new Date(adjustedTime);
           itemDate = this.createDateObject(placeHolder);
@@ -439,8 +450,8 @@ export class GoalTrackService {
 
   /**
    *
-   * @param first: number
-   * @param second: number
+   * @param first
+   * @param second
    *
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
@@ -519,9 +530,37 @@ export class GoalTrackService {
     }
   }
 
-  public deleteTrack(track) {
-    // const selectedTrack: any = this.findTrackByName(track.name);
+  /**
+   * 
+   * @param track 
+   */
+  public deleteTrack(track: Track): void {
     localStorage.removeItem(track.name);
+  }
+
+  public verifyNewerTrackInfo(): Array<any> {
+    // Typed as 'any' for the subtraction below
+    const todaysDate: any = new Date();
+    let dates = [];
+
+    // find first date in storage
+    this.track.dates.forEach(element => {
+      dates.push(element);
+    });
+
+    let convertedDate = dates[0] ? dates[0].recordedDate : null;
+    convertedDate = convertedDate ? new Date(convertedDate.replace('-', '/')) : null;
+    const timeInBetween = Math.floor((todaysDate - convertedDate) / this.oneDay);
+
+    // Reduce lets you sum an array (dates is an array of objects)
+    const times = dates.reduce((a, b) => {
+      return a + b.recordedMinutes;
+    }, 0);
+
+    const avgOverTimeSpan = Math.floor(times / timeInBetween);
+
+    console.log(avgOverTimeSpan + ' ' + timeInBetween);
+    return [avgOverTimeSpan, timeInBetween];
   }
 
 }
