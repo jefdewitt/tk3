@@ -374,9 +374,9 @@ export class GoalTrackService {
   }
 
   /**
-   * 
-   * @param track 
-   * 
+   *
+   * @param track
+   *
    * Takes a track object and prompts a user for an email address
    * to send the track data (dates & times entered).
    */
@@ -384,7 +384,7 @@ export class GoalTrackService {
     const email = prompt('Provide an email address to send this data to.');
 
     // Was email address provided?
-    if ( email === null || email === '' || !email ) { 
+    if ( email === null || email === '' || !email ) {
       return false;
     } else {
       const trackData = this.formatTrackData(track);
@@ -418,10 +418,10 @@ export class GoalTrackService {
       let itemDate: string;
       let itemTime: string;
 
-      /** 
+      /**
        * Compute how many days are in between entries. If there are any
        * gaps, create placeholder date objects with 0 minutes to fill them.
-       * This is so the emailed dates are sequential and there are no 
+       * This is so the emailed dates are sequential and there are no
        * missing dates (makes it easier to average out times later).
       */
       const numberOfDays = (item2 - item1) / this.oneDay;
@@ -475,9 +475,9 @@ export class GoalTrackService {
       const newTrackName = 'new track ';
 
       // FYI -- .indexOf is a older/clunkier (ES5) version of .includes()
-      let newTrackArray = tracks.filter( item => 
+      const newTrackArray = tracks.filter( item =>
         item.name.includes(newTrackName)
-      )
+      );
 
       let newestTrack: Track;
 
@@ -531,8 +531,8 @@ export class GoalTrackService {
   }
 
   /**
-   * 
-   * @param track 
+   *
+   * @param track
    */
   public deleteTrack(track: Track): void {
     localStorage.removeItem(track.name);
@@ -557,7 +557,7 @@ export class GoalTrackService {
       return a + b.recordedMinutes;
     }, 0);
 
-    const avgOverTimeSpan = Math.floor(times / timeInBetween);
+    const avgOverTimeSpan = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
 
     console.log(avgOverTimeSpan + ' ' + timeInBetween);
     return [avgOverTimeSpan, timeInBetween];
