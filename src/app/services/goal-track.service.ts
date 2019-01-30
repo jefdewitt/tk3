@@ -557,7 +557,7 @@ export class GoalTrackService {
       return a + b.recordedMinutes;
     }, 0);
 
-    const avgOverTimeSpan = Math.floor(times / timeInBetween);
+    const avgOverTimeSpan = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
 
     console.log(avgOverTimeSpan + ' ' + timeInBetween);
     return [avgOverTimeSpan, timeInBetween];
