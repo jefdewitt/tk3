@@ -261,15 +261,15 @@ export class GoalTrackService {
 
   /**
    *
-   * @param sum
-   * @param interval
+   * @param sum number
+   * @param interval number
    *
    * Pass a sum and a time interval (7 = week, 30 = month, etc) to find daily minutes
    */
   dailyMinutes(sum: number, interval: number): number {
     try {
-      const percent = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
-      return percent;
+      const minutesPerDay = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
+      return minutesPerDay;
     } catch (error) {
       console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
     }
@@ -465,11 +465,11 @@ export class GoalTrackService {
     /**
      * Creates a new track, and updates localStorage to reflect the change.
      *
-     * @param name: string
-     * @param time: number
+     * @param name string
+     * @param time number
      */
 
-    public createNewTrack() {
+    public createNewTrack(): void {
 
       const tracks = this.getAllTracks();
       const newTrackName = 'new track ';
@@ -491,7 +491,7 @@ export class GoalTrackService {
       // Is there a number in the track name?
       if ( newestTrack && number ) {
         // .join returns a string from the number array
-        number = number.join("");
+        number = number.join('');
         // Get the number from the string
         number = parseInt(number, 10);
       }
@@ -509,10 +509,12 @@ export class GoalTrackService {
 
   /**
    *
+   * @param track Track
+   *
    * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
-  public makeSelectedTrack(track) {
+  public makeSelectedTrack(track: Track) {
     try {
       this.track = track;
       this.deselectTracks();
@@ -532,7 +534,7 @@ export class GoalTrackService {
 
   /**
    *
-   * @param track
+   * @param track Track
    */
   public deleteTrack(track: Track): void {
     localStorage.removeItem(track.name);
@@ -541,7 +543,7 @@ export class GoalTrackService {
   public verifyNewerTrackInfo(): Array<any> {
     // Typed as 'any' for the subtraction below
     const todaysDate: any = new Date();
-    let dates = [];
+    const dates = [];
 
     // find first date in storage
     this.track.dates.forEach(element => {
