@@ -1,4 +1,4 @@
-import { Component, AfterContentInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GoalTrackService } from '../../services/goal-track.service';
@@ -9,7 +9,7 @@ import { Track } from '../../interfaces/track.interface';
   templateUrl: './app-output.component.html',
   styleUrls: ['./app-output.component.css']
 })
-export class AppOutputComponent implements AfterContentInit {
+export class AppOutputComponent {
 
   timeFrom: string;
   dailyMinutes: number = null;
@@ -19,7 +19,7 @@ export class AppOutputComponent implements AfterContentInit {
   public timePeriod = 'progress today';
   public completed = ' today';
   public noTimeFrameChosen = ' Select an option below to view a different time frame.';
-  dailyRecordedTimes: Array<any> = [];
+  public progressBarArray: Array<any> = [];
   isMonthView: boolean;
   isThreeMonthView: boolean;
   isSixMonthView: boolean;
@@ -38,6 +38,7 @@ export class AppOutputComponent implements AfterContentInit {
   constructor(private goalTrackService: GoalTrackService, private router: Router) {
 
     const track = this.goalTrackService.track;
+
     if (!track) {
       this.noTracks = true;
     } else {
@@ -45,27 +46,33 @@ export class AppOutputComponent implements AfterContentInit {
       this.newerTrackCheckArray = this.goalTrackService.verifyNewerTrackInfo();
       this.dailyMinAndPerc(track, sumInInterval, 1);
     }
+
+    if (this.newerTrackCheckArray[1] > 30) {
+      this.progressBarArray = this.populateProgressBars(30);
+    } else if (this.newerTrackCheckArray[1] > 0) {
+      this.progressBarArray = this.populateProgressBars(this.newerTrackCheckArray[1]);
+    } else {
+      this.progressBarArray = this.populateProgressBars(1);
+    }
+    this.barWidth = this.newerTrackCheckArray[1] >= 29 ? 10 : this.mobileDeviceWidth / this.newerTrackCheckArray[1];
+    this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
   }
 
-  ngAfterContentInit() {
-    this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ?
-      this.populateProgressBars(30) :
-      this.populateProgressBars(this.newerTrackCheckArray[1]);
-    this.barWidth = this.newerTrackCheckArray[1] >= 29 ? 10 : Math.floor(this.mobileDeviceWidth / this.newerTrackCheckArray[1]);
-    // this.isMonthView = this.newerTrackCheckArray[1] > 30 ? true : false;
-    this.frequency = this.determineFrequencyOfDateElements(this.dailyRecordedTimes);
-  }
+  /**
+   *
+   * @param numberOfBars Array<objects>
+   *
+   * Determines equal spacing for date elements as they appear beneath progress bars.
+   */
+  private determineFrequencyOfDateElements(numberOfBars: any): number {
 
-  public determineFrequencyOfDateElements(numberOfBars: any): number {
     let amount: number;
 
-    switch (true) {
-      case (numberOfBars.length < 11):
+      if (numberOfBars.length < 11) {
         amount = 1;
-        break;
-      default:
+      } else {
         amount = Math.ceil(numberOfBars.length / 10);
-    }
+      }
 
     return amount;
   }
@@ -83,7 +90,7 @@ export class AppOutputComponent implements AfterContentInit {
     this.dailyPercentage = this.newerTrackCheckArray[1] > daysInInterval ?
       ( this.goalTrackService.dailyPercentage(track['name'], sumInInterval, daysInInterval) ) / 60 :
       this.newerTrackCheckArray[0];
-    this.dailyRecordedTimes = this.goalTrackService.findRecentTime(track['name'], 1);
+    this.progressBarArray = this.goalTrackService.findRecentTime(track['name'], 1);
     this.percentageDone = this.goalTrackService.percentOfEntireGoal(track['name'], sumInInterval);
   }
 
@@ -105,7 +112,7 @@ export class AppOutputComponent implements AfterContentInit {
       this.showTotalCompleted = true;
       this.timePeriod = 'daily average';
 
-      if (this.dailyRecordedTimes.length < 30) {
+      if (this.progressBarArray.length < 30) {
         this.showDate = true;
       }
 
@@ -114,31 +121,31 @@ export class AppOutputComponent implements AfterContentInit {
             let sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 29);
             this.completed = ' this month';
             this.dailyMinAndPerc(this.track, sumInInterval, 29);
-            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 30 ?
+            this.progressBarArray = this.newerTrackCheckArray[1] > 30 ?
               this.populateProgressBars(30) :
               this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.barWidth = this.newerTrackCheckArray[1] >= 29 ? 10 : this.mobileDeviceWidth / this.newerTrackCheckArray[1];
-            this.frequency = this.determineFrequencyOfDateElements(this.dailyRecordedTimes);
+            this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
             break;
         case '3-month':
             sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 89);
             this.completed = ' in the last 90 days';
             this.dailyMinAndPerc(this.track, sumInInterval, 89);
-            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 89 ?
+            this.progressBarArray = this.newerTrackCheckArray[1] > 89 ?
               this.populateProgressBars(90) :
               this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.barWidth = this.newerTrackCheckArray[1] >= 89 ? 3.33 : this.mobileDeviceWidth / this.newerTrackCheckArray[1];
-            this.frequency = this.determineFrequencyOfDateElements(this.dailyRecordedTimes);
+            this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
             break;
         case '6-month':
             sumInInterval = this.goalTrackService.timeInInterval(this.track['name'], 0, 179);
             this.completed = ' in the last 6 months';
             this.dailyMinAndPerc(this.track, sumInInterval, 179);
-            this.dailyRecordedTimes = this.newerTrackCheckArray[1] > 179 ?
+            this.progressBarArray = this.newerTrackCheckArray[1] > 179 ?
               this.populateProgressBars(180) :
               this.populateProgressBars(this.newerTrackCheckArray[1]);
             this.barWidth = this.newerTrackCheckArray[1] >= 179 ? 1.66 : this.mobileDeviceWidth / this.newerTrackCheckArray[1];
-            this.frequency = this.determineFrequencyOfDateElements(this.dailyRecordedTimes);
+            this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
             break;
       }
     } catch (error) {

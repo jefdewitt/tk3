@@ -16,19 +16,14 @@
             <span class="top">{{ this.mostTime }} hrs</span>
                 <div class="progressBar"
                      [style.height.px]="barWidth"
-                     *ngFor="let dailyRecordedTime of dailyRecordedTimes; let index = index; let count = count">
+                     *ngFor="let progressBar of progressBarArray; let index = index; let count = count">
                         <progress class="progress-bar"
-                        [style.height.px]="barWidth"
-                        max="{{ this.mostTime }}"
-                        value="{{ dailyRecordedTime['time'] }}"></progress>
-                        <span *ngIf="index % frequency === 1" class="before"></span>
-                        <!-- <span *ngIf="index % frequency === 0" class="after">{{ dailyRecordedTime['date'] }} {{index}}</span> -->
-                        <span *ngIf="index % frequency === 1" class="after">{{index}}</span>
+                                  [style.height.px]="barWidth"
+                                  max="{{ this.mostTime }}"
+                                  value="{{ progressBar['time'] }}"></progress>
+                        <span *ngIf="index % frequency === 0" class="before"></span>
+                        <span *ngIf="index % frequency === 0" class="after">{{ progressBar['date'] }}</span>
                 </div>
-                <!-- <progress [style.height.px]="width" *ngFor="let dailyRecordedTime of dailyRecordedTimes; let index = index; let count = count"
-                        class="progress-bar" max="{{ mostTime }}" value="{{ dailyRecordedTime['time'] }}">
-                    </progress>
-                    <span class="before">{{ dailyRecordedTime['date'] }}</span> -->
             <span class="bottom">&nbsp;&nbsp;0 hrs</span>
         </div>
     </div>

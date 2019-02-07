@@ -1,23 +1,22 @@
 import { GoalTrackService } from './../../services/goal-track.service';
-import { Component, OnInit, ElementRef, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './app-calendar.component.html',
   styleUrls: ['./app-calendar.component.css']
 })
-export class AppCalendarComponent implements OnInit {
+export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private elementRef: ElementRef,
-    private goalTrackService: GoalTrackService)
-    { }
+    private goalTrackService: GoalTrackService) { }
 
   public todayDate: Date = new Date();
 
   // Template bound vars
-  public displayMonth;
-  public displayYear;
+  public displayMonth: number;
+  public displayYear: number;
   public weekdays: Array<string> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   public month = {
     index: '',
@@ -26,6 +25,8 @@ export class AppCalendarComponent implements OnInit {
   public curYear: number = this.todayDate.getFullYear();
   public monthToDisplay;
   public hours = false;
+  public visible = false;
+  public visibleAnimate = false;
 
   // Used in main calendar build method
   private weeks: Array<any> = [];
@@ -34,8 +35,6 @@ export class AppCalendarComponent implements OnInit {
   private lastDayOfMonths = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   private day;
 
-  private visible = false;
-  private visibleAnimate = false;
   private state = 'Open';
   private track;
   private curMonth: number = this.todayDate.getMonth() + 1;
@@ -53,9 +52,9 @@ export class AppCalendarComponent implements OnInit {
   // Used exclusively for adding focus to an input on init (input init not class init).
   @ViewChildren
   ('time') focusedTime: ElementRef;
-  private focusedTimeInput
+  private focusedTimeInput;
 
-  ngOnInit() {
+  public ngOnInit() {
     this.track = this.goalTrackService.track;
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
@@ -65,11 +64,11 @@ export class AppCalendarComponent implements OnInit {
   /**
    * The logic contained in this lifecycle hook is related
    * to adding instant focus to an input field when its
-   * label is clicked. We replace the label with an input 
-   * field for editing but since the input field had not 
-   * existed before it was difficult to add focus. 
-   */ 
-  ngAfterViewChecked() {
+   * label is clicked. We replace the label with an input
+   * field for editing but since the input field had not
+   * existed before it was difficult to add focus.
+   */
+  public ngAfterViewChecked() {
     this.focusedTimeInput = this.focusedTime;
     if (this.focusedTimeInput.first) {
       this.focusedTimeInput.first.nativeElement.focus();
@@ -77,11 +76,11 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param year 
+   *
+   * @param year
    * @param month
-   * 
-   * This determines what cell in first row the month starts on (1-7). 
+   *
+   * This determines what cell in first row the month starts on (1-7).
    */
   public determineWeekdayThatMonthStartsOn(year = this.curYear, month = this.curMonth) {
     // Get first day of month as a new date object.
@@ -91,10 +90,10 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param yearIndex 
-   * @param monthIndex 
-   * 
+   *
+   * @param yearIndex
+   * @param monthIndex
+   *
    * Determines what strings to show in the template.
    */
   public monthAndYearOnDisplay(yearIndex = 0, monthIndex = 1) {
@@ -113,9 +112,9 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param day 
-   * 
+   *
+   * @param day
+   *
    * Just lookin' for the td in the calendar that matches today's date.
    */
   public checkForToday(day) {
@@ -141,9 +140,9 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * @param monthIndex number;
-   * 
+   *
    * This builds the flippin calendar. Its one parameter is used
    * when cycling between months.
    */
@@ -212,10 +211,10 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param month 
-   * @param count 
-   * 
+   *
+   * @param month
+   * @param count
+   *
    * When moving forward/backwards thru months, determine if we're
    * in another year -- last year/next year, etc.
    */
@@ -232,10 +231,10 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param day 
+   *
+   * @param day
    * @param month
-   * 
+   *
    * This guy hooks into the local storage object. Pass a day and month
    * to it to build the proper days/weeks/month.
    */
@@ -278,12 +277,12 @@ export class AppCalendarComponent implements OnInit {
   }
 
     /**
-   * 
-   * @param event 
-   * @param date 
-   * @param day 
-   * @param time 
-   * 
+   *
+   * @param event
+   * @param date
+   * @param day
+   * @param time
+   *
    * On Enter key presses, update storage.
    */
   public updateTime(event, date, day, time) {
@@ -295,9 +294,9 @@ export class AppCalendarComponent implements OnInit {
   /** CALENDAR TOGGLE LOGIC */
 
   /**
-   * 
-   * @param toggle 
-   * 
+   *
+   * @param toggle
+   *
    * Toggle the calendar open/close.
    */
   public showOrHide(toggle): void {
@@ -315,9 +314,9 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param event 
-   * 
+   *
+   * @param event
+   *
    * Listen for modal clicks.
    */
   public onContainerClicked(event: MouseEvent): void {
@@ -327,9 +326,9 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param day 
-   * 
+   *
+   * @param day
+   *
    * Show the input field on the the clicked calendar cell.
    */
   public editDateEntryTime(day) {
@@ -346,10 +345,10 @@ export class AppCalendarComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param hours 
-   * 
-   * All we're doing here is converting the time displayed in the 
+   *
+   * @param hours
+   *
+   * All we're doing here is converting the time displayed in the
    * cal from min to hrs & vice versa. Hours is a boolean set by
    * selecting a checkbox.
    */

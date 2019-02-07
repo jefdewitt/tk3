@@ -550,9 +550,9 @@ export class GoalTrackService {
       dates.push(element);
     });
 
-    let convertedDate = dates[0] ? dates[0].recordedDate : null;
-    convertedDate = convertedDate ? new Date(convertedDate.replace('-', '/')) : null;
-    const timeInBetween = Math.floor((todaysDate - convertedDate) / this.oneDay);
+    const earliestDate = dates[0] ? dates[0].recordedDate.split('-').join('/') : null;
+    const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
+    const timeInBetween = Math.ceil((todaysDate - convertedDate) / this.oneDay);
 
     // Reduce lets you sum an array (dates is an array of objects)
     const times = dates.reduce((a, b) => {

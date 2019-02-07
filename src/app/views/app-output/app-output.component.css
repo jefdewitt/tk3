@@ -78,15 +78,27 @@ progress[value] {
     width: 100%;
     -webkit-appearance: none;
     appearance: none;
+    animation: load 1s linear;
 }
 
 progress[value]::-webkit-progress-bar {
-    background-color: #eee;
-    border-radius: 2px;
+    background-color: #fff;
 }
 
 progress::-webkit-progress-value {
     transition: 1s width ease-in-out;
+
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25) inset;
+    background-image:
+    -webkit-linear-gradient(-45deg,
+                            transparent 33%, rgba(0, 0, 0, .1) 33%,
+                            rgba(0,0, 0, .1) 66%, transparent 66%),
+    -webkit-linear-gradient(top,
+                            rgba(255, 255, 255, .25),
+                            rgba(0, 0, 0, .25)),
+    -webkit-linear-gradient(left, rgb(116, 45, 45), #b06d06);
+    background-size: 1px 1px, 100% 100%, 100% 100%;
 }
 
 form {
@@ -112,16 +124,21 @@ span.before {
     height: 1px;
     background:#000;
     position: absolute;
-        top: 50%;
         right: 100%;
+        top: 50%;
     transform: translatey(-50%);
 }
 
 span.after {
     content: '';
     position: absolute;
-    right: 115%;
-    top: 0;
+        right: 115%;
+        top: 44%;
     transform: rotate(25deg);
     font-size: 8px;
+}
+
+@keyframes load {
+    from { width: 0%; }
+    to   { width: 76%; }
 }
