@@ -1,2 +1,2 @@
 # tk3
-Here's an Ionic of my classic nerdy goal tracking app.
+Here's an updated take on my nerdy goal tracking app.
