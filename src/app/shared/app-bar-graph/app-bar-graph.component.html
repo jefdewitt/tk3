@@ -1,0 +1,37 @@
+<div *ngIf="!noTracks">
+  <h3 id="progressHeader">
+          <span *ngIf="showTotalCompleted">You've completed {{ percentageDone.toFixed(2) }}%
+          of your goal {{ completed }}.</span> Your {{ timePeriod }} is
+    {{ dailyMinutes.toFixed(0) }} minutes or
+    {{ dailyPercentage.toFixed(2) }}%.
+  </h3>
+  <div id="progressContainer">
+    <div>
+      <span class="top">{{ this.mostTime }} hrs</span>
+      <div class="progressBar"
+           [style.height.px]="barWidth"
+           *ngFor="let progressBar of progressBarArray; let index = index; let count = count">
+        <progress class="progress-bar"
+                  [style.height.px]="barWidth"
+                  max="{{ this.mostTime }}"
+                  value="{{ progressBar['time'] }}"></progress>
+        <span *ngIf="index % frequency === 0" class="before"></span>
+        <span *ngIf="index % frequency === 0" class="after">{{ progressBar['date'] }}</span>
+      </div>
+      <span class="bottom">&nbsp;&nbsp;0 hrs</span>
+    </div>
+  </div>
+  <div id="formContainer">
+    <form action="">
+      <label for="1-month">
+        <input type="radio" name="timeFrame" id="1-month" class="radio" (click)="changeTimeFrame($event)">1-month
+      </label>
+      <label for="3-month">
+        <input type="radio" name="timeFrame" id="3-month" class="radio" (click)="changeTimeFrame($event)">3-month
+      </label>
+      <label for="6-month">
+        <input type="radio" name="timeFrame" id="6-month" class="radio" (click)="changeTimeFrame($event)">6-month
+      </label>
+    </form>
+  </div>
+</div>

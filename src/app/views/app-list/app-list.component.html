@@ -2,7 +2,7 @@
     <h2>Active: {{ track?.name }}</h2>
     <div class="controls">
         <p>Create new</p>
-        <img class="add-button" (click)="createNew()" src="./assets/new.svg"/>
+        <img class="add-button" (click)="createNew()" src="./assets/plus_one-24px.svg"/>
     </div>
 </div>
 <div *ngIf="!noTracks" class="trackList">
@@ -15,6 +15,7 @@
             >
             <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
             <div class="track-wrapper">
+              <img src="../../assets/score-24px.svg" alt="">
                 <div>
                     <span class="percent">{{ findPercentCompleted(track) }}%<br>done</span>
                 </div>
@@ -51,7 +52,7 @@
                 <div class="buttons-wrapper">
                     <!-- <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button> -->
                     <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
-                    <button type="button" id="delete" class="listButtons" (click)="exportTrackData(track)">export</button> 
+                    <button type="button" class="listButtons" (click)="exportTrackData(track)">export</button>
                 </div>
             </div>
         </li>

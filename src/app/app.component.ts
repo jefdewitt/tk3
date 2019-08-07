@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GoalTrackService } from '../app/services/goal-track.service';
-import { Router, Event } from '@angular/router';
-import { Navigation } from 'selenium-webdriver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +15,6 @@ export class AppComponent implements OnInit {
       try {
         if (event.url) {
           if ( (event.url === '/New%20Track') || (event.url === '/List%20Tracks') ) {
-              // this.title = 'Tracker';
-              // this.time = 'Keeper';
               this.tkTitle = true;
           } else if ( (event.url !== '/New%20Track') || (event.url !== '/List%20Tracks') ) {
               this.track = this.goalTrackService.track;

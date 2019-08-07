@@ -1,5 +1,5 @@
-import { GoalTrackService } from './../../services/goal-track.service';
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChildren } from '@angular/core';
+import { GoalTrackService } from '../../services/goal-track.service';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChildren, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-calendar',
@@ -15,9 +15,9 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   public todayDate: Date = new Date();
 
   // Template bound vars
-  public displayMonth: number;
+  public displayMonth: string;
   public displayYear: number;
-  public weekdays: Array<string> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  public weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   public month = {
     index: '',
     weeks: []
@@ -37,22 +37,21 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   private state = 'Open';
   private track;
-  private curMonth: number = this.todayDate.getMonth() + 1;
-  private twelveMonths: any = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+  private curMonth = this.todayDate.getMonth() + 1;
+  private twelveMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
    'August', 'September', 'October', 'November', 'December'];
   private newMonthDate = new Date(this.curYear, this.curMonth - 1, 1);
-  private formattedMonth;
   private scanForToday = (this.curYear === this.todayDate.getFullYear() && this.curMonth === this.todayDate.getMonth() + 1 ) ?
           this.todayDate.getDate() : 0;
   private count = 0;
   private adjustedCount;
   private edit = true;
-  private toggle: boolean;
+  private focusedTimeInput;
 
   // Used exclusively for adding focus to an input on init (input init not class init).
-  @ViewChildren
-  ('time') focusedTime: ElementRef;
-  private focusedTimeInput;
+  @ViewChildren('time') focusedTime: ElementRef;
+
+  @Output() notify: EventEmitter<string> = new EventEmitter<string>();
 
   public ngOnInit() {
     this.track = this.goalTrackService.track;
@@ -77,8 +76,8 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   /**
    *
-   * @param year
-   * @param month
+   * @param year number
+   * @param month number
    *
    * This determines what cell in first row the month starts on (1-7).
    */
@@ -91,7 +90,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   /**
    *
-   * @param yearIndex
+   * @param yearIndex number
    * @param monthIndex
    *
    * Determines what strings to show in the template.
@@ -212,7 +211,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   /**
    *
-   * @param month
+   * @param month number
    * @param count
    *
    * When moving forward/backwards thru months, determine if we're
@@ -232,7 +231,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   /**
    *
-   * @param day
+   * @param day: number
    * @param month
    *
    * This guy hooks into the local storage object. Pass a day and month
@@ -287,7 +286,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
    */
   public updateTime(event, date, day, time) {
     if (event.keyCode === 13) {
-      this.updateStorage(date, day, time)
+      this.updateStorage(date, day, time);
     }
   }
 
@@ -333,6 +332,8 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
    */
   public editDateEntryTime(day) {
 
+    this.notify.emit(day);
+
     if (day.date !== '') {
 
       for (let i = 0; i < this.month.weeks.length; i++) {
@@ -356,11 +357,13 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
     this.month.weeks.forEach(element => {
       element.forEach(item => {
         if (item.minutes > 0 && hours) {
-          item.minutes = item.minutes / 60;
+          const minutes = item.minutes / 60;
+          item.minutes = minutes.toFixed(2);
         } else {
-          item.minutes = item.minutes * 60;
+          const minutes = item.minutes * 60
+          item.minutes = Math.ceil(minutes);
         }
-      })
+      });
     });
   }
 

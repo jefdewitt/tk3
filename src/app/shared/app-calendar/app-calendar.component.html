@@ -1,11 +1,8 @@
-<div class="main" (click)="onContainerClicked($event)" class="modal fade" tabindex="-1" [ngClass]="{'in': visibleAnimate}"
-[ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
-<label class="hours-button" for="hours">Hours
-    <input type="checkbox" 
-        name="hours" 
-        id="hours" 
-        (click)="changeTimeFrame(!hours); hours = !hours">
-  </label>
+<div class="main"
+     class="modal fade" tabindex="-1"
+     (click)="onContainerClicked($event)"
+     [ngClass]="{'in': visibleAnimate}"
+     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
   <table class="" cols="7" cellpadding="0" cellspacing="0">
     <thead>
       <tr>
@@ -20,7 +17,7 @@
           <td *ngFor="let day of week" 
               class="{{ checkForToday(day.date) }}" 
               id="date-{{ curYear }}-{{ formatSingleDigitValues(monthToDisplay + 1) }}-{{ formatSingleDigitValues(day.date) }}"
-              (click)="editDateEntryTime(day)"
+              (click)="editDateEntryTime([day, curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date)])"
               >{{ day.date }}
             <label *ngIf="!day.edit" 
                    class="timeStamp-{{ day.date }}">{{ day.minutes > 0 ? day.minutes : '' }}

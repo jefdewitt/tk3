@@ -169,6 +169,7 @@ export class GoalTrackService {
    * loaded in time for Angular to find them in the DOM otherwise.
    */
   public minutesOrHours(hours, minutes) {
+    parseInt(minutes, 10);
     if (hours === true && minutes <= 24) {
       return minutes * 60;
     } else if (hours === false && minutes <= 1440) {

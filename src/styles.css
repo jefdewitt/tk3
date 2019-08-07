@@ -30,27 +30,12 @@ body {
     align-items: center;
 }
 
-.sub-header h2 {
-    margin: 0 0 1rem;
-}
+/*.sub-header h2 {*/
+    /*margin: 0 0 1rem;*/
+/*}*/
 
 .sub-header div img {
     vertical-align: middle;
-}
-
-img {
-    width: 1.5em;
-}
-
-.controls p {
-    display: none;
-}
-
-button {
-    width: 100%;
-    border: 3px solid #ddd;
-    margin-bottom: 3px;
-    background: #ddd;
 }
 
 #titleContainer {
@@ -98,3 +83,13 @@ nav a {
 input {
     font-size: 16px;
 }
+
+.controls p {
+  display: none;
+}
+
+app-app-input-field {
+  margin-bottom: 1em;
+  display: block;
+}
+

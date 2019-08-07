@@ -4,16 +4,16 @@
            name="minutes"
            id="minutes"
            [(ngModel)]="minutes"
-           placeholder="Enter {{ hours ? 'hours' : 'minutes'}}"
+           placeholder="Enter {{ hours ? 'hours' : 'minutes' }}"
            autocomplete="off"
            min="0"
            max="1440">
-    <img (click)="hours = !hours" src="./assets/time-24px.svg" alt="">
-    <button (click)='addMinutes(minutes)'><img src="./assets/save-24px.svg"></button>
+    <img (click)="hours = !hours; updateCal(hours)" src="./assets/time-24px.svg" alt="">
+    <button type="submit" (click)='addMinutes(minutes)'><img src="./assets/save-24px.svg"></button>
     <img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/date_range-24px.svg" alt=""/>
   </form>
-  <!--<div class="controls">-->
-    <!--<p>{{ modal.state }} calendar </p>-->
-  <!--</div>-->
-  <app-calendar #modal></app-calendar>
+
+  <app-calendar #modal (notify)="onNotifyClicked($event)"></app-calendar>
+
 </div>
+
