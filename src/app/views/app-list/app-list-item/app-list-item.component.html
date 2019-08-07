@@ -1,0 +1,36 @@
+<div class="track-wrapper">
+  <img src="../../assets/score-24px.svg" alt="">
+  <div>
+    <span class="percent">{{ findPercentCompleted(individualTrack) }}%</span>
+  </div>
+  <div class="track-details" (click)="$event.stopPropagation()">
+    <div class="track-details-inputs">
+      <label *ngIf="!individualTrack.editName"
+             (click)="editTrackDetails(individualTrack, 'name')"
+             name="name">{{ individualTrack.name }}</label>
+      <input *ngIf="individualTrack.editName"
+             (blur)="individualTrack.editName = false; updateTrackName($event, individualTrack, name.value)"
+             (keyup)="updateName($event, individualTrack, name.value)"
+             class="name"
+             value="{{ individualTrack.name }}"
+             type="text"
+             name="name"
+             pattern="[a-zA-Z\s]+"
+             autofocus #name>
+    </div>
+    <div>
+      <label *ngIf="!individualTrack.editTime"
+             (click)="editTrackDetails(individualTrack, 'time')"
+             name="time">{{ individualTrack?.time }} hours</label>
+      <input *ngIf="individualTrack.editTime"
+             (blur)="individualTrack.editTime = false; updateTrackTime(individualTrack, time.value)"
+             (keypress)="updateTime($event, individualTrack, time.value)"
+             class="time"
+             value="{{ individualTrack?.time }}"
+             type="text"
+             name="time"
+             pattern="/^\d*\.?\d*$/"
+             autofocus #time>
+    </div>
+  </div>
+</div>

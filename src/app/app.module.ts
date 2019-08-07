@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { AppInputComponent } from './views/app-input/app-input.component';
-import { AppOutputComponent } from './views/app-output/app-output.component';
 import { AppCalendarComponent } from './shared/app-calendar/app-calendar.component';
 import { AppListComponent } from './views/app-list/app-list.component';
 
@@ -14,18 +12,18 @@ import { AppHelpComponent } from './views/app-help/app-help.component';
 import { AppIoComponent } from './views/app-io/app-io.component';
 import { AppInputFieldComponent } from './shared/app-input-field/app-input-field.component';
 import { AppBarGraphComponent } from './shared/app-bar-graph/app-bar-graph.component';
+import { AppListItemComponent } from './views/app-list/app-list-item/app-list-item.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    AppInputComponent,
-    AppOutputComponent,
-    AppCalendarComponent,
     AppListComponent,
+    AppListItemComponent,
     AppHelpComponent,
     AppIoComponent,
     AppInputFieldComponent,
+    AppCalendarComponent,
     AppBarGraphComponent
   ],
   imports: [

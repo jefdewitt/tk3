@@ -5,62 +5,25 @@
         <img class="add-button" (click)="createNew()" src="./assets/plus_one-24px.svg"/>
     </div>
 </div>
+<div class="buttons-wrapper">
+  <!-- <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button> -->
+  <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)" [disabled]="!track">delete</button>
+  <button type="button" class="listButtons" (click)="exportTrackData(track)" [disabled]="!track">export</button>
+</div>
 <div *ngIf="!noTracks" class="trackList">
     <ul>
-        <li *ngFor="let track of tracks; let i = index;" 
+        <li *ngFor="let track of tracks; let i = index;"
             class="track-{{i}}"
-            [class.disabled]="disabled"
             (click)="makeSelectedTrack(track)"
-            [routerLink]="!disabled ? ['/Track Output'] : null"
-            >
-            <!-- <a href="/Input" [routerLink]="['/Input']" id="trackWrapper" (click)="makeSelectedTrack($event)"> -->
-            <div class="track-wrapper">
-              <img src="../../assets/score-24px.svg" alt="">
-                <div>
-                    <span class="percent">{{ findPercentCompleted(track) }}%<br>done</span>
-                </div>
-                <div class="track-details">
-                    <div>
-                        <label *ngIf="!track.editName" 
-                            (click)="editTrackDetails(track, 'name')" 
-                            name="name">{{ track.name }}</label>
-                        <input *ngIf="track.editName" 
-                            (blur)="track.editName = false; updateTrackName($event, track, name.value)"
-                            (keyup)="updateName($event, track, name.value)"
-                            class="name"
-                            value="{{ track.name }}" 
-                            type="text" 
-                            name="name" 
-                            pattern="[a-zA-Z\s]+"
-                            autofocus #name>
-                    </div>
-                    <div>
-                        <label *ngIf="!track.editTime" 
-                            (click)="editTrackDetails(track, 'time')" 
-                            name="time">{{ track?.time }} hours</label>
-                        <input *ngIf="track.editTime" 
-                            (blur)="track.editTime = false; updateTrackTime(track, time.value)" 
-                            (keypress)="updateTime($event, track, time.value)"
-                            class="time"
-                            value="{{ track?.time }}" 
-                            type="text" 
-                            name="time" 
-                            pattern="/^\d*\.?\d*$/"
-                            autofocus #time>
-                    </div>
-                </div>
-                <div class="buttons-wrapper">
-                    <!-- <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button> -->
-                    <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)">delete</button>
-                    <button type="button" class="listButtons" (click)="exportTrackData(track)">export</button>
-                </div>
-            </div>
+            [routerLink]="['/IO']">
+
+          <app-list-item [individualTrack]="track"></app-list-item>
+
         </li>
     </ul>
 </div>
-<!-- <div *ngIf="noTracks" [class.noTracks]="noTracks" >
-    <h2>Currently there are zero tracks selected. Please select a track or create a new one.</h2>
-</div> -->
-<div *ngIf="noTracks" [class.noTracks]="noTracks" >
-    <h3>Click the plus sign (+) to get started.</h3>
+
+
+<div *ngIf="noTracks" [class.noTracks]="noTracks">
+    <h3>Click the plus one (+1) to get started.</h3>
 </div>

@@ -21,13 +21,12 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public track: Track;
   public tracks: any;
   public noTracks = false;
-  public nameSelected = false;
-  public timeSelected = false;
+  // public disabled = false;
+  // public nameSelected = false;
+  // public timeSelected = false;
   public focusedNameInput;
   public focusedTimeInput;
   public name;
-  public disabled = false;
-  // private nameVetted;
 
   constructor(
     private goalTrackService: GoalTrackService,
@@ -48,10 +47,10 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   /**
    * The logic contained in this lifecycle hook is related
    * to adding instant focus to an input field when its
-   * label is clicked. We replace the label with an input 
-   * field for editing but since the input field had not 
-   * existed before it was difficult to add focus. 
-   */ 
+   * label is clicked. We replace the label with an input
+   * field for editing but since the input field had not
+   * existed before it was difficult to add focus.
+   */
   ngAfterViewChecked() {
       this.focusedNameInput = this.focusedName;
       if (this.focusedNameInput.first) {
@@ -74,10 +73,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  findPercentCompleted(track) {
-    return this.goalTrackService.overallCompleted(track);
-  }
-
   public makeSelectedTrack(track) {
     if (this.track !== track) {
       this.goalTrackService.makeSelectedTrack(track);
@@ -87,7 +82,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
   public deleteTrack(track: Track) {
     try {
-      if (confirm('Are you sure you want to delete this track? It can\'t be recovered.')) {
+      if ( confirm('Are you sure you want to delete this track? It can\'t be recovered.') ) {
 
         this.goalTrackService.deleteTrack(track);
 
@@ -119,68 +114,6 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
   public exportTrackData(track) {
     this.goalTrackService.exportTrackData(track);
-  }
-
-  public updateTrackName(event, track: any, property: any ) {
-
-    let nameIsNotTaken;
-
-    if (event.type === 'blur') {
-      nameIsNotTaken = this.goalTrackService.nameCheck(property);
-    }
-
-    if (nameIsNotTaken) {
-      const formerName = track.name;
-      track.name = property === '' ? formerName : property;
-
-      localStorage.setItem(track['name'], JSON.stringify(track));
-      localStorage.removeItem(formerName);
-    }
-
-    track.editName = false;
-
-    setTimeout( () => {
-      this.disabled = false;
-    }), 500
-  }
-
-  public updateTrackTime(track: any, property: any ) {
-      // Check if number starts with 0
-      if (property.charAt(0) === '0') {
-        property = parseFloat(property);
-      }
-
-      track.time = property > 0 ? property : 0;
-      localStorage.setItem(this.track['name'], JSON.stringify(track));
-
-      track.editTime = false;
-      
-      setTimeout( () => {
-        this.disabled = false;
-      }), 500
-  }
-
-  public editTrackDetails(track: any, property: string) {
-    this.disabled = true;
-    
-    if (property === 'name') {
-      track.editName = true;
-
-    } else {
-      track.editTime = true;
-    }
-  }
-
-  public updateName(event, track, name) {
-    if (event.keyCode === 13) {
-      this.updateTrackName(event, track, name);
-    }
-  }
-
-  public updateTime(event, track, time) {
-    if (event.keyCode === 13) {
-      this.updateTrackTime(track, time);
-    }
   }
 
 }

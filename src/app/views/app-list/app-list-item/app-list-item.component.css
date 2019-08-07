@@ -1,0 +1,21 @@
+
+.percent {
+  color: darkgoldenrod;
+  font-size: 2em;
+}
+
+.track-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.track-details {
+  max-width: 33%%;
+}
+
+.buttons-wrapper {
+  display: inline-block;
+}
+

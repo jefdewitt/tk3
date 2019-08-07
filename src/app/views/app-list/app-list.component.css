@@ -11,10 +11,11 @@ ul {
 li {
     padding-bottom: 20px;
     position: relative;
-    border: 5px solid #ddd;
+    /*border: 5px solid #ddd;*/
     padding: 10px;
     margin-bottom: 20px;
     background: #fff;
+    overflow: hidden;
 }
 
 li a {
@@ -43,50 +44,26 @@ li a {
     margin: 0;
 }
 
-span {
-    display: inline-block;
-    width: 32%;
-}
-
-a span.percent {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: .25em;
-    color: #000;
-}
 
 .noTracks h2 {
     color: #000;
     font-size: 1.5em;
 }
 
-.track-wrapper {
-    width: 100%;
-    display: flex;
-    align-items: center;
+button {
+  width: 49%;
+  padding: .49em 0;
+  border-radius: 5%;
+  margin: 0 .5%;
+  font-size: 1em;
+  color: black;
+  background: 0;
+  border: 1px solid #ccc;
 }
 
-.track-wrapper div:first-child,
-.track-wrapper div:last-child {
-    flex: 1;
+button:first-child {
+  background: goldenrod;
+  color: white;
+  border: 0;
+  padding: .5em;
 }
-
-.track-details {
-    flex: 3;
-    padding-left: 1em;
-}
-
-.buttons-wrapper {
-    display: inline-block;
-}
-
-.buttons-wrapper button {
-    display: block;
-    width: 100%;
-    white-space: nowrap; 
-}
-
-/* .disabled {
-    pointer-events: none;
-} */

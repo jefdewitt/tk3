@@ -38,12 +38,6 @@ body {
     vertical-align: middle;
 }
 
-#titleContainer {
-    position: relative;
-    margin-top: 1em;
-    background: #fff;
-}
-
 #titleContainer h1 {
     color: #b06d06;
     font-family: Arial, Helvetica, sans-serif;

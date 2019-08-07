@@ -33,14 +33,9 @@ export class AppBarGraphComponent implements OnInit {
   private newerTrackCheckArray: Array<any>;
   private mobileDeviceWidth = 300;
 
-  constructor(
-    private goalTrackService: GoalTrackService ) {
-
-  }
+  constructor( private goalTrackService: GoalTrackService ) { }
 
   public ngOnInit() {
-    console.log('hello');
-    // this.changeTimeFrame('1-month');
     const track = this.goalTrackService.track;
     const sumInInterval = this.goalTrackService.timeInInterval(track['name'], 0, 0);
     this.newerTrackCheckArray = this.goalTrackService.verifyNewerTrackInfo();
@@ -81,7 +76,7 @@ export class AppBarGraphComponent implements OnInit {
    * @param sumInInterval number
    * @param daysInInterval number
    */
-  dailyMinAndPerc(track: Track, sumInInterval: number, daysInInterval: number): void {
+  private dailyMinAndPerc(track: Track, sumInInterval: number, daysInInterval: number): void {
     this.dailyMinutes = this.newerTrackCheckArray[1] > daysInInterval ?
       this.goalTrackService.dailyMinutes(sumInInterval, daysInInterval) :
       this.newerTrackCheckArray[0];

@@ -46,6 +46,12 @@ export class AppInputFieldComponent {
   public addMinutes(): void {
     try {
       if (this.minutes != null) {
+
+        if (typeof this.minutes === 'string') {
+          const parsedMinutes = parseInt(this.minutes, 10);
+          this.minutes = parsedMinutes;
+        }
+
         // Check if minutes or hours
         this.minutes = this.goalTrackService.minutesOrHours(this.hours, this.minutes);
 

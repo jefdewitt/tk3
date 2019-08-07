@@ -10,6 +10,7 @@ form {
   display: flex;
   position: relative;
   justify-content: space-between;
+  margin-bottom: 2em;
 }
 
 form input {
@@ -18,7 +19,7 @@ form input {
 
 .manual-input.active {
   opacity: 1;
-  pointer-events: initial;
+  /*pointer-events: initial;*/
 }
 
 .controls img {
