@@ -9,15 +9,41 @@ import {GoalTrackService} from '../../../services/goal-track.service';
 })
 export class AppListItemComponent implements OnInit {
 
-  // public track: Track;
+  public percentage: number;
   public disabled = false;
   @Input() public individualTrack: Track;
 
   constructor( private goalTrackService: GoalTrackService ) { }
 
   ngOnInit() {
-    // this.track = this.goalTrackService.track;
-    console.log(this.individualTrack);
+    this.setPercentageImage(this.individualTrack);
+  }
+
+  private setPercentageImage(track: Track): void {
+    const percentageString = this.findPercentCompleted(this.individualTrack);
+    const percentage = parseInt(percentageString, 10);
+    switch (true) {
+      case (percentage < 21):
+        this.percentage = 20;
+        break;
+      case (percentage < 31):
+        this.percentage = 30;
+        break;
+      case (percentage < 51):
+        this.percentage = 50;
+        break;
+      case (percentage < 61):
+        this.percentage = 60;
+        break;
+      case (percentage < 81):
+        this.percentage = 80;
+        break;
+      case (percentage < 100):
+        this.percentage = 90;
+        break;
+      default:
+        this.percentage = 100;
+    }
   }
 
   public updateTrackName(event, track: any, property: any ) {

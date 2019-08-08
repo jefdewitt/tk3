@@ -1,7 +1,8 @@
 <div class="track-wrapper">
-  <img src="../../assets/score-24px.svg" alt="">
-  <div>
+  <span class="li-img batt-{{percentage}}"></span>
+  <div class="percentage-container">
     <span class="percent">{{ findPercentCompleted(individualTrack) }}%</span>
+    <progress max="100" value="{{ findPercentCompleted(individualTrack) }}"></progress>
   </div>
   <div class="track-details" (click)="$event.stopPropagation()">
     <div class="track-details-inputs">
