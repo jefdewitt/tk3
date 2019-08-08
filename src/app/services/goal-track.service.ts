@@ -1,4 +1,4 @@
-import { Injectable, Output, EventEmitter, OnInit } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs';
 import { Track } from '../interfaces/track.interface';
@@ -7,11 +7,11 @@ import { Track } from '../interfaces/track.interface';
 export class GoalTrackService {
 
   public track: Track;
-  public trackToEdit: string = '';
+  public trackToEdit = '';
 
-  private example: Track;
+  private readonly example: Track;
   private oneDay = 86400000;
-  private count: number = 2;
+  // private count: number = 2;
 
   @Output()
   public event = new EventEmitter();
@@ -30,7 +30,7 @@ export class GoalTrackService {
       time: 0,
       editName: false,
       editTime: false
-    }
+    };
    }
 
   /**
@@ -87,7 +87,7 @@ export class GoalTrackService {
         };
         this.track['dates'].push(timeObject);
       }
-      this.track['dates'].sort(this.compareFunction);
+      this.track['dates'].sort(this.compareEntriesByDate);
       localStorage.setItem(this.track['name'], JSON.stringify(this.track));
     }
   }
@@ -230,9 +230,9 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName
-   * @param startTime
-   * @param endTime
+   * @param trackName string
+   * @param startTime number
+   * @param endTime number
    *
    * The startTime is the number of days from today to begin the maths and the endTime is number of days from today
    * to end the maths.
@@ -278,9 +278,9 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName
-   * @param sum
-   * @param interval
+   * @param trackName string
+   * @param sum number
+   * @param interval number
    */
   dailyPercentage(trackName: string, sum: number, interval: number): number {
     try {
@@ -405,7 +405,7 @@ export class GoalTrackService {
     const parsedTrack = JSON.parse(selectedTrack);
     let trackDates = parsedTrack['dates'];
 
-    trackDates.sort(this.compareFunction);
+    trackDates.sort(this.compareEntriesByDate);
 
     for (let i = 0; i < trackDates.length; i++) {
 
@@ -451,13 +451,13 @@ export class GoalTrackService {
 
   /**
    *
-   * @param first
-   * @param second
+   * @param first string
+   * @param second string
    *
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
    */
-  public compareFunction(first, second) {
+  public compareEntriesByDate(first, second) {
       const firstString = first.recordedDate.replace(/-/g, '');
       const secondString = second.recordedDate.replace(/-/g, '');
       return (parseInt(firstString, 10) - parseInt(secondString, 10));
@@ -541,6 +541,10 @@ export class GoalTrackService {
     localStorage.removeItem(track.name);
   }
 
+  public simpleCompareFunction(a: number, b: number): number {
+    return a - b;
+  }
+
   public verifyNewerTrackInfo(): Array<any> {
     // Typed as 'any' for the subtraction below
     const todaysDate: any = new Date();
@@ -551,6 +555,7 @@ export class GoalTrackService {
       dates.push(element);
     });
 
+    dates.sort(this.compareEntriesByDate);
     const earliestDate = dates[0] ? dates[0].recordedDate.split('-').join('/') : null;
     const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
     const timeInBetween = Math.ceil((todaysDate - convertedDate) / this.oneDay);

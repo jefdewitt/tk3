@@ -15,10 +15,6 @@
   max-width: 33%;
 }
 
-.buttons-wrapper {
-  display: inline-block;
-}
-
 progress[value] {
   /*transform: rotate(90deg);*/
   /*animation: load .5s linear;*/

@@ -9,7 +9,7 @@
            min="0"
            max="1440">
     <img (click)="hours = !hours; updateCal(hours)" src="./assets/twotone-access_time-24px.svg" alt="">
-    <button type="submit" (click)='addMinutes(minutes)'><img src="./assets/twotone-save-24px.svg"></button>
+    <img (click)="addMinutes(minutes)" src="./assets/twotone-save-24px.svg">
     <img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/twotone-insert_chart-24px.svg" alt=""/>
   </form>
 

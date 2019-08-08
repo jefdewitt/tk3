@@ -87,3 +87,25 @@ app-app-input-field {
   display: block;
 }
 
+.buttons-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+button {
+  flex: 1;
+  border-radius: 3px;
+  margin: 0 .5%;
+  font-size: 1em;
+  color: black;
+  background: 0;
+  border: 1px solid #ccc;
+}
+
+button:nth-child(odd) {
+  background: goldenrod;
+  color: white;
+  border: 0;
+  padding: .5em;
+}
+

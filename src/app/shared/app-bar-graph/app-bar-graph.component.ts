@@ -89,7 +89,7 @@ export class AppBarGraphComponent implements OnInit {
 
   // Check to see if user is selecting checkboxes
   public changeTimeFrame($event: any): void {
-    const timeValue = $event.target.id;
+    const timeValue = $event.target.attributes[2].nodeValue;
     try {
       this.isMonthView = false;
       this.isThreeMonthView = false;
@@ -216,10 +216,6 @@ export class AppBarGraphComponent implements OnInit {
     }
   }
 
-  compareFunction(a: number, b: number): number {
-    return a - b;
-  }
-
   findMostTime(progressArray: Array<any>): void {
     try {
       const timeArray: Array<any> = [];
@@ -227,7 +223,7 @@ export class AppBarGraphComponent implements OnInit {
         const time = progressArray[i].time;
         timeArray.push(time);
       }
-      const sortedArray = timeArray.sort(this.compareFunction);
+      const sortedArray = timeArray.sort(this.goalTrackService.simpleCompareFunction);
       // Find the most time in the array
       const mostTime = sortedArray.pop();
       if (mostTime) {

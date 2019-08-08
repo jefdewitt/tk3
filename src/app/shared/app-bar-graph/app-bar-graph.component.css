@@ -8,8 +8,8 @@
 }
 
 #progressContainer > div {
-  border: 2px solid #ddd;
-  height: 300px;
+  border-left: 2px solid #ddd;
+  /*height: 300px;*/
   transform: rotate(270deg);
   width: 100px;
 }

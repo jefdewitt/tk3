@@ -44,26 +44,8 @@ li a {
     margin: 0;
 }
 
-
 .noTracks h2 {
     color: #000;
     font-size: 1.5em;
 }
 
-button {
-  width: 49%;
-  padding: .49em 0;
-  border-radius: 5%;
-  margin: 0 .5%;
-  font-size: 1em;
-  color: black;
-  background: 0;
-  border: 1px solid #ccc;
-}
-
-button:first-child {
-  background: goldenrod;
-  color: white;
-  border: 0;
-  padding: .5em;
-}
