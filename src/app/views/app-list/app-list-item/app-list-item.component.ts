@@ -17,6 +17,7 @@ export class AppListItemComponent implements OnInit {
 
   ngOnInit() {
     this.setPercentageImage(this.individualTrack);
+    this.individualTrack.editName = false;
   }
 
   private setPercentageImage(track: Track): void {
@@ -47,10 +48,11 @@ export class AppListItemComponent implements OnInit {
   }
 
   public updateTrackName(event, track: any, property: any ) {
+    this.goalTrackService.makeSelectedTrack(track);
 
     let nameIsNotTaken;
 
-    if (event.type === 'blur') {
+    if (event.type === 'change') {
       nameIsNotTaken = this.goalTrackService.nameCheck(property);
     }
 
@@ -86,7 +88,7 @@ export class AppListItemComponent implements OnInit {
   }
 
   public editTrackDetails(track: any, property: string) {
-    console.log('editTrackDetails clicked')
+    this.goalTrackService.makeSelectedTrack(track);
     this.disabled = true;
 
     if (property === 'name') {

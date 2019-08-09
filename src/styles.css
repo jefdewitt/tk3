@@ -97,9 +97,9 @@ button {
   border-radius: 3px;
   margin: 0 .5%;
   font-size: 1em;
-  color: black;
-  background: 0;
-  border: 1px solid #ccc;
+  color: #fff;
+  background: #777;
+  border: 1px solid #777;
 }
 
 button:nth-child(odd) {

@@ -1,9 +1,10 @@
 <div *ngIf="!noTracks">
   <h3 id="progressHeader">
-          <span *ngIf="showTotalCompleted">You've completed {{ percentageDone.toFixed(2) }}%
-          of your goal {{ completed }}.</span> Your {{ timePeriod }} is
+    <span *ngIf="showTotalCompleted">{{ percentageDone.toFixed(2) }}%
+          completed {{ completed }}.</span>
+    <br>
     {{ dailyMinutes.toFixed(0) }} minutes or
-    {{ dailyPercentage.toFixed(2) }}%.
+    {{ dailyPercentage.toFixed(2) }}% {{ timePeriod }}.
   </h3>
   <div id="progressContainer">
     <div>
@@ -21,20 +22,6 @@
       <span class="bottom">&nbsp;&nbsp;0 hrs</span>
     </div>
   </div>
-  <!--<div id="formContainer">-->
-    <!--<form action="">-->
-      <!--<label for="1-month">-->
-        <!--<input type="radio" name="timeFrame" id="1-month" class="radio" (click)="changeTimeFrame($event)">1-month-->
-      <!--</label>-->
-      <!--<label for="3-month">-->
-        <!--<input type="radio" name="timeFrame" id="3-month" class="radio" (click)="changeTimeFrame($event)">3-month-->
-      <!--</label>-->
-      <!--<label for="6-month">-->
-        <!--<input type="radio" name="timeFrame" id="6-month" class="radio" (click)="changeTimeFrame($event)">6-month-->
-      <!--</label>-->
-      <!--<button></button>-->
-    <!--</form>-->
-  <!--</div>-->
   <div class="buttons-container">
     <button value="1-month" type="submit" (click)="changeTimeFrame($event)">30 days</button>
     <button value="3-month" type="submit" (click)="changeTimeFrame($event)">90 days</button>

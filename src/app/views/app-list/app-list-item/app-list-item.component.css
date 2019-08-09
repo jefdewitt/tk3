@@ -43,11 +43,10 @@ progress::-webkit-progress-value {
 }
 
 .li-img {
-  /*background-image: url("../../../../assets/twotone_battery_charging_20_white_48dp.png");*/
   background-repeat: no-repeat;
-  background-color: #555;
+  background-color: #777;
   background-position: center;
-  background-size: 80%;
+  background-size: 70%;
   border-radius: 50%;
   width: 2.5em;
   height: 2.5em;

@@ -2,11 +2,10 @@
     <h2>Active: {{ track?.name }}</h2>
     <div class="controls">
         <p>Create new</p>
-        <img class="add-button" (click)="createNew()" src="./assets/plus_one-24px.svg"/>
+        <img class="add-button" (click)="createNew()" src="./assets/twotone-control_point-24px.svg"/>
     </div>
 </div>
 <div class="buttons-container">
-  <!-- <button type="button" id="edit" class="listButtons" (click)="makeSelectedTrack(track)" [routerLink]="['/Input']">add time</button> -->
   <button type="button" id="delete" class="listButtons" (click)="deleteTrack(track)" [disabled]="!track">delete</button>
   <button type="button" class="listButtons" (click)="exportTrackData(track)" [disabled]="!track">export</button>
 </div>
@@ -17,7 +16,7 @@
             (click)="makeSelectedTrack(track)"
             [routerLink]="['/IO']">
 
-          <app-list-item [individualTrack]="track"></app-list-item>
+          <app-list-item [individualTrack]="track" (toParent)="nameCheck($event)"></app-list-item>
 
         </li>
     </ul>

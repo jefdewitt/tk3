@@ -2,6 +2,7 @@
 import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked } from '@angular/core';
 import { GoalTrackService } from '../../services/goal-track.service';
 import { Track } from '../../interfaces/track.interface';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-app-list',
@@ -61,6 +62,14 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       if (this.focusedTimeInput.first) {
         this.focusedTimeInput.first.nativeElement.focus();
       }
+  }
+
+  public nameCheck(property: string) {
+    this.tracks.forEach(function(track) {
+      if ( track.name === property ) {
+        alert('Do something');
+      }
+    });
   }
 
   public createNew() {
