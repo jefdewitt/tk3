@@ -285,10 +285,9 @@ export class GoalTrackService {
   dailyPercentage(trackName: string, sum: number, interval: number): number {
     try {
       // First, is this a new(er) track? If so, there may not be enough data
-      const today = new Date();
+      // const today = new Date();
 
       this.verifyNewerTrackInfo();
-
 
       const track = this.findTrackByName(trackName);
       const timeGoal = ( track['time'] !== 0 ) ? track['time'] : 0;
@@ -550,12 +549,12 @@ export class GoalTrackService {
     const todaysDate: any = new Date();
     const dates = [];
 
-    // find first date in storage
     this.track.dates.forEach(element => {
       dates.push(element);
     });
-
+    // find first date in storage
     dates.sort(this.compareEntriesByDate);
+
     const earliestDate = dates[0] ? dates[0].recordedDate.split('-').join('/') : null;
     const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
     const timeInBetween = Math.ceil((todaysDate - convertedDate) / this.oneDay);
@@ -568,7 +567,7 @@ export class GoalTrackService {
     const avgOverTimeSpan = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
 
     console.log(avgOverTimeSpan + ' ' + timeInBetween);
-    return [avgOverTimeSpan, timeInBetween];
+    return [avgOverTimeSpan, timeInBetween, times];
   }
 
 }
