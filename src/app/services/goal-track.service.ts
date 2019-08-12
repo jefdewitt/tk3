@@ -6,31 +6,31 @@ import { Track } from '../interfaces/track.interface';
 @Injectable()
 export class GoalTrackService {
 
-  public track: Track;
+  // public track: Track;
   public trackToEdit = '';
 
   private readonly example: Track;
-  private oneDay = 86400000;
+  // private oneDay = 86400000;
   // private count: number = 2;
 
-  @Output()
-  public event = new EventEmitter();
+  // @Output()
+  // public event = new EventEmitter();
 
   constructor() {
-    this.findSelectedTrack().subscribe((track: Track): Track => {
-      this.track = track;
-      return track;
-    })
+    // this.findSelectedTrack().subscribe((track: Track): Track => {
+    //   this.track = track;
+    //   return track;
+    // })
 
     // The Track object needs to be initialized with values
-    this.example = {
-      dates: [],
-      name: 'new track ',
-      selected: true,
-      time: 0,
-      editName: false,
-      editTime: false
-    };
+    // this.example = {
+    //   dates: [],
+    //   name: 'new track ',
+    //   selected: true,
+    //   time: 0,
+    //   editName: false,
+    //   editTime: false
+    // };
    }
 
   /**
@@ -39,10 +39,10 @@ export class GoalTrackService {
    *
    * Remove leading 0 and convert string to number.
    */
-  private convertToNumber(time: string): number {
-    const convertedTime = parseInt(time, 10);
-    return convertedTime;
-  }
+  // private convertToNumber(time: string): number {
+  //   const convertedTime = parseInt(time, 10);
+  //   return convertedTime;
+  // }
 
   /**
    *
@@ -56,154 +56,154 @@ export class GoalTrackService {
    * that represents the number of the day in that month, and the
    * time entered when you click on a calendar cell.
    */
-  public updateTrackTimeInStorage(date: string, day: number | string, time: string): void {
+  // public updateTrackTimeInStorage(date: string, day: number | string, time: string): void {
+  //
+  //   const convertedTime = this.convertToNumber(time);
+  //   const isTimeValid = this.timeCheck(convertedTime);
+  //
+  //   if (isTimeValid && day !== '') {
+  //
+  //     if (this.track['dates'].length > 0) {
+  //
+  //       for (let i = 0; i < this.track['dates'].length; i++) {
+  //
+  //           const recordedEntry = this.track['dates'][i];
+  //
+  //           if ( date === recordedEntry.recordedDate) {
+  //             this.track['dates'][i].recordedMinutes = convertedTime;
+  //             break;
+  //           } else if ( i === this.track['dates'].length - 1 ) {
+  //             const timeObject = {
+  //               recordedMinutes : convertedTime,
+  //               recordedDate : date
+  //             };
+  //             this.track['dates'].push(timeObject);
+  //           }
+  //       }
+  //     } else {
+  //       const timeObject = {
+  //         recordedMinutes : convertedTime,
+  //         recordedDate : date
+  //       };
+  //       this.track['dates'].push(timeObject);
+  //     }
+  //     this.track['dates'].sort(this.compareEntriesByDate);
+  //     localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+  //   }
+  // }
 
-    const convertedTime = this.convertToNumber(time);
-    const isTimeValid = this.timeCheck(convertedTime);
-
-    if (isTimeValid && day !== '') {
-
-      if (this.track['dates'].length > 0) {
-
-        for (let i = 0; i < this.track['dates'].length; i++) {
-
-            const recordedEntry = this.track['dates'][i];
-
-            if ( date === recordedEntry.recordedDate) {
-              this.track['dates'][i].recordedMinutes = convertedTime;
-              break;
-            } else if ( i === this.track['dates'].length - 1 ) {
-              const timeObject = {
-                recordedMinutes : convertedTime,
-                recordedDate : date
-              };
-              this.track['dates'].push(timeObject);
-            }
-        }
-      } else {
-        const timeObject = {
-          recordedMinutes : convertedTime,
-          recordedDate : date
-        };
-        this.track['dates'].push(timeObject);
-      }
-      this.track['dates'].sort(this.compareEntriesByDate);
-      localStorage.setItem(this.track['name'], JSON.stringify(this.track));
-    }
-  }
-
-  public getAllTracks(): Track[] {
-    try {
-      const tracks = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
-        tracks.push(track);
-      }
-      return tracks;
-    } catch (error) {
-      console.log('Unable to retrive tracks list. ' + error.message);
-    }
-  }
+  // public getAllTracks(): Track[] {
+  //   try {
+  //     const tracks = [];
+  //     for (let i = 0; i < localStorage.length; i++) {
+  //       let track = localStorage.getItem(localStorage.key(i));
+  //       track = JSON.parse(track);
+  //       tracks.push(track);
+  //     }
+  //     return tracks;
+  //   } catch (error) {
+  //     console.log('Unable to retrive tracks list. ' + error.message);
+  //   }
+  // }
 
  // Returns the current selected track
- public findSelectedTrack(): Observable<Object> {
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
-        if (track['selected'] === true) {
-          return of(track);
-        }
-      }
-      // If there's no selected tracks
-      return of(false);
-    } catch (error) {
-      console.log('Currently there\'s no selected track. ' + error.message);
-    }
-  }
+ // public findSelectedTrack(): Observable<Object> {
+ //    try {
+ //      for (let i = 0; i < localStorage.length; i++) {
+ //        let track = localStorage.getItem(localStorage.key(i));
+ //        track = JSON.parse(track);
+ //        if (track['selected'] === true) {
+ //          return of(track);
+ //        }
+ //      }
+ //      // If there's no selected tracks
+ //      return of(false);
+ //    } catch (error) {
+ //      console.log('Currently there\'s no selected track. ' + error.message);
+ //    }
+ //  }
 
   // Confirms no other tracks exist with desired name
-  public nameCheck(name: string): boolean {
-    try {
-      if (name) {
-        if (localStorage.length > 1) {
-          for (let i = 0; i < localStorage.length; i++) {
-            let track = localStorage.getItem(localStorage.key(i));
-            track = JSON.parse(track);
-            if (name === track['name']) {
-              alert('This track already exists. Please choose a different name.');
-              return false;
-            } else if (name === '') {
-              alert('Please choose a name.');
-              return false;
-            } else if (i === (localStorage.length - 1)) {
-              this.deselectTracks();
-              return true;
-            }
-          }
-        } else {
-          this.deselectTracks();
-          return true;
-        }
-      } else {
-        alert('Please enter a name.');
-      }
-    } catch (error) {
-      console.log('Name check failed. ' + error.message);
-    }
-  }
+  // public nameCheck(name: string): boolean {
+  //   try {
+  //     if (name) {
+  //       if (localStorage.length > 1) {
+  //         for (let i = 0; i < localStorage.length; i++) {
+  //           let track = localStorage.getItem(localStorage.key(i));
+  //           track = JSON.parse(track);
+  //           if (name === track['name']) {
+  //             alert('This track already exists. Please choose a different name.');
+  //             return false;
+  //           } else if (name === '') {
+  //             alert('Please choose a name.');
+  //             return false;
+  //           } else if (i === (localStorage.length - 1)) {
+  //             this.deselectTracks();
+  //             return true;
+  //           }
+  //         }
+  //       } else {
+  //         this.deselectTracks();
+  //         return true;
+  //       }
+  //     } else {
+  //       alert('Please enter a name.');
+  //     }
+  //   } catch (error) {
+  //     console.log('Name check failed. ' + error.message);
+  //   }
+  // }
 
   // Confirms if time was actually entered
-  private timeCheck(time: number): boolean {
-    if (time > 0) {
-      return true;
-    } else {
-      return;
-    }
-  }
+  // private timeCheck(time: number): boolean {
+  //   if (time > 0) {
+  //     return true;
+  //   } else {
+  //     return;
+  //   }
+  // }
 
    /**
    * Check to see if user is inputting time in hours.
    * We declare these as lets instead of class properties cuz they aren't
    * loaded in time for Angular to find them in the DOM otherwise.
    */
-  public minutesOrHours(hours, minutes) {
-    parseInt(minutes, 10);
-    if (hours === true && minutes <= 24) {
-      return minutes * 60;
-    } else if (hours === false && minutes <= 1440) {
-      return minutes;
-    } else {
-      return;
-    }
-  }
+  // public minutesOrHours(hours, minutes): number {
+  //   parseInt(minutes, 10);
+  //   if (hours === true && minutes <= 24) {
+  //     return minutes * 60;
+  //   } else if (hours === false && minutes <= 1440) {
+  //     return minutes;
+  //   } else {
+  //     return;
+  //   }
+  // }
 
-  // Defaults all tracks selected property to false
-  public deselectTracks(): void {
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
-        track['selected'] = false;
-        localStorage.setItem(track['name'], JSON.stringify(track));
-      }
-    } catch (error) {
-      console.log('Deselecting tracks failed. ' + error.message);
-    }
-  }
+  // Defaults all track's selected property to false
+  // public deselectTracks(): void {
+  //   try {
+  //     for (let i = 0; i < localStorage.length; i++) {
+  //       let track = localStorage.getItem(localStorage.key(i));
+  //       track = JSON.parse(track);
+  //       track['selected'] = false;
+  //       localStorage.setItem(track['name'], JSON.stringify(track));
+  //     }
+  //   } catch (error) {
+  //     console.log('Deselecting tracks failed. ' + error.message);
+  //   }
+  // }
 
   // Create a string from a Date object with today's date, format YYYY-MM-DD
-  public createDateObject(date?: Date): string {
-    const dateObj = date ? date : new Date();
-    let month: any = dateObj.getMonth() + 1; // getMonth is 0-based
-    if (month < 10) { month = '0' + month; }
-    let day: any = dateObj.getDate();
-    if (day < 10) { day = '0' + day; }
-    const year = dateObj.getFullYear();
-    const newDate = year + '-' + month + '-' + day;
-    return newDate;
-  }
+  // public createDateObject(date?: Date): string {
+  //   const dateObj = date ? date : new Date();
+  //   let month: any = dateObj.getMonth() + 1; // getMonth is 0-based
+  //   if (month < 10) { month = '0' + month; }
+  //   let day: any = dateObj.getDate();
+  //   if (day < 10) { day = '0' + day; }
+  //   const year = dateObj.getFullYear();
+  //   const newDate = year + '-' + month + '-' + day;
+  //   return newDate;
+  // }
 
   /**
    *
@@ -212,53 +212,49 @@ export class GoalTrackService {
    * Pass in a number to return the date from as far
    * back as the time specified.
    */
-  dateOfNthDaysAgo(daysAgo: number): string {
-    try {
-      const newDate = new Date();
-      newDate.setDate(newDate.getDate() - daysAgo);
-      let nthDaysAgo: any = newDate.getDate();
-      if (nthDaysAgo < 10) { nthDaysAgo = '0' + nthDaysAgo; }
-      let monthMinusNthDaysAgo: any = newDate.getMonth() + 1;
-      if (monthMinusNthDaysAgo < 10) { monthMinusNthDaysAgo = '0' + monthMinusNthDaysAgo; }
-      const yearMinusNthDaysAgo = newDate.getFullYear();
-      const dateNthDaysAgo = yearMinusNthDaysAgo + '-' + monthMinusNthDaysAgo + '-' + nthDaysAgo;
-      return dateNthDaysAgo;
-    } catch (error) {
-      console.log('Can\'t find date from ' + daysAgo + ' days ago' + error.message);
-    }
-  }
+  // dateOfNthDaysAgo(daysAgo: number): string {
+  //   try {
+  //     const newDate = new Date();
+  //     newDate.setDate(newDate.getDate() - daysAgo);
+  //     let nthDaysAgo: any = newDate.getDate();
+  //     if (nthDaysAgo < 10) { nthDaysAgo = '0' + nthDaysAgo; }
+  //     let monthMinusNthDaysAgo: any = newDate.getMonth() + 1;
+  //     if (monthMinusNthDaysAgo < 10) { monthMinusNthDaysAgo = '0' + monthMinusNthDaysAgo; }
+  //     const yearMinusNthDaysAgo = newDate.getFullYear();
+  //     const dateNthDaysAgo = yearMinusNthDaysAgo + '-' + monthMinusNthDaysAgo + '-' + nthDaysAgo;
+  //     return dateNthDaysAgo;
+  //   } catch (error) {
+  //     console.log('Can\'t find date from ' + daysAgo + ' days ago' + error.message);
+  //   }
+  // }
 
   /**
    *
-   * @param trackName string
-   * @param startTime number
+   * @param trackName Track
    * @param endTime number
    *
-   * The startTime is the number of days from today to begin the maths and the endTime is number of days from today
-   * to end the maths.
+   * endTime is number of days back in time from today
    *
-   * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 0); // Returns today's time
-   * Example: this.goalTrackService.timeInInterval('firstTrack', 0, 6); // Returns last week's sum of time
-   * Example: this.goalTrackService.timeInInterval('firstTrack', 15, 45) // Returns one month of time beginning 15 days ago.
+   * Example: this.goalTrackService.timeInInterval('firstTrack', 0); // Returns today's time
+   * Example: this.goalTrackService.timeInInterval('firstTrack', 6); // Returns last week's sum of time
    */
-  timeInInterval(trackName: string, startTime: number, endTime: number) {
-    try {
-      const track = this.findTrackByName(trackName);
-      const startDate = this.dateOfNthDaysAgo(startTime);
-      const endDate = this.dateOfNthDaysAgo(endTime);
-      let sum = 0;
-
-      for (let i = 0; i < track['dates'].length; i++) {
-        const recordedDate = track['dates'][i].recordedDate;
-        if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
-          sum += track['dates'][i].recordedMinutes;
-        }
-      }
-      return sum;
-    } catch (error) {
-      console.log('Can\'t find sum in time interval provided for ' + trackName + ' track ' + error.message);
-    }
-  }
+  // timeInInterval(track: Track, endTime: number) {
+  //   try {
+  //     const startDate = this.dateOfNthDaysAgo(0);
+  //     const endDate = this.dateOfNthDaysAgo(endTime);
+  //     let sum = 0;
+  //
+  //     for (let i = 0; i < track['dates'].length; i++) {
+  //       const recordedDate = track['dates'][i].recordedDate;
+  //       if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
+  //         sum += track['dates'][i].recordedMinutes;
+  //       }
+  //     }
+  //     return sum;
+  //   } catch (error) {
+  //     console.log('Can\'t find sum in time interval provided for ' + track['name'] + ' track ' + error.message);
+  //   }
+  // }
 
   /**
    *
@@ -301,21 +297,20 @@ export class GoalTrackService {
 
   /**
    *
-   * @param trackName string
+   * @param track Track
    * @param sum string
    *
    * Pass a track name and sum to find the overall percentage of the track completed.
    */
-  percentOfEntireGoal(trackName, sum) {
-    try {
-      const track = this.findTrackByName(trackName);
-      const timeGoal = track['time'] * 60;
-      const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
-      return percent;
-    } catch (error) {
-      console.log('Can\'t find daily percentage from ' + trackName['name'] + ' & ' + sum + '. ' + error.message);
-    }
-  }
+  // percentOfEntireGoal(track: Track, sum: number) {
+  //   try {
+  //     const timeGoal = track['time'] * 60;
+  //     const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
+  //     return percent;
+  //   } catch (error) {
+  //     console.log('Can\'t find daily percentage from ' + track['name'] + ' & ' + sum + '. ' + error.message);
+  //   }
+  // }
 
   /**
    *
@@ -324,22 +319,22 @@ export class GoalTrackService {
    * Pass the number of days you want data on and the time completed for each day will be
    * returned in a tidy array;
    */
-  findRecentTime(trackName: string, numberOfDays: number): Array<any> {
-    try {
-      const selected = this.findTrackByName(trackName);
-      const recentTime: Array<any> = [];
-      for (let i = 0; i < numberOfDays; i++) {
-          let timeEntry: any = this.timeInInterval(selected['name'], i, i);
-          timeEntry = timeEntry / 60;
-          timeEntry = timeEntry.toFixed(1);
-          recentTime.push(timeEntry);
-          recentTime.reverse();
-      }
-      return recentTime;
-    } catch (error) {
-      console.log('Can\'t find recent time from ' + numberOfDays + '. ' + error.message);
-    }
-  }
+  // findRecentTime(trackName: string, numberOfDays: number): Array<any> {
+  //   try {
+  //     const selected = this.findTrackByName(trackName);
+  //     const recentTime: Array<any> = [];
+  //     for (let i = 0; i < numberOfDays; i++) {
+  //         let timeEntry: any = this.timeInInterval(selected['name'], i, i);
+  //         timeEntry = timeEntry / 60;
+  //         timeEntry = timeEntry.toFixed(1);
+  //         recentTime.push(timeEntry);
+  //         recentTime.reverse();
+  //     }
+  //     return recentTime;
+  //   } catch (error) {
+  //     console.log('Can\'t find recent time from ' + numberOfDays + '. ' + error.message);
+  //   }
+  // }
 
   public findTrackByName(track) {
     try {
@@ -448,6 +443,10 @@ export class GoalTrackService {
     return trackDataOutput;
   }
 
+  public simpleCompareFunction(a: number, b: number): number {
+    return a - b;
+  }
+
   /**
    *
    * @param first string
@@ -456,11 +455,11 @@ export class GoalTrackService {
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
    */
-  public compareEntriesByDate(first, second) {
-      const firstString = first.recordedDate.replace(/-/g, '');
-      const secondString = second.recordedDate.replace(/-/g, '');
-      return (parseInt(firstString, 10) - parseInt(secondString, 10));
-  }
+  // public compareEntriesByDate(first, second) {
+  //     const firstString = first.recordedDate.replace(/-/g, '');
+  //     const secondString = second.recordedDate.replace(/-/g, '');
+  //     return (parseInt(firstString, 10) - parseInt(secondString, 10));
+  // }
 
     /**
      * Creates a new track, and updates localStorage to reflect the change.
@@ -469,43 +468,43 @@ export class GoalTrackService {
      * @param time number
      */
 
-    public createNewTrack(): void {
-
-      const tracks = this.getAllTracks();
-      const newTrackName = 'new track ';
-
-      // FYI -- .indexOf is a older/clunkier (ES5) version of .includes()
-      const newTrackArray = tracks.filter( item =>
-        item.name.includes(newTrackName)
-      );
-
-      let newestTrack: Track;
-
-      if ( newTrackArray.length > 0 ) {
-        newestTrack = newTrackArray.pop();
-      }
-
-      // .match() returns an array matching the regex; in this case, any numbers
-      let number: any = newestTrack ? newestTrack.name.match(/\d/g) : null;
-
-      // Is there a number in the track name?
-      if ( newestTrack && number ) {
-        // .join returns a string from the number array
-        number = number.join('');
-        // Get the number from the string
-        number = parseInt(number, 10);
-      }
-
-      // If there's a number in the track name, iterate the number, else just create a 'new track'
-      if (number || newestTrack) {
-        this.example.name = 'new track ' + (number + 1);
-      } else {
-        this.example.name = 'new track ';
-      }
-
-      localStorage.setItem(this.example.name, JSON.stringify(this.example));
-      this.event.emit(this.example.name);
-    }
+    // public createNewTrack(): void {
+    //
+    //   const tracks = this.getAllTracks();
+    //   const newTrackName = 'new track ';
+    //
+    //   // FYI -- .indexOf is an older/clunkier (ES5) version of .includes()
+    //   const newTrackArray = tracks.filter( item =>
+    //     item.name.includes(newTrackName)
+    //   );
+    //
+    //   let newestTrack: Track;
+    //
+    //   if ( newTrackArray.length > 0 ) {
+    //     newestTrack = newTrackArray.pop();
+    //   }
+    //
+    //   // .match() returns an array matching the regex; in this case, any numbers
+    //   let number: any = newestTrack ? newestTrack.name.match(/\d/g) : null;
+    //
+    //   // Is there a number in the track name?
+    //   if ( newestTrack && number ) {
+    //     // .join returns a string from the number array
+    //     number = number.join('');
+    //     // Get the number from the string
+    //     number = parseInt(number, 10);
+    //   }
+    //
+    //   // If there's a number in the track name, iterate the number, else just create a 'new track'
+    //   if (number || newestTrack) {
+    //     this.example.name = 'new track ' + (number + 1);
+    //   } else {
+    //     this.example.name = 'new track ';
+    //   }
+    //
+    //   localStorage.setItem(this.example.name, JSON.stringify(this.example));
+    //   this.event.emit(this.example.name);
+    // }
 
   /**
    *
@@ -514,60 +513,56 @@ export class GoalTrackService {
    * Loop thru tracks from localstorage and turn the selected key
    * for the track clicked to true
    */
-  public makeSelectedTrack(track: Track) {
-    try {
-      this.track = track;
-      this.deselectTracks();
-      for (let i = 0; i < localStorage.length; i++) {
-        let storedTrack = localStorage.getItem(localStorage.key(i));
-        storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === track.name) {
-          storedTrack['selected'] = true;
-          localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
-          // this.findSelectedTrack();
-        }
-      }
-    } catch (error) {
-      console.log('Could not change selected track ' + error.message);
-    }
-  }
+  // public makeSelectedTrack(track: Track) {
+  //   try {
+  //     this.track = track;
+  //     this.deselectTracks();
+  //     for (let i = 0; i < localStorage.length; i++) {
+  //       let storedTrack = localStorage.getItem(localStorage.key(i));
+  //       storedTrack = JSON.parse(storedTrack);
+  //       if (storedTrack['name'] === track.name) {
+  //         storedTrack['selected'] = true;
+  //         localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
+  //         // this.findSelectedTrack();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('Could not change selected track ' + error.message);
+  //   }
+  // }
 
   /**
    *
    * @param track Track
    */
-  public deleteTrack(track: Track): void {
-    localStorage.removeItem(track.name);
-  }
+  // public deleteTrack(track: Track): void {
+  //   localStorage.removeItem(track.name);
+  // }
 
-  public simpleCompareFunction(a: number, b: number): number {
-    return a - b;
-  }
-
-  public verifyNewerTrackInfo(): Array<any> {
-    // Typed as 'any' for the subtraction below
-    const todaysDate: any = new Date();
-    const dates = [];
-
-    this.track.dates.forEach(element => {
-      dates.push(element);
-    });
-    // find first date in storage
-    dates.sort(this.compareEntriesByDate);
-
-    const earliestDate = dates[0] ? dates[0].recordedDate.split('-').join('/') : null;
-    const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
-    const timeInBetween = Math.ceil((todaysDate - convertedDate) / this.oneDay);
-
-    // Reduce lets you sum an array (dates is an array of objects)
-    const times = dates.reduce((a, b) => {
-      return a + b.recordedMinutes;
-    }, 0);
-
-    const avgOverTimeSpan = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
-
-    console.log(avgOverTimeSpan + ' ' + timeInBetween);
-    return [avgOverTimeSpan, timeInBetween, times];
-  }
+  // public verifyNewerTrackInfo(): Array<any> {
+  //   // Typed as 'any' for the subtraction below
+  //   const todaysDate: any = new Date();
+  //   const dates = [];
+  //
+  //   this.track.dates.forEach(element => {
+  //     dates.push(element);
+  //   });
+  //   // find first date in storage
+  //   dates.sort(this.compareEntriesByDate);
+  //
+  //   const earliestDate = dates[0] ? dates[0].recordedDate.split('-').join('/') : null;
+  //   const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
+  //   const timeInBetween = Math.ceil((todaysDate - convertedDate) / this.oneDay);
+  //
+  //   // Reduce lets you sum an array (dates is an array of objects)
+  //   const times = dates.reduce((a, b) => {
+  //     return a + b.recordedMinutes;
+  //   }, 0);
+  //
+  //   const avgOverTimeSpan = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
+  //
+  //   console.log(avgOverTimeSpan + ' ' + timeInBetween);
+  //   return [avgOverTimeSpan, timeInBetween, times];
+  // }
 
 }

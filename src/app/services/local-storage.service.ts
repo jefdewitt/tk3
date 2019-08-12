@@ -1,28 +1,172 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Track} from '../interfaces/track.interface';
+import {Observable, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
 
-  constructor() { }
+  public track: Track;
 
+  constructor() {
+    this.findSelectedTrack().subscribe((track: Track): Track => {
+      this.track = track;
+      return track;
+    });
+  }
+
+  /**
+   *
+   * @param track
+   *
+   * Saves a track to local storage
+   */
   public saveTrack(track: Track): void {
-
+    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
   }
 
-  public deleteTrack(trackName: string): void {
-
+  /**
+   *
+   * @param track Track
+   *
+   * Deletes a track from local storage
+   */
+  public deleteTrack(track: Track): void {
+    localStorage.removeItem(track.name);
   }
 
-  public findTrack(trackName: string): Track {
-    const track: Track = null;
-    return track;
+  /**
+   *
+   * @param track Track
+   *
+   * Finds a track in local storage by its name string
+   */
+  public findTrackByName(track: string) {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        let storedTrack = localStorage.getItem(localStorage.key(i));
+        storedTrack = JSON.parse(storedTrack);
+        if (storedTrack['name'] === track) {
+          return storedTrack;
+        }
+      }
+    } catch (error) {
+      console.log('Unable to find ' + track + ' by name ' + error.message);
+    }
   }
 
+  /**
+   *
+   * @param track Track
+   *
+   * Loop thru tracks from localstorage and turn the selected key
+   * for the track clicked to true
+   */
+  public makeSelectedTrack(track: Track) {
+    try {
+      this.track = track;
+      this.deselectTracks();
+      for (let i = 0; i < localStorage.length; i++) {
+        let storedTrack = localStorage.getItem(localStorage.key(i));
+        storedTrack = JSON.parse(storedTrack);
+        if (storedTrack['name'] === track.name) {
+          storedTrack['selected'] = true;
+          localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
+        }
+      }
+    } catch (error) {
+      console.log('Could not change selected track ' + error.message);
+    }
+  }
+
+  /**
+   * Returns the current selected track
+   *
+   * @return Observable
+   */
+  public findSelectedTrack(): Observable<Object> {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i));
+        track = JSON.parse(track);
+        if (track['selected'] === true) {
+          return of(track);
+        }
+      }
+      // If there's no selected tracks
+      return of(false);
+    } catch (error) {
+      console.log('Currently there\'s no selected track. ' + error.message);
+    }
+  }
+
+  /**
+   * Defaults all track's selected property to false
+   */
+  public deselectTracks(): void {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        let track = localStorage.getItem(localStorage.key(i));
+        track = JSON.parse(track);
+        track['selected'] = false;
+        localStorage.setItem(track['name'], JSON.stringify(track));
+      }
+    } catch (error) {
+      console.log('Deselecting tracks failed. ' + error.message);
+    }
+  }
+
+  /**
+   * Returns all the tracks in local storage
+   */
   public getAllTracks(): Track[] {
-    const allTracks: Track[] = null;
-    return allTracks;
+    try {
+      const allTracks: Track[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const track: string = localStorage.getItem(localStorage.key(i));
+        const trackObj: Track  = JSON.parse(track);
+        allTracks.push(trackObj);
+      }
+      return allTracks;
+    } catch (error) {
+      console.log('Unable to retrive tracks list. ' + error.message);
+    }
+  }
+
+  /**
+   *
+   * @param name string
+   *
+   * Confirms no other tracks exist with desired name
+   */
+  public isNameAlreadyTaken(name: string): boolean {
+    try {
+      if (name) {
+        if (localStorage.length > 1) {
+          for (let i = 0; i < localStorage.length; i++) {
+            let track = localStorage.getItem(localStorage.key(i));
+            track = JSON.parse(track);
+            if (name === track['name']) {
+              alert('This track already exists. Please choose a different name.');
+              return false;
+            } else if (name === '') {
+              alert('Please choose a name.');
+              return false;
+            } else if (i === (localStorage.length - 1)) {
+              this.deselectTracks();
+              return true;
+            }
+          }
+        } else {
+          this.deselectTracks();
+          return true;
+        }
+      } else {
+        alert('Please enter a name.');
+      }
+    } catch (error) {
+      console.log('Name check failed. ' + error.message);
+    }
   }
 }
