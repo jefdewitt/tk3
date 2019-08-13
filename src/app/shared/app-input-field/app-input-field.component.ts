@@ -1,7 +1,8 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {GoalTrackService} from '../../services/goal-track.service';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {TimeObject} from '../../timeObject';
 import {AppCalendarComponent} from '../app-calendar/app-calendar.component';
+import {TimeManagerService} from '../../services/time-manager.service';
+import {TrackManagerService} from '../../services/track-manager.service';
 
 @Component({
   selector: 'app-input-field',
@@ -12,7 +13,7 @@ export class AppInputFieldComponent {
 
   public minutes: number;
   public hours = false;
-  public track = this.goalTrackService.track;
+  public track = this._trackManagerService.track;
   public toggle = true;
 
   private _dateFromCal: string;
@@ -20,7 +21,10 @@ export class AppInputFieldComponent {
   @ViewChild(AppCalendarComponent) calendar: AppCalendarComponent;
   @Output() notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor( private goalTrackService: GoalTrackService ) { }
+  constructor(
+    private _timeManagerService: TimeManagerService,
+    private _trackManagerService: TrackManagerService
+  ) { }
 
   /**
    *
@@ -53,11 +57,11 @@ export class AppInputFieldComponent {
         }
 
         // Check if minutes or hours
-        this.minutes = this.goalTrackService.minutesOrHours(this.hours, this.minutes);
+        this.minutes = this._trackManagerService.minutesOrHours(this.hours, this.minutes);
 
         let timeObject: TimeObject = new TimeObject();
         if (!this._dateFromCal) {
-          timeObject = this.setTimeObject(this.minutes, this.goalTrackService.createDateObject());
+          timeObject = this.setTimeObject(this.minutes, this._timeManagerService.formatDateObjectToString());
         } else {
           timeObject = this.setTimeObject(this.minutes, this._dateFromCal);
         }

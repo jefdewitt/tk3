@@ -1,7 +1,7 @@
 <div class="track-wrapper">
   <span class="li-img batt-{{percentage}}"></span>
   <div class="percentage-container">
-    <span class="percent">{{ findPercentCompleted(individualTrack) }}%</span>
+    <span class="percent">{{ findPercentCompleted(individualTrack).toFixed(2) }}%</span>
     <progress max="100" value="{{ findPercentCompleted(individualTrack) }}"></progress>
   </div>
   <div class="track-details">
@@ -23,7 +23,7 @@
     <div>
       <label *ngIf="!individualTrack.editTime"
              (click)="editTrackDetails(individualTrack, 'time'); $event.stopPropagation()"
-             name="time">{{ individualTrack?.time }} hours</label>
+             name="time">{{ individualTrack?.time }} hour(s)</label>
       <input *ngIf="individualTrack.editTime"
              (click)="$event.stopPropagation()"
              (blur)="individualTrack.editTime = false; updateTrackTime(individualTrack, time.value); $event.stopPropagation()"

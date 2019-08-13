@@ -1,5 +1,5 @@
-import { GoalTrackService } from '../../services/goal-track.service';
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChildren, Output, EventEmitter } from '@angular/core';
+import {TrackManagerService} from '../../services/track-manager.service';
 
 @Component({
   selector: 'app-calendar',
@@ -10,7 +10,8 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private elementRef: ElementRef,
-    private goalTrackService: GoalTrackService) { }
+    private _trackManagerService: TrackManagerService
+    ) { }
 
   public todayDate: Date = new Date();
 
@@ -54,7 +55,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   @Output() notify: EventEmitter<string> = new EventEmitter<string>();
 
   public ngOnInit() {
-    this.track = this.goalTrackService.track;
+    this.track = this._trackManagerService.track;
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
     this.buildCal();
@@ -266,21 +267,22 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
    */
   public updateStorage(date, day, time) {
 
-    const minutes = this.goalTrackService.minutesOrHours(this.hours, time);
+    const minutes = this._trackManagerService.minutesOrHours(this.hours, time);
+    // const minutes = parseInt(timeInMinutesOrHours, 10);
     if (minutes) {
-      this.goalTrackService.updateTrackTimeInStorage(date, day, minutes);
+      this._trackManagerService.updateTrackTimeInStorage(date, day, minutes);
       day.minutes = time;
       day.edit = false;
     }
 
   }
 
-    /**
+  /**
    *
-   * @param event
-   * @param date
-   * @param day
-   * @param time
+   * @param event Event
+   * @param date Date
+   * @param day number
+   * @param time string
    *
    * On Enter key presses, update storage.
    */

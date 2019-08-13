@@ -1,8 +1,7 @@
-// import { Router } from '@angular/router';
 import { Component, OnInit, Input, ViewChildren, ElementRef, AfterViewChecked } from '@angular/core';
-import { GoalTrackService } from '../../services/goal-track.service';
 import { Track } from '../../interfaces/track.interface';
-import {forEach} from '@angular/router/src/utils/collection';
+import { LocalStorageService } from '../../services/local-storage.service';
+import { TrackManagerService } from '../../services/track-manager.service';
 
 @Component({
   selector: 'app-app-list',
@@ -22,24 +21,22 @@ export class AppListComponent implements OnInit, AfterViewChecked {
   public track: Track;
   public tracks: any;
   public noTracks = false;
-  // public disabled = false;
-  // public nameSelected = false;
-  // public timeSelected = false;
   public focusedNameInput;
   public focusedTimeInput;
   public name;
 
   constructor(
-    private goalTrackService: GoalTrackService,
+    private _localStorageService: LocalStorageService,
+    private _trackManagerService: TrackManagerService
     ) { }
 
   ngOnInit() {
-    this.track = this.goalTrackService.track;
-    this.tracks = this.goalTrackService.getAllTracks();
+    this.track = this._trackManagerService.track;
+    this.tracks = this._localStorageService.getAllTracks();
     if (this.tracks.length === 0) {
       this.noTracks = true;
     }
-    this.receiver = this.goalTrackService.event;
+    this.receiver = this._trackManagerService.event;
     this.receiver.subscribe( () => {
       this.noTracks = true;
     });
@@ -74,8 +71,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
   public createNew() {
     try {
-      this.goalTrackService.createNewTrack();
-      this.tracks = this.goalTrackService.getAllTracks();
+      this._trackManagerService.createNewTrack();
+      this.tracks = this._localStorageService.getAllTracks();
       this.noTracks = false;
     } catch (error) {
       console.error('Could not create a new track. ' + error.message);
@@ -84,7 +81,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
 
   public makeSelectedTrack(track) {
     if (this.track !== track) {
-      this.goalTrackService.makeSelectedTrack(track);
+      this._localStorageService.makeSelectedTrack(track);
       this.track = track;
     }
   }
@@ -93,7 +90,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     try {
       if ( confirm('Are you sure you want to delete this track? It can\'t be recovered.') ) {
 
-        this.goalTrackService.deleteTrack(track);
+        this._localStorageService.deleteTrack(track);
 
         // Update class member to maintain localStorage sync.
         if (this.track.name === track.name) {
@@ -116,13 +113,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public editTrack($event) {
-    this.makeSelectedTrack($event);
-    this.goalTrackService.trackToEdit = this.track['name'];
-  }
-
   public exportTrackData(track) {
-    this.goalTrackService.exportTrackData(track);
+    this._trackManagerService.exportTrackData(track);
   }
 
 }

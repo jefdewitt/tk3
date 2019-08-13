@@ -10,8 +10,7 @@ export class TrackManagerService {
 
   public track: Track;
   private oneDay = 86400000;
-  @Output()
-  public event = new EventEmitter();
+  @Output() public event = new EventEmitter();
 
   private example: Track = {
     dates: [],
@@ -25,12 +24,7 @@ export class TrackManagerService {
   constructor(
     private _timeManagerService: TimeManagerService,
     private _localStorageService: LocalStorageService
-    ) {
-    this._localStorageService.findSelectedTrack().subscribe((track: Track): Track => {
-      this.track = track;
-      return track;
-    });
-  }
+    ) { }
 
   /**
    *
@@ -138,7 +132,7 @@ export class TrackManagerService {
    * Sort track entries by date. First, these need to have hyphens
    * removed so we can properly parse them and then compare.
    */
-  public sortTrackObjectTimeEntriesByDate(first, second) {
+  public sortTrackObjectTimeEntriesByDate(first, second): number {
     const firstString = first.recordedDate.replace(/-/g, '');
     const secondString = second.recordedDate.replace(/-/g, '');
     return (parseInt(firstString, 10) - parseInt(secondString, 10));
@@ -169,7 +163,7 @@ export class TrackManagerService {
   /**
    *
    */
-  public totalMinutesInInterval(track: Track, interval: number) {
+  public totalMinutesInInterval(track: Track, interval: number): number {
     const dates = [];
     const dateStringStartingPoint = this._timeManagerService.stringDateOfNthDaysAgo(interval);
 

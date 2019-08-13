@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Track} from '../../../interfaces/track.interface';
-import {GoalTrackService} from '../../../services/goal-track.service';
+import {LocalStorageService} from '../../../services/local-storage.service';
+import {TrackManagerService} from '../../../services/track-manager.service';
 
 @Component({
   selector: 'app-list-item',
@@ -13,7 +14,10 @@ export class AppListItemComponent implements OnInit {
   public disabled = false;
   @Input() public individualTrack: Track;
 
-  constructor( private goalTrackService: GoalTrackService ) { }
+  constructor(
+    private _localStorageService: LocalStorageService,
+    private _trackManagerService: TrackManagerService
+    ) { }
 
   ngOnInit() {
     this.setPercentageImage(this.individualTrack);
@@ -48,27 +52,27 @@ export class AppListItemComponent implements OnInit {
   }
 
   public updateTrackName(event, track: any, property: any ) {
-    this.goalTrackService.makeSelectedTrack(track);
+    this._localStorageService.makeSelectedTrack(track);
 
     let nameIsNotTaken;
 
     if (event.type === 'change') {
-      nameIsNotTaken = this.goalTrackService.nameCheck(property);
+      nameIsNotTaken = this._localStorageService.isNameAlreadyTaken(property);
     }
 
     if (nameIsNotTaken) {
       const formerName = track.name;
       track.name = property === '' ? formerName : property;
 
-      localStorage.setItem(track['name'], JSON.stringify(track));
-      localStorage.removeItem(formerName);
+      this._localStorageService.saveTrack(track);
+      this._localStorageService.deleteTrack(track);
     }
 
     track.editName = false;
 
     setTimeout( () => {
       this.disabled = false;
-    }), 500;
+    }, 500);
   }
 
   public updateTrackTime(track: any, property: any ) {
@@ -78,17 +82,17 @@ export class AppListItemComponent implements OnInit {
     }
 
     track.time = property > 0 ? property : 0;
-    localStorage.setItem(this.individualTrack['name'], JSON.stringify(track));
+    this._localStorageService.saveTrack(track);
 
     track.editTime = false;
 
     setTimeout( () => {
       this.disabled = false;
-    }), 500
+    }, 500);
   }
 
   public editTrackDetails(track: any, property: string) {
-    this.goalTrackService.makeSelectedTrack(track);
+    this._localStorageService.makeSelectedTrack(track);
     this.disabled = true;
 
     if (property === 'name') {
@@ -112,7 +116,7 @@ export class AppListItemComponent implements OnInit {
   }
 
   public findPercentCompleted(track): any {
-    return this.goalTrackService.overallCompleted(track);
+    return this._trackManagerService.percentOfTrackCompletedInInterval(track);
   }
 
 }

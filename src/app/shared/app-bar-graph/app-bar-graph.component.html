@@ -1,11 +1,54 @@
 <div *ngIf="!noTracks">
-  <h3 id="progressHeader">
-    <span *ngIf="showTotalCompleted">{{ percentageDone.toFixed(2) }}%
-          completed {{ completed }}.</span>
-    <br>
-    {{ dailyMinutes.toFixed(0) }} minutes or
-    {{ dailyPercentage.toFixed(2) }}% {{ timePeriod }}.
-  </h3>
+  <table>
+    <tr>
+      <td>
+        {{ timePeriod }}
+      </td>
+      <td>
+        total:
+      </td>
+      <td>
+        {{ totalMinutes }}
+      </td>
+      <td>
+        minutes
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>
+        {{ percentageDone.toFixed(2) }}
+      </td>
+      <td>
+        %
+      </td>
+    </tr>
+  </table>
+  <table *ngIf="showTotalCompleted">
+    <tr>
+      <td></td>
+      <td>
+        average:
+      </td>
+      <td>
+        {{ dailyMinutes.toFixed(0) }}
+      </td>
+      <td>
+        minutes
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>
+        {{ dailyPercentage.toFixed(2) }}
+      </td>
+      <td>
+        %
+      </td>
+    </tr>
+  </table>
   <div id="progressContainer">
     <div>
       <span class="top">{{ this.mostTime }} hrs</span>

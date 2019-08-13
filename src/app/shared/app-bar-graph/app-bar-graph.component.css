@@ -144,3 +144,12 @@ span.after {
   from { width: 0%; }
   to   { width: 100%; }
 }
+
+table {
+  width: 100%;
+}
+
+td {
+  width: 33%;
+  border-bottom: 1px solid #ccc;
+}

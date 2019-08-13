@@ -9,11 +9,17 @@ export class LocalStorageService {
 
   public track: Track;
 
+  // create observable
+  public trackObservable$ = new Observable((observer) => {
+
+    // observable execution
+    console.log('observable observed')
+    observer.next(this.track);
+    observer.complete();
+  });
+
   constructor() {
-    this.findSelectedTrack().subscribe((track: Track): Track => {
-      this.track = track;
-      return track;
-    });
+    this.findSelectedTrack();
   }
 
   /**
@@ -73,6 +79,7 @@ export class LocalStorageService {
         if (storedTrack['name'] === track.name) {
           storedTrack['selected'] = true;
           localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
+          this.findSelectedTrack();
         }
       }
     } catch (error) {
@@ -85,17 +92,17 @@ export class LocalStorageService {
    *
    * @return Observable
    */
-  public findSelectedTrack(): Observable<Object> {
+  public findSelectedTrack(): Track {
+    console.log('findSelectedTrack')
     try {
       for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
+        const trackString = localStorage.getItem(localStorage.key(i));
+        const track = JSON.parse(trackString);
         if (track['selected'] === true) {
-          return of(track);
+          this.track = track;
+          return track;
         }
       }
-      // If there's no selected tracks
-      return of(false);
     } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }

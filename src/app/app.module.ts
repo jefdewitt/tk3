@@ -1,4 +1,3 @@
-import { GoalTrackService } from './services/goal-track.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -13,6 +12,9 @@ import { AppIoComponent } from './views/app-io/app-io.component';
 import { AppInputFieldComponent } from './shared/app-input-field/app-input-field.component';
 import { AppBarGraphComponent } from './shared/app-bar-graph/app-bar-graph.component';
 import { AppListItemComponent } from './views/app-list/app-list-item/app-list-item.component';
+import {TrackManagerService} from './services/track-manager.service';
+import {TimeManagerService} from './services/time-manager.service';
+import {LocalStorageService} from './services/local-storage.service';
 
 
 @NgModule({
@@ -32,7 +34,9 @@ import { AppListItemComponent } from './views/app-list/app-list-item/app-list-it
     FormsModule
   ],
   providers: [
-    GoalTrackService,
+    TrackManagerService,
+    TimeManagerService,
+    LocalStorageService
   ],
   bootstrap: [ AppComponent ],
   exports: [ AppRoutingModule ]
