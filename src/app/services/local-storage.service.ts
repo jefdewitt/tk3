@@ -1,6 +1,6 @@
-import {EventEmitter, Injectable, Output} from '@angular/core';
-import {Track} from '../interfaces/track.interface';
-import {Observable, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Track } from '../interfaces/track.interface';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class LocalStorageService {
    *
    * Finds a track in local storage by its name string
    */
-  public findTrackByName(track: string) {
+  public findTrackByName(track: Track) {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let storedTrack = localStorage.getItem(localStorage.key(i));

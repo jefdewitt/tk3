@@ -7,9 +7,9 @@ import { Track } from '../interfaces/track.interface';
 export class GoalTrackService {
 
   // public track: Track;
-  public trackToEdit = '';
+  // public trackToEdit = '';
 
-  private readonly example: Track;
+  // private readonly example: Track;
   // private oneDay = 86400000;
   // private count: number = 2;
 
@@ -263,14 +263,14 @@ export class GoalTrackService {
    *
    * Pass a sum and a time interval (7 = week, 30 = month, etc) to find daily minutes
    */
-  dailyMinutes(sum: number, interval: number): number {
-    try {
-      const minutesPerDay = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
-      return minutesPerDay;
-    } catch (error) {
-      console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
-    }
-  }
+  // dailyMinutes(sum: number, interval: number): number {
+  //   try {
+  //     const minutesPerDay = ( sum === 0 || interval === 0 ) ? 0 : sum / interval;
+  //     return minutesPerDay;
+  //   } catch (error) {
+  //     console.log('Can\'t find daily minutes from ' + sum + ' / ' + interval + '. ' + error.message);
+  //   }
+  // }
 
   /**
    *
@@ -278,22 +278,22 @@ export class GoalTrackService {
    * @param sum number
    * @param interval number
    */
-  dailyPercentage(trackName: string, sum: number, interval: number): number {
-    try {
-      // First, is this a new(er) track? If so, there may not be enough data
-      // const today = new Date();
-
-      this.verifyNewerTrackInfo();
-
-      const track = this.findTrackByName(trackName);
-      const timeGoal = ( track['time'] !== 0 ) ? track['time'] : 0;
-      const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
-      const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
-      return dailyPercent;
-    } catch (error) {
-      console.log('Can\'t find daily percentage from ' + trackName + ', ' + sum + ' & ' + interval + '. ' + error.message);
-    }
-  }
+  // dailyPercentage(trackName: string, sum: number, interval: number): number {
+  //   try {
+  //     // First, is this a new(er) track? If so, there may not be enough data
+  //     // const today = new Date();
+  //
+  //     // this.verifyNewerTrackInfo();
+  //
+  //     const track = this.findTrackByName(trackName);
+  //     const timeGoal = ( track['time'] !== 0 ) ? track['time'] : 0;
+  //     const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
+  //     const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
+  //     return dailyPercent;
+  //   } catch (error) {
+  //     console.log('Can\'t find daily percentage from ' + trackName + ', ' + sum + ' & ' + interval + '. ' + error.message);
+  //   }
+  // }
 
   /**
    *
@@ -336,37 +336,37 @@ export class GoalTrackService {
   //   }
   // }
 
-  public findTrackByName(track) {
-    try {
-      for (let i = 0; i < localStorage.length; i++) {
-        let storedTrack = localStorage.getItem(localStorage.key(i))
-        storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === track) {
-          return storedTrack;
-        }
-      }
-    } catch (error) {
-      console.log('Unable to find ' + track + ' by name ' + error.message);
-    }
-  }
+  // public findTrackByName(track) {
+  //   try {
+  //     for (let i = 0; i < localStorage.length; i++) {
+  //       let storedTrack = localStorage.getItem(localStorage.key(i))
+  //       storedTrack = JSON.parse(storedTrack);
+  //       if (storedTrack['name'] === track) {
+  //         return storedTrack;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('Unable to find ' + track + ' by name ' + error.message);
+  //   }
+  // }
 
-  public overallCompleted(track) {
-    try {
-      let sum = 0;
-      for (let i = 0; i < track['dates'].length; i++) {
-
-        sum += Number(track['dates'][i].recordedMinutes);
-      }
-      const percentage = track['time'] > 0 ? ( sum / ( track['time']  * 60 ) ) * 100 : 0;
-      if (percentage > 0) {
-        return percentage.toFixed(2);
-      } else {
-        return 0;
-      }
-    } catch (error) {
-      console.log('Currently there\'s no selected track. ' + error.message);
-    }
-  }
+  // public overallCompleted(track) {
+  //   try {
+  //     let sum = 0;
+  //     for (let i = 0; i < track['dates'].length; i++) {
+  //
+  //       sum += Number(track['dates'][i].recordedMinutes);
+  //     }
+  //     const percentage = track['time'] > 0 ? ( sum / ( track['time']  * 60 ) ) * 100 : 0;
+  //     if (percentage > 0) {
+  //       return percentage.toFixed(2);
+  //     } else {
+  //       return 0;
+  //     }
+  //   } catch (error) {
+  //     console.log('Currently there\'s no selected track. ' + error.message);
+  //   }
+  // }
 
   /**
    *
@@ -375,77 +375,19 @@ export class GoalTrackService {
    * Takes a track object and prompts a user for an email address
    * to send the track data (dates & times entered).
    */
-  exportTrackData(track: Track): void | boolean {
-    const email = prompt('Provide an email address to send this data to.');
+  // exportTrackData(track: Track): void | boolean {
+  //   const email = prompt('Provide an email address to send this data to.');
+  //
+  //   // Was email address provided?
+  //   if ( email === null || email === '' || !email ) {
+  //     return false;
+  //   } else {
+  //     const trackData = this.formatTrackData(track);
+  //     window.location.href = 'mailto:' + email + '?subject=' + track.name + ' Data&body=' + trackData + '';
+  //   }
+  // }
 
-    // Was email address provided?
-    if ( email === null || email === '' || !email ) {
-      return false;
-    } else {
-      const trackData = this.formatTrackData(track);
-      window.location.href = 'mailto:' + email + '?subject=' + track.name + ' Data&body=' + trackData + '';
-    }
-  }
 
-  /**
-   *
-   * @param trackName
-   *
-   * Get the track minutes and export them in an easy to read JSON file.
-   */
-  formatTrackData(track: Track): Object {
-    let trackDataOutput = 'Track name = ' + track.name + '%0D%0A%0D%0A';
-    const selectedTrack = localStorage.getItem(track.name);
-    const parsedTrack = JSON.parse(selectedTrack);
-    let trackDates = parsedTrack['dates'];
-
-    trackDates.sort(this.compareEntriesByDate);
-
-    for (let i = 0; i < trackDates.length; i++) {
-
-      let trackDataString = '';
-
-      // Grab 2 entries for date comparison
-      let item1 = parsedTrack['dates'][i - 1];
-      item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
-      let item2 = parsedTrack['dates'][i];
-      item2 = item2 ? new Date(item2.recordedDate.replace('-', '/')) : null;
-      let itemDate: string;
-      let itemTime: string;
-
-      /**
-       * Compute how many days are in between entries. If there are any
-       * gaps, create placeholder date objects with 0 minutes to fill them.
-       * This is so the emailed dates are sequential and there are no
-       * missing dates (makes it easier to average out times later).
-      */
-      const numberOfDays = (item2 - item1) / this.oneDay;
-      if ((item1 && item2) && (numberOfDays)) {
-        for (let j = numberOfDays - 1; j > 0 ; j--) {
-          const timePeriod = this.oneDay * j;
-          const adjustedTime = item2 - timePeriod;
-          const placeHolder = new Date(adjustedTime);
-          itemDate = this.createDateObject(placeHolder);
-          itemTime = '0';
-          trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
-        }
-        itemDate = parsedTrack['dates'][i]['recordedDate'];
-        itemTime = parsedTrack['dates'][i]['recordedMinutes'];
-      } else {
-        itemDate = parsedTrack['dates'][i]['recordedDate'];
-        itemTime = parsedTrack['dates'][i]['recordedMinutes'];
-      }
-
-      trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
-      trackDataOutput += trackDataString;
-    }
-    trackDataOutput += '%0D%0A' + selectedTrack;
-    return trackDataOutput;
-  }
-
-  public simpleCompareFunction(a: number, b: number): number {
-    return a - b;
-  }
 
   /**
    *

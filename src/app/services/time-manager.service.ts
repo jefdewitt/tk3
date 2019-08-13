@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Track } from '../interfaces/track.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimeManagerService {
 
-  constructor() { }
+  constructor( ) { }
 
-  public intervalOfDaysBetweenDates(date1: Date, date2: Date): number {
-    const numberOfDaysBetweenDates: number = null;
-    return numberOfDaysBetweenDates;
+  public intervalOfDaysBetweenDateStrings(date1: string, date2: string): number {
+    // Typed to any so we can do some maths on em
+    const earliestDateObj: any = this.formatStringToDateObject(date1);
+    const latestDateObj: any = this.formatStringToDateObject(date2);
+    return Math.ceil((latestDateObj - earliestDateObj) / 86400000) + 1;
   }
 
   /**
@@ -30,14 +33,19 @@ export class TimeManagerService {
     return stringDate;
   }
 
+  /**
+   *
+   * @param date Date
+   */
   public formatStringToDateObject(date: string): Date {
-    const dateObject: Date = null;
-    return dateObject;
+    const formattedDate = date.split('-').join('/');
+    const dateObjectFromString = new Date(formattedDate);
+    return dateObjectFromString;
   }
 
   /**
    *
-   * @param daysAgo numbe
+   * @param daysAgo number
    *
    * Pass in a number to return the date string from as far
    * back as the time specified. 0-based so passing in 0
@@ -57,5 +65,77 @@ export class TimeManagerService {
     } catch (error) {
       console.log('Can\'t find date from ' + daysAgo + ' days ago' + error.message);
     }
+  }
+
+  /**
+   *
+   * @param track Track
+   * @param datePlaceholder string
+   *
+   * This simply loops thru a track's dates property for matching dates provided from
+   * the populateProgressBars function below and returns the time from that date.
+   */
+  public stringMinutesOfTimeEnteredNthDayAgo(track: Track, datePlaceholder: string): string {
+    let time;
+    // loop thru selected track's dates property
+    for (let i = 0; i < track['dates'].length; i++) {
+      if (track['dates'][i].recordedDate === datePlaceholder) {
+        time = track['dates'][i].recordedMinutes;
+        time = time / 60;
+        time = time.toFixed(1);
+        return time;
+      } else {
+        time = 0;
+      }
+    }
+    return time;
+  }
+
+  /**
+   *
+   * @param time
+   *
+   * Take a date with format YYYY-MM-DD and reformat it to M/DD
+   */
+  public trimmedDate(time: string): string {
+    const splitTime = time.split('-');
+    let trimmedDayDate = splitTime[1];
+    let trimmedMonthDate = splitTime[2];
+    if (trimmedDayDate.startsWith('0')) {
+      trimmedDayDate = trimmedDayDate[1];
+    }
+    if (trimmedMonthDate.startsWith('0')) {
+      trimmedMonthDate = trimmedMonthDate[1];
+    }
+    const trimmedDate = trimmedDayDate + '/' + trimmedMonthDate;
+    return trimmedDate;
+  }
+
+  /**
+   *
+   * @param array Array<any>
+   */
+  public findMostTime(array: Array<any>): number {
+    try {
+      const timeArray: Array<any> = [];
+      for (let i = 0; i < array.length; i++) {
+        const time = array[i].time;
+        timeArray.push(time);
+      }
+      const sortedArray = timeArray.sort(this.simpleCompareFunction);
+      // Find the most time in the array
+      const mostTime = sortedArray.pop();
+      if (mostTime) {
+        return mostTime;
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log('Unable to find top time' + error.message);
+    }
+  }
+
+  public simpleCompareFunction(a: number, b: number): number {
+    return a - b;
   }
 }
