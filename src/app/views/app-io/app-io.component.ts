@@ -1,7 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Track } from '../../interfaces/track.interface';
 import { AppBarGraphComponent } from '../../shared/app-bar-graph/app-bar-graph.component';
-import {AppInputFieldComponent} from '../../shared/app-input-field/app-input-field.component';
+import { AppInputFieldComponent } from '../../shared/app-input-field/app-input-field.component';
+import { LocalStorageService } from '../../services/local-storage.service';
 import {TrackManagerService} from '../../services/track-manager.service';
 
 @Component({
@@ -9,19 +10,25 @@ import {TrackManagerService} from '../../services/track-manager.service';
   templateUrl: './app-io.component.html',
   styleUrls: ['./app-io.component.css']
 })
-export class AppIoComponent {
+export class AppIoComponent implements OnInit {
 
-  noTracks = false;
-  public track: Track = this._trackManagerService.track;
+  public noTracks = false;
+  public track: Track;
 
   @ViewChild(AppBarGraphComponent) barGraph: AppBarGraphComponent;
   @ViewChild(AppInputFieldComponent) inputComp: AppInputFieldComponent;
 
   constructor(
+    private _localStorageService: LocalStorageService,
     private _trackManagerService: TrackManagerService
-    ) {
+  ) { }
+
+  public ngOnInit() {
+    this.track = this._localStorageService.findSelectedTrack();
+
     if (!this.track) {
       this.noTracks = true;
+      this._trackManagerService.routeToListView();
     }
   }
 

@@ -1,51 +1,33 @@
 <div *ngIf="!noTracks">
   <table>
     <tr>
-      <td>
-        {{ timePeriod }}
+      <td class="right">
+        {{ timePeriod }} total:
       </td>
       <td>
-        total:
-      </td>
-      <td>
-        {{ totalMinutes }}
-      </td>
-      <td>
-        minutes
+        {{ totalMinutes }} minutes
       </td>
     </tr>
     <tr>
       <td></td>
-      <td></td>
       <td>
-        {{ percentageDone.toFixed(2) }}
-      </td>
-      <td>
-        %
+        {{ percentageDone.toFixed(2) }} %
       </td>
     </tr>
   </table>
   <table *ngIf="showTotalCompleted">
     <tr>
-      <td></td>
-      <td>
+      <td class="right">
         average:
       </td>
       <td>
-        {{ dailyMinutes.toFixed(0) }}
-      </td>
-      <td>
-        minutes
+        {{ dailyMinutes.toFixed(0) }} minutes
       </td>
     </tr>
     <tr>
       <td></td>
-      <td></td>
       <td>
-        {{ dailyPercentage.toFixed(2) }}
-      </td>
-      <td>
-        %
+        {{ dailyPercentage.toFixed(2) }} %
       </td>
     </tr>
   </table>

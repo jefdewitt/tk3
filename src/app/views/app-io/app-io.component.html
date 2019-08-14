@@ -3,7 +3,7 @@
     <h2>Active: {{ track.name }}</h2>
   </div>
 
-    <app-input-field (notifyIOComp)="updateDisplays($event)"></app-input-field>
+    <app-input-field [track]="track" (notifyIOComp)="updateDisplays($event)"></app-input-field>
 
   <div *ngIf="noTracks"><h3>Currently there are zero tracks selected. Please select a track or create a new one.</h3></div>
 </section>
@@ -11,7 +11,7 @@
 <section>
   <div class="output-view sub-header">
 
-    <app-bar-graph (notifyFromBarGraph)="updateBarGraph($event)"></app-bar-graph>
+    <app-bar-graph [track]="track"></app-bar-graph>
 
   </div>
 </section>

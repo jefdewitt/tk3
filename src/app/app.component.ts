@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Track } from './interfaces/track.interface';
 import { LocalStorageService } from './services/local-storage.service';
-import {map} from 'rxjs/operators';
+import { TrackManagerService } from './services/track-manager.service';
 
 @Component({
   selector: 'app-root',
@@ -11,30 +10,16 @@ import {map} from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
 
-  track: any;
+  public track: Track;
 
   constructor(
     private _localStorageService: LocalStorageService,
-    private router: Router
-  ) {
-
-  }
+    private _trackManagerService: TrackManagerService
+    ) { }
 
   ngOnInit() {
-    this.routeToListView();
-
-    this._localStorageService.trackObservable$.subscribe( content => console.log( this.track = content ));
-  }
-
-  /**
-   * If there's no selected tracks (i.e., 0 tracks) go the list track view.
-   */
-  private routeToListView() {
-    try {
-      this.router.navigateByUrl('/List Tracks');
-    } catch (error) {
-      console.log('Unable to reroute to List Track view ' + error.message);
-    }
+    this._trackManagerService.routeToListView();
+    this.track = this._localStorageService.findSelectedTrack();
   }
 
 }

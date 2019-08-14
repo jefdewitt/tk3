@@ -9,18 +9,7 @@ export class LocalStorageService {
 
   public track: Track;
 
-  // create observable
-  public trackObservable$ = new Observable((observer) => {
-
-    // observable execution
-    console.log('observable observed')
-    observer.next(this.track);
-    observer.complete();
-  });
-
-  constructor() {
-    this.findSelectedTrack();
-  }
+  constructor() { }
 
   /**
    *
@@ -29,7 +18,7 @@ export class LocalStorageService {
    * Saves a track to local storage
    */
   public saveTrack(track: Track): void {
-    localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+    localStorage.setItem(track['name'], JSON.stringify(track));
   }
 
   /**
@@ -93,7 +82,6 @@ export class LocalStorageService {
    * @return Observable
    */
   public findSelectedTrack(): Track {
-    console.log('findSelectedTrack')
     try {
       for (let i = 0; i < localStorage.length; i++) {
         const trackString = localStorage.getItem(localStorage.key(i));

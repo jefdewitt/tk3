@@ -2,6 +2,7 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 import {Track} from '../interfaces/track.interface';
 import {TimeManagerService} from './time-manager.service';
 import {LocalStorageService} from './local-storage.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,11 @@ export class TrackManagerService {
 
   constructor(
     private _timeManagerService: TimeManagerService,
-    private _localStorageService: LocalStorageService
-    ) { }
+    private _localStorageService: LocalStorageService,
+    private _router: Router
+    ) {
+    this.track = this._localStorageService.findSelectedTrack();
+  }
 
   /**
    *
@@ -156,7 +160,6 @@ export class TrackManagerService {
 
     const averageDailyMinutes = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
 
-    console.log(averageDailyMinutes + ' ' + timeInBetween);
     return [averageDailyMinutes, timeInBetween];
   }
 
@@ -195,7 +198,7 @@ export class TrackManagerService {
       const sum = this.totalMinutesInInterval(track, interval);
       const daysSinceFirstEntry =
         this._timeManagerService.intervalOfDaysBetweenDateStrings(
-          this.track.dates[0].recordedDate, this.track.dates[this.track.dates.length - 1].recordedDate
+          this.track.dates[this.track.dates.length - 1].recordedDate, this.track.dates[0].recordedDate
         );
       const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
       if ( interval > daysSinceFirstEntry ) { interval = daysSinceFirstEntry; }
@@ -374,5 +377,16 @@ export class TrackManagerService {
     }
     trackDataOutput += '%0D%0A' + this.track['name'];
     return trackDataOutput;
+  }
+
+  /**
+   * If there's no selected tracks (i.e., 0 tracks) go the list track view.
+   */
+  public routeToListView() {
+    try {
+      this._router.navigateByUrl('/List Tracks');
+    } catch (error) {
+      console.log('Unable to reroute to List Track view ' + error.message);
+    }
   }
 }

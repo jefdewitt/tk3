@@ -31,7 +31,8 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     ) { }
 
   ngOnInit() {
-    this.track = this._trackManagerService.track;
+    this.track = this._localStorageService.findSelectedTrack();
+
     this.tracks = this._localStorageService.getAllTracks();
     if (this.tracks.length === 0) {
       this.noTracks = true;
@@ -69,7 +70,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  public createNew() {
+  public createNew(): void {
     try {
       this._trackManagerService.createNewTrack();
       this.tracks = this._localStorageService.getAllTracks();
@@ -79,7 +80,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public makeSelectedTrack(track) {
+  public makeSelectedTrack(track): void {
     if (this.track !== track) {
       this._localStorageService.makeSelectedTrack(track);
       this.track = track;

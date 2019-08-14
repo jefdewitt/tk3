@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { Track } from '../../interfaces/track.interface';
 import {TimeManagerService} from '../../services/time-manager.service';
 import {TrackManagerService} from '../../services/track-manager.service';
@@ -16,18 +16,19 @@ export class AppBarGraphComponent implements OnInit {
   public timePeriod = 'Today\'s';
   public totalMinutes: number;
   public progressBarArray: Array<any> = [];
-  public track = this._trackManagerService.track;
   public showTotalCompleted = false;
   public barWidth: number;
   public showDate: boolean;
   public frequency: number;
+  public mostTime: any;
+
+  @Input() public track;
+
   private dailyAverageMinutesAndIntervalArray: Array<number>;
   private mobileDeviceWidth = 300;
-
   private isMonthView: boolean;
   private isThreeMonthView: boolean;
   private isSixMonthView: boolean;
-  private mostTime: any;
 
   constructor(
     private _trackManagerService: TrackManagerService,
@@ -37,8 +38,8 @@ export class AppBarGraphComponent implements OnInit {
   public ngOnInit() {
 
     this.dailyAverageMinutesAndIntervalArray =
-      this._trackManagerService.averageDailyCompletedMinutesByInterval(this._trackManagerService.track, 0);
-    this.dailyMinAndPerc(this._trackManagerService.track, 1);
+      this._trackManagerService.averageDailyCompletedMinutesByInterval(this.track, 0);
+    this.dailyMinAndPerc(this.track, 1);
 
     if (this.dailyAverageMinutesAndIntervalArray[1] > 30) {
       this.progressBarArray = this.populateProgressBars(30);

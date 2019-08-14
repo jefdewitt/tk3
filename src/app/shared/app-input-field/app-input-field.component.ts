@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {TimeObject} from '../../timeObject';
 import {AppCalendarComponent} from '../app-calendar/app-calendar.component';
 import {TimeManagerService} from '../../services/time-manager.service';
 import {TrackManagerService} from '../../services/track-manager.service';
+import {LocalStorageService} from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-input-field',
@@ -13,17 +14,18 @@ export class AppInputFieldComponent {
 
   public minutes: number;
   public hours = false;
-  public track = this._trackManagerService.track;
   public toggle = true;
+
+  @ViewChild(AppCalendarComponent) public calendar: AppCalendarComponent;
+  @Output() public notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
+  @Input() public track;
 
   private _dateFromCal: string;
 
-  @ViewChild(AppCalendarComponent) calendar: AppCalendarComponent;
-  @Output() notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
-
   constructor(
     private _timeManagerService: TimeManagerService,
-    private _trackManagerService: TrackManagerService
+    private _trackManagerService: TrackManagerService,
+    private _localStorageService: LocalStorageService
   ) { }
 
   /**
@@ -43,7 +45,7 @@ export class AppInputFieldComponent {
 
   public refreshCal(): void {
     this.calendar.resetAndChecks();
-    this.calendar.ngOnInit();
+    this.calendar.loadNewCalendar();
   }
 
 // Adds minutes to local storage for submit button clicks
@@ -68,7 +70,7 @@ export class AppInputFieldComponent {
         // Check if min > 0 and if there are prev. date entries in dates array
         this.sameDateCheck(timeObject);
 
-        localStorage.setItem(this.track['name'], JSON.stringify(this.track));
+        this._localStorageService.saveTrack(this.track);
         this.minutes = null;
         this._dateFromCal = null;
         this.notifyIOComp.emit('update');

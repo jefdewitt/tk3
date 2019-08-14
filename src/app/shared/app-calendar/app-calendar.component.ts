@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChildren, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, AfterViewChecked, ElementRef, ViewChildren, Output, EventEmitter, Input} from '@angular/core';
 import {TrackManagerService} from '../../services/track-manager.service';
 
 @Component({
@@ -37,7 +37,6 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   private day;
 
   private state = 'Open';
-  private track;
   private curMonth = this.todayDate.getMonth() + 1;
   private twelveMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
    'August', 'September', 'October', 'November', 'December'];
@@ -48,6 +47,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   private adjustedCount;
   private edit = true;
   private focusedTimeInput;
+  @Input() private track;
 
   // Used exclusively for adding focus to an input on init (input init not class init).
   @ViewChildren('time') focusedTime: ElementRef;
@@ -55,10 +55,22 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   @Output() notify: EventEmitter<string> = new EventEmitter<string>();
 
   public ngOnInit() {
-    this.track = this._trackManagerService.track;
+    this.loadNewCalendar();
+  }
+
+  /**
+   * Rebuilds calendar when new time is entered and saved.
+   */
+  public loadNewCalendar() {
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
-    this.buildCal();
+    if (this.count > 0 || this.count < 0) {
+      const adjustedCount = this.calcAdjustedCount(this.count);
+      this.monthAndYearOnDisplay(0, adjustedCount );
+      this.buildCal(adjustedCount);
+    } else {
+      this.buildCal();
+    }
   }
 
   /**
@@ -205,9 +217,19 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
     this.count--;
     this.resetAndChecks();
     // Account for 0-based index error for setting months.
-    this.adjustedCount = (this.count === -1) ? this.adjustedCount = 0 : this.adjustedCount = this.count + 1;
-    this.monthAndYearOnDisplay(0, this.adjustedCount );
+    const adjustedCount = this.calcAdjustedCount(this.count);
+    this.monthAndYearOnDisplay(0, adjustedCount );
     this.buildCal(this.adjustedCount);
+  }
+
+  /**
+   *
+   * @param count number
+   */
+  private calcAdjustedCount(count: number): number {
+    let adjustedCount: number;
+    adjustedCount = (count === -1) ? 0 : count + 1;
+    return adjustedCount;
   }
 
   /**
@@ -332,19 +354,8 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
    *
    * Show the input field on the the clicked calendar cell.
    */
-  public editDateEntryTime(day) {
-
+  public editDateEntryTime(day): void {
     this.notify.emit(day);
-
-    if (day.date !== '') {
-
-      for (let i = 0; i < this.month.weeks.length; i++) {
-        for (let j = 0; j <  this.month.weeks[i].length; j++) {
-          this.month.weeks[i][j].edit = false;
-        }
-      }
-      day.edit = true;
-    }
   }
 
   /**
