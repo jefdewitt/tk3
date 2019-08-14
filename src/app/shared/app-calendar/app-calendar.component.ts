@@ -64,13 +64,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   public loadNewCalendar() {
     this.determineWeekdayThatMonthStartsOn();
     this.monthAndYearOnDisplay();
-    if (this.count > 0 || this.count < 0) {
-      const adjustedCount = this.calcAdjustedCount(this.count);
-      this.monthAndYearOnDisplay(0, adjustedCount );
-      this.buildCal(adjustedCount);
-    } else {
-      this.buildCal();
-    }
+    this.calcMonthNameAndCalToDisplay();
   }
 
   /**
@@ -207,19 +201,35 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   // Last month
   public prevMonth() {
     this.count++;
-    this.resetAndChecks();
-    this.monthAndYearOnDisplay(0, this.count + 1);
-    this.buildCal(this.count + 1);
+    this.calcMonthNameAndCalToDisplay();
   }
 
   // Next month
   public nextMonth() {
     this.count--;
-    this.resetAndChecks();
-    // Account for 0-based index error for setting months.
-    const adjustedCount = this.calcAdjustedCount(this.count);
-    this.monthAndYearOnDisplay(0, adjustedCount );
-    this.buildCal(this.adjustedCount);
+    this.calcMonthNameAndCalToDisplay();
+  }
+
+  /**
+   * Basically, we're just building a new calendar based on whether we've clicked to a past or future month
+   */
+  private calcMonthNameAndCalToDisplay(): void {
+      this.resetAndChecks();
+    // prevmonth was clicked
+    if (this.count > 0) {
+      this.monthAndYearOnDisplay(0, this.count + 1);
+      this.buildCal(this.count + 1);
+    } else if (this.count < 0) {
+      // next month was clicked
+      // Account for 0-based index error for setting months.
+      const adjustedCount = this.calcAdjustedCount(this.count);
+      this.monthAndYearOnDisplay(0, adjustedCount );
+      this.buildCal(this.adjustedCount);
+    } else {
+      this.determineWeekdayThatMonthStartsOn();
+      this.monthAndYearOnDisplay();
+      this.buildCal();
+    }
   }
 
   /**
@@ -323,7 +333,6 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
    * Toggle the calendar open/close.
    */
   public showOrHide(toggle): void {
-
     if (toggle) {
       this.visible = true;
       setTimeout(() => this.visibleAnimate = true, 100);

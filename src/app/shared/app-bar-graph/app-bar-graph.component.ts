@@ -48,6 +48,7 @@ export class AppBarGraphComponent implements OnInit {
     } else {
       this.progressBarArray = this.populateProgressBars(1);
     }
+
     this.barWidth = this.dailyAverageMinutesAndIntervalArray[1] >= 29 ?
                     10 :
                     this.mobileDeviceWidth / this.dailyAverageMinutesAndIntervalArray[1];

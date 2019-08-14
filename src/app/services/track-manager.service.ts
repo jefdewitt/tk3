@@ -148,19 +148,16 @@ export class TrackManagerService {
    * @param interval number
    */
   public averageDailyCompletedMinutesByInterval(track: Track, interval: number): Array<number> {
-    // Typed as 'any' for the subtraction below
-    const todaysDateObject: any = new Date();
+
     track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
 
-    const earliestDate = track.dates[0] ? track.dates[0].recordedDate.split('-').join('/') : null;
-    const convertedDate: any = earliestDate ? new Date(earliestDate) : null;
-    const timeInBetween = Math.ceil((todaysDateObject - convertedDate) / this.oneDay);
-
+    const todaysDateObject: Date = new Date();
+    const daysSinceFirstEntry = this._timeManagerService.intervalOfDaysBetweenDates(track.dates[0].recordedDate, todaysDateObject);
+    const intervalToComputeAverage = daysSinceFirstEntry > interval ? interval : daysSinceFirstEntry;
     const times = this.totalMinutesInInterval(track, interval);
+    const averageDailyMinutes = intervalToComputeAverage > 0 ? Math.floor(times / intervalToComputeAverage) : times;
 
-    const averageDailyMinutes = timeInBetween > 0 ? Math.floor(times / timeInBetween) : times;
-
-    return [averageDailyMinutes, timeInBetween];
+    return [averageDailyMinutes, daysSinceFirstEntry];
   }
 
   /**
@@ -197,8 +194,8 @@ export class TrackManagerService {
       const timeGoal = ( this.track['time'] !== 0 ) ? this.track['time'] * 60 : 0;
       const sum = this.totalMinutesInInterval(track, interval);
       const daysSinceFirstEntry =
-        this._timeManagerService.intervalOfDaysBetweenDateStrings(
-          this.track.dates[this.track.dates.length - 1].recordedDate, this.track.dates[0].recordedDate
+        this._timeManagerService.intervalOfDaysBetweenDates(
+          this.track.dates[0].recordedDate, this.track.dates[this.track.dates.length - 1].recordedDate
         );
       const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
       if ( interval > daysSinceFirstEntry ) { interval = daysSinceFirstEntry; }
