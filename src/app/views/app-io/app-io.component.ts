@@ -24,12 +24,8 @@ export class AppIoComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    this.track = this._localStorageService.findSelectedTrack();
 
-    if (!this.track) {
-      this.noTracks = true;
-      this._trackManagerService.routeToListView();
-    }
+    this.track = this._localStorageService.findSelectedTrack();
   }
 
   public updateDisplays(dataFromInputComp: string): void {

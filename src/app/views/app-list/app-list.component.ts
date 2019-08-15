@@ -10,12 +10,9 @@ import { TrackManagerService } from '../../services/track-manager.service';
 })
 export class AppListComponent implements OnInit, AfterViewChecked {
 
-  @ViewChildren
-  ('name') focusedName: ElementRef;
-  @ViewChildren
-  ('time') focusedTime: ElementRef;
-  @Input()
-  public receiver;
+  @ViewChildren ('name') focusedName: ElementRef;
+  @ViewChildren ('time') focusedTime: ElementRef;
+  @Input() public receiver;
 
   public time;
   public track: Track;
@@ -75,6 +72,7 @@ export class AppListComponent implements OnInit, AfterViewChecked {
       this._trackManagerService.createNewTrack();
       this.tracks = this._localStorageService.getAllTracks();
       this.noTracks = false;
+      this.ngOnInit();
     } catch (error) {
       console.error('Could not create a new track. ' + error.message);
     }

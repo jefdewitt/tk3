@@ -1,4 +1,4 @@
-<div *ngIf="!noTracks">
+<div *ngIf="hasTime; else noGraph">
   <table>
     <tr>
       <td class="right">
@@ -53,3 +53,4 @@
     <button value="6-month" type="submit" (click)="changeTimeFrame($event)">6 months</button>
   </div>
 </div>
+<ng-template #noGraph><h3>Enter time to begin tracking your progress.</h3></ng-template>

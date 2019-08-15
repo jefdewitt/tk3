@@ -17,7 +17,7 @@ export class TrackManagerService {
     dates: [],
     name: 'new track ',
     selected: true,
-    time: 0,
+    time: 1,
     editName: false,
     editTime: false
   };
@@ -116,7 +116,7 @@ export class TrackManagerService {
     try {
       const recentTime: Array<number> = [];
       for (let i = 0; i < numberOfDays; i++) {
-        let timeEntry: any = this.sumTrackObjectTimesByInterval(this._localStorageService.track, i);
+        let timeEntry: any = this.sumTrackObjectTimesByInterval(this.track, i);
         timeEntry = timeEntry / 60;
         timeEntry = timeEntry.toFixed(1);
         recentTime.push(timeEntry);
@@ -149,10 +149,15 @@ export class TrackManagerService {
    */
   public averageDailyCompletedMinutesByInterval(track: Track, interval: number): Array<number> {
 
-    track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
+    if (track) {
+      track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
+    } else {
+      track = this.track, track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
+    }
 
     const todaysDateObject: Date = new Date();
-    const daysSinceFirstEntry = this._timeManagerService.intervalOfDaysBetweenDates(track.dates[0].recordedDate, todaysDateObject);
+    const daysSinceFirstEntry = track.dates[0] ?
+                                this._timeManagerService.intervalOfDaysBetweenDates(track.dates[0].recordedDate, todaysDateObject) : 0;
     const intervalToComputeAverage = daysSinceFirstEntry > interval ? interval : daysSinceFirstEntry;
     const times = this.totalMinutesInInterval(track, interval);
     const averageDailyMinutes = intervalToComputeAverage > 0 ? Math.floor(times / intervalToComputeAverage) : times;

@@ -29,6 +29,7 @@ export class LocalStorageService {
    */
   public deleteTrack(track: Track): void {
     localStorage.removeItem(track.name);
+    this.track = null;
   }
 
   /**

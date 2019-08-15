@@ -21,6 +21,7 @@ export class AppBarGraphComponent implements OnInit {
   public showDate: boolean;
   public frequency: number;
   public mostTime: any;
+  public hasTime: boolean;
 
   @Input() public track;
 
@@ -29,6 +30,7 @@ export class AppBarGraphComponent implements OnInit {
   private isMonthView: boolean;
   private isThreeMonthView: boolean;
   private isSixMonthView: boolean;
+  private intervalOfDays: number;
 
   constructor(
     private _trackManagerService: TrackManagerService,
@@ -41,18 +43,20 @@ export class AppBarGraphComponent implements OnInit {
       this._trackManagerService.averageDailyCompletedMinutesByInterval(this.track, 0);
     this.dailyMinAndPerc(this.track, 1);
 
-    if (this.dailyAverageMinutesAndIntervalArray[1] > 30) {
+    this.intervalOfDays = this.dailyAverageMinutesAndIntervalArray[1];
+
+    if (this.intervalOfDays > 30) {
       this.progressBarArray = this.populateProgressBars(30);
-    } else if (this.dailyAverageMinutesAndIntervalArray[1] > 0) {
-      this.progressBarArray = this.populateProgressBars(this.dailyAverageMinutesAndIntervalArray[1]);
+    } else if (this.intervalOfDays > 0) {
+      this.progressBarArray = this.populateProgressBars(this.intervalOfDays);
     } else {
       this.progressBarArray = this.populateProgressBars(1);
     }
 
-    this.barWidth = this.dailyAverageMinutesAndIntervalArray[1] >= 29 ?
-                    10 :
-                    this.mobileDeviceWidth / this.dailyAverageMinutesAndIntervalArray[1];
+    this.barWidth = this.intervalOfDays >= 29 ? 10 : this.mobileDeviceWidth / this.intervalOfDays;
     this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
+
+    this.hasTime = this._trackManagerService.sumTrackObjectTimesByInterval(this.track) ? true : false;
   }
 
   /**
@@ -106,12 +110,10 @@ export class AppBarGraphComponent implements OnInit {
   private setTableAndChart(timeInterval: string, numberOfDays: number, barSize: number) {
     this.timePeriod = timeInterval;
     this.dailyMinAndPerc(this.track, numberOfDays);
-    this.progressBarArray = this.dailyAverageMinutesAndIntervalArray[1] > (numberOfDays + 1) ?
+    this.progressBarArray = this.intervalOfDays > (numberOfDays + 1) ?
                             this.populateProgressBars(30) :
-                            this.populateProgressBars(this.dailyAverageMinutesAndIntervalArray[1]);
-    this.barWidth = this.dailyAverageMinutesAndIntervalArray[1] >= numberOfDays ?
-                    barSize :
-                    this.mobileDeviceWidth / this.dailyAverageMinutesAndIntervalArray[1];
+                            this.populateProgressBars(this.intervalOfDays);
+    this.barWidth = this.intervalOfDays >= numberOfDays ? barSize : this.mobileDeviceWidth / this.intervalOfDays;
     this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
   }
 
@@ -150,7 +152,7 @@ export class AppBarGraphComponent implements OnInit {
    *
    * Pass the number of date objects you want returned in a new progress bar array.
    * If time already exists inside the dates property of the track object for the
-   * dates created in this function, they'll will added to the object with the appropriate
+   * dates created in this function, they'll be added to the object with the appropriate
    * date. This func just returns date objects equal to the number of progress bars
    * you want created.
    */
@@ -169,7 +171,19 @@ export class AppBarGraphComponent implements OnInit {
         progressArray.push(progressBarObject);
       }
       this.mostTime = this._timeManagerService.findMostTime(progressArray);
-      return progressArray.reverse();
+
+      // for (let i = progressArray.length - 1 ; i < progressArray.length; i--) {
+      //   if ( progressArray[i]['time'] === 0 || progressArray[i]['time'] === '0' && i === 0 ) {
+      //     progressArray.splice(progressArray.length - 1, 1);
+      //     i--;
+      //   } else {
+      //     break;
+      //   }
+      // }
+
+      progressArray.reverse();
+
+      return progressArray;
     } catch (error) {
       console.log('Unable to populate progress bar array ' + error.message);
     }
