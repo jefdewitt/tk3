@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Track} from '../../../interfaces/track.interface';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {TrackManagerService} from '../../../services/track-manager.service';
+import {track} from '../../../models/trackItemModel';
 
 @Component({
   selector: 'app-list-item',
@@ -13,6 +14,7 @@ export class AppListItemComponent implements OnInit {
   public percentage: number;
   public disabled = false;
   @Input() public individualTrack: Track;
+  @Output() public toParent: EventEmitter<Track> = new EventEmitter<Track>();
 
   constructor(
     private _localStorageService: LocalStorageService,
@@ -20,11 +22,11 @@ export class AppListItemComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.setPercentageImage(this.individualTrack);
+    this.setPercentageImage();
     this.individualTrack.editName = false;
   }
 
-  private setPercentageImage(track: Track): void {
+  private setPercentageImage(): void {
     const percentageString = this.findPercentCompleted(this.individualTrack);
     const percentage = parseInt(percentageString, 10);
     switch (true) {
@@ -51,21 +53,23 @@ export class AppListItemComponent implements OnInit {
     }
   }
 
-  public updateTrackName(event, track: any, property: any ) {
-    this._localStorageService.makeSelectedTrack(track);
+  public updateTrackName(event, track: Track, newName: any ) {
+    // this._localStorageService.makeSelectedTrack(track);
 
     let nameIsNotTaken;
 
     if (event.type === 'change') {
-      nameIsNotTaken = this._localStorageService.isNameAlreadyTaken(property);
+      nameIsNotTaken = this._localStorageService.isNameAlreadyTaken(newName);
     }
 
     if (nameIsNotTaken) {
-      const formerName = track.name;
-      track.name = property === '' ? formerName : property;
+      const formerTrack = this._localStorageService.findTrackgitByName(track.name);
+      const newTrack: Track = track;
+      newTrack.name = newName;
 
-      this._localStorageService.saveTrack(track);
-      this._localStorageService.deleteTrack(track);
+      this._localStorageService.saveTrack(newTrack);
+      this._localStorageService.deleteTrack(formerTrack);
+      this.toParent.emit(newTrack);
     }
 
     track.editName = false;
@@ -75,7 +79,7 @@ export class AppListItemComponent implements OnInit {
     }, 500);
   }
 
-  public updateTrackTime(track: any, property: any ) {
+  public updateTrackTime(track: Track, property: any ) {
     // Check if number starts with 0
     if (property.charAt(0) === '0') {
       property = parseFloat(property);

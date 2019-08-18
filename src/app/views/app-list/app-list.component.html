@@ -16,7 +16,7 @@
             (click)="makeSelectedTrack(track)"
             [routerLink]="['/IO']">
 
-          <app-list-item [individualTrack]="track" (toParent)="nameCheck($event)"></app-list-item>
+          <app-list-item [individualTrack]="track" (toParent)="makeSelectedTrack($event)"></app-list-item>
 
         </li>
     </ul>

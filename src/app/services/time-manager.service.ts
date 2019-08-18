@@ -18,8 +18,6 @@ export class TimeManagerService {
     if (type1 === 'string') { earliestDateObj = this.formatStringToDateObject(date1); } else { earliestDateObj = date1; }
     if (type2 === 'string') { latestDateObj = this.formatStringToDateObject(date2); } else { latestDateObj = date2; }
 
-    console.log((latestDateObj - earliestDateObj) / 86400000, (latestDateObj - earliestDateObj) / 86400000 + 1)
-
     return Math.ceil((latestDateObj - earliestDateObj) / 86400000);
   }
 

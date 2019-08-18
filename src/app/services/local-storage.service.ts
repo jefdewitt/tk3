@@ -38,7 +38,7 @@ export class LocalStorageService {
    *
    * Finds a track in local storage by its name string
    */
-  public findTrackByName(track: Track) {
+  public findTrackByName(track: string): Track {
     try {
       for (let i = 0; i < localStorage.length; i++) {
         let storedTrack = localStorage.getItem(localStorage.key(i));
