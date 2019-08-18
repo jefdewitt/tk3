@@ -40,7 +40,7 @@ export class AppBarGraphComponent implements OnInit {
   public ngOnInit() {
 
     this.dailyAverageMinutesAndIntervalArray =
-      this._trackManagerService.averageDailyCompletedMinutesByInterval(this.track, 0);
+      this._trackManagerService.averageDailyCompletedMinutesByInterval(this.track, 1);
     this.dailyMinAndPerc(this.track, 1);
 
     this.intervalOfDays = this.dailyAverageMinutesAndIntervalArray[1];
@@ -56,7 +56,7 @@ export class AppBarGraphComponent implements OnInit {
     this.barWidth = this.intervalOfDays >= 29 ? 10 : this.mobileDeviceWidth / this.intervalOfDays;
     this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
 
-    this.hasTime = this._trackManagerService.sumTrackObjectTimesByInterval(this.track) ? true : false;
+    this.hasTime = !!this._trackManagerService.sumTrackObjectTimesByInterval(this.track);
   }
 
   /**

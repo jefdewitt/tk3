@@ -2,7 +2,7 @@ export interface Track {
     dates: Dates[];
     name: string;
     selected: true;
-    time: 0;
+    time: number;
     editName: false;
     editTime: false;
   }

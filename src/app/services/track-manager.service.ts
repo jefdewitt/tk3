@@ -87,15 +87,17 @@ export class TrackManagerService {
    */
   public sumTrackObjectTimesByInterval(track: Track, interval?: number): number {
     try {
-      const startDate = this._timeManagerService.stringDateOfNthDaysAgo(0);
-      const endDate = interval ? this._timeManagerService.stringDateOfNthDaysAgo(interval) : 0;
+      const startDate = this._timeManagerService.stringDateOfNthDaysAgo(0); // Today
+      const earliestDateInTrackDatesArray = track.dates[0].recordedDate;
+      const timeSinceEarliestDate = this._timeManagerService.intervalOfDaysBetweenDates(earliestDateInTrackDatesArray, startDate);
+      const endDate = interval ?
+                      this._timeManagerService.stringDateOfNthDaysAgo(interval) :
+                      this._timeManagerService.stringDateOfNthDaysAgo(timeSinceEarliestDate);
       let sum = 0;
 
       for (let i = 0; i < track['dates'].length; i++) {
         const recordedDate = track['dates'][i].recordedDate;
-        if ( !endDate ) {
-          sum += track['dates'][i].recordedMinutes;
-        } else if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
+        if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
           sum += track['dates'][i].recordedMinutes;
         }
       }
@@ -173,7 +175,7 @@ export class TrackManagerService {
     const dateStringStartingPoint = this._timeManagerService.stringDateOfNthDaysAgo(interval);
 
     track.dates.forEach( element => {
-      if (element.recordedDate >= dateStringStartingPoint) {
+      if (element.recordedDate > dateStringStartingPoint) {
         dates.push(element);
       }
     });
@@ -196,13 +198,14 @@ export class TrackManagerService {
    */
   public dailyPercentage(track: Track, interval: number): number {
     try {
-      const timeGoal = ( this.track['time'] !== 0 ) ? this.track['time'] * 60 : 0;
+      const timeGoal = ( track['time'] !== 0 ) ? track['time'] * 60 : 0;
       const sum = this.totalMinutesInInterval(track, interval);
-      const daysSinceFirstEntry =
+      let daysSinceFirstEntry =
         this._timeManagerService.intervalOfDaysBetweenDates(
           this.track.dates[0].recordedDate, this.track.dates[this.track.dates.length - 1].recordedDate
         );
       const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
+      if ( daysSinceFirstEntry < 1 ) { daysSinceFirstEntry = 1; }
       if ( interval > daysSinceFirstEntry ) { interval = daysSinceFirstEntry; }
       const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
       return dailyPercent;

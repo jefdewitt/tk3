@@ -109,3 +109,11 @@ button:nth-child(odd) {
   padding: .5em;
 }
 
+.alert {
+  background: goldenrod;
+  padding: 1em;
+  margin: 0;
+  color: white;
+  border-radius: 3px;
+}
+
