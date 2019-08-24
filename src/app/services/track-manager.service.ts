@@ -3,6 +3,7 @@ import {Track} from '../interfaces/track.interface';
 import {TimeManagerService} from './time-manager.service';
 import {LocalStorageService} from './local-storage.service';
 import {Router} from '@angular/router';
+import {DailySeconds} from '../enums/daily-seconds.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import {Router} from '@angular/router';
 export class TrackManagerService {
 
   public track: Track;
-  private oneDay = 86400000;
+  private oneDay = DailySeconds.oneDay;
   @Output() public event = new EventEmitter();
 
   private example: Track = {
