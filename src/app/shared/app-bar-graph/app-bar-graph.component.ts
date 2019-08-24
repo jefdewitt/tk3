@@ -39,6 +39,9 @@ export class AppBarGraphComponent implements OnInit {
 
   public ngOnInit() {
 
+    this.timePeriod = 'Today\'s';
+    this.showTotalCompleted = false;
+
     this.dailyAverageMinutesAndIntervalArray =
       this._trackManagerService.averageDailyCompletedMinutesByInterval(this.track, 1);
     this.dailyMinAndPerc(this.track, 1);
@@ -49,8 +52,6 @@ export class AppBarGraphComponent implements OnInit {
       this.progressBarArray = this.populateProgressBars(30);
     } else if (this.intervalOfDays > 0) {
       this.progressBarArray = this.populateProgressBars(this.intervalOfDays);
-    } else {
-      this.progressBarArray = this.populateProgressBars(1);
     }
 
     this.barWidth = this.intervalOfDays >= 29 ? 10 : this.mobileDeviceWidth / this.intervalOfDays;

@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Track} from '../../../interfaces/track.interface';
 import {LocalStorageService} from '../../../services/local-storage.service';
 import {TrackManagerService} from '../../../services/track-manager.service';
-import {track} from '../../../models/trackItemModel';
 
 @Component({
   selector: 'app-list-item',
@@ -54,19 +53,19 @@ export class AppListItemComponent implements OnInit {
   }
 
   public updateTrackName(event, track: Track, newName: any ) {
-    // this._localStorageService.makeSelectedTrack(track);
 
-    let nameIsNotTaken;
+    let nameIsTaken;
 
     if (event.type === 'change') {
-      nameIsNotTaken = this._localStorageService.isNameAlreadyTaken(newName);
+      nameIsTaken = this._localStorageService.isNameAlreadyTaken(newName);
     }
 
-    if (nameIsNotTaken) {
-      const formerTrack = this._localStorageService.findTrackgitByName(track.name);
+    if (!nameIsTaken) {
+      const formerTrack = this._localStorageService.findTrackByName(track.name);
       const newTrack: Track = track;
       newTrack.name = newName;
 
+      this._localStorageService.makeSelectedTrack(newTrack);
       this._localStorageService.saveTrack(newTrack);
       this._localStorageService.deleteTrack(formerTrack);
       this.toParent.emit(newTrack);

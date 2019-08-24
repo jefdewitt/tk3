@@ -87,21 +87,24 @@ export class TrackManagerService {
    */
   public sumTrackObjectTimesByInterval(track: Track, interval?: number): number {
     try {
-      const startDate = this._timeManagerService.stringDateOfNthDaysAgo(0); // Today
-      const earliestDateInTrackDatesArray = track.dates[0].recordedDate;
-      const timeSinceEarliestDate = this._timeManagerService.intervalOfDaysBetweenDates(earliestDateInTrackDatesArray, startDate);
-      const endDate = interval ?
-                      this._timeManagerService.stringDateOfNthDaysAgo(interval) :
-                      this._timeManagerService.stringDateOfNthDaysAgo(timeSinceEarliestDate);
-      let sum = 0;
+      if (track.dates.length > 0) {
+        const startDate = this._timeManagerService.stringDateOfNthDaysAgo(0); // Today
+        const earliestDateInTrackDatesArray = track.dates[0].recordedDate;
+        const timeSinceEarliestDate = this._timeManagerService.intervalOfDaysBetweenDates(earliestDateInTrackDatesArray, startDate);
+        interval = interval === 1 ? 0 : interval;
+        const endDate = interval || interval === 0 ?
+          this._timeManagerService.stringDateOfNthDaysAgo(interval) :
+          this._timeManagerService.stringDateOfNthDaysAgo(timeSinceEarliestDate);
+        let sum = 0;
 
-      for (let i = 0; i < track['dates'].length; i++) {
-        const recordedDate = track['dates'][i].recordedDate;
-        if ( (recordedDate <= startDate) && (recordedDate >= endDate) ) {
-          sum += track['dates'][i].recordedMinutes;
+        for (let i = 0; i < track['dates'].length; i++) {
+          const recordedDate = track['dates'][i].recordedDate;
+          if ((recordedDate <= startDate) && (recordedDate >= endDate)) {
+            sum += track['dates'][i].recordedMinutes;
+          }
         }
+        return sum;
       }
-      return sum;
     } catch (error) {
       console.log('Can\'t find sum in time interval provided for ' + track['name'] + ' track ' + error.message);
     }
@@ -132,30 +135,12 @@ export class TrackManagerService {
 
   /**
    *
-   * @param first string
-   * @param second string
-   *
-   * Sort track entries by date. First, these need to have hyphens
-   * removed so we can properly parse them and then compare.
-   */
-  public sortTrackObjectTimeEntriesByDate(first, second): number {
-    const firstString = first.recordedDate.replace(/-/g, '');
-    const secondString = second.recordedDate.replace(/-/g, '');
-    return (parseInt(firstString, 10) - parseInt(secondString, 10));
-  }
-
-  /**
-   *
    * @param track Track
    * @param interval number
    */
   public averageDailyCompletedMinutesByInterval(track: Track, interval: number): Array<number> {
 
-    if (track) {
-      track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
-    } else {
-      track = this.track, track.dates.sort(this.sortTrackObjectTimeEntriesByDate);
-    }
+    if (!track) { track = this.track; }
 
     const todaysDateObject: Date = new Date();
     const daysSinceFirstEntry = track.dates[0] ?
@@ -180,8 +165,6 @@ export class TrackManagerService {
       }
     });
 
-    dates.sort(this.sortTrackObjectTimeEntriesByDate);
-
     // Reduce lets you sum an array (dates is an array of objects)
     const times = dates.reduce((a, b) => {
       return a + b.recordedMinutes;
@@ -200,15 +183,20 @@ export class TrackManagerService {
     try {
       const timeGoal = ( track['time'] !== 0 ) ? track['time'] * 60 : 0;
       const sum = this.totalMinutesInInterval(track, interval);
-      let daysSinceFirstEntry =
-        this._timeManagerService.intervalOfDaysBetweenDates(
-          this.track.dates[0].recordedDate, this.track.dates[this.track.dates.length - 1].recordedDate
-        );
-      const percent = ( sum > 0 && timeGoal > 0 ) ? ( sum / timeGoal ) * 100 : 0;
-      if ( daysSinceFirstEntry < 1 ) { daysSinceFirstEntry = 1; }
-      if ( interval > daysSinceFirstEntry ) { interval = daysSinceFirstEntry; }
-      const dailyPercent: number = ( percent === 0 || interval === 0 ) ? 0 : percent / interval;
-      return dailyPercent;
+      if (track.dates.length > 0) {
+        let daysSinceFirstEntry =
+          this._timeManagerService.intervalOfDaysBetweenDates(
+            track.dates[0].recordedDate, track.dates[track.dates.length - 1].recordedDate
+          );
+        const percent = (sum > 0 && timeGoal > 0) ? (sum / timeGoal) * 100 : 0;
+        daysSinceFirstEntry++;
+        if (interval > daysSinceFirstEntry) {
+          interval = daysSinceFirstEntry;
+        }
+        const dailyPercent: number = (percent === 0 || interval === 0) ? 0 : percent / interval;
+        return dailyPercent;
+      }
+        return 0;
     } catch (error) {
       console.log('Can\'t find daily percentage from ' + track['name'] + ',\n' +
         ' ' + this.totalMinutesInInterval(track, interval) + ' & ' + interval + '.\n' +
@@ -293,7 +281,6 @@ export class TrackManagerService {
         };
         this.track['dates'].push(timeObject);
       }
-      this.track['dates'].sort(this.sortTrackObjectTimeEntriesByDate);
       this._localStorageService.saveTrack(this.track);
     }
   }
@@ -341,9 +328,7 @@ export class TrackManagerService {
    */
   public formatTrackData(track: Track): Object {
     let trackDataOutput = 'Track name = ' + track.name + '%0D%0A%0D%0A';
-    const trackDates = this.track['dates'];
-
-    trackDates.sort(this.sortTrackObjectTimeEntriesByDate);
+    const trackDates = track['dates'];
 
     for (let i = 0; i < trackDates.length; i++) {
 
@@ -373,14 +358,14 @@ export class TrackManagerService {
           itemTime = 0;
           trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
         }
-        itemDate = this.track['dates'][i]['recordedDate'];
-        itemTime = this.track['dates'][i]['recordedMinutes'];
+        itemDate = track['dates'][i]['recordedDate'];
+        itemTime = track['dates'][i]['recordedMinutes'];
       }
 
       trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
       trackDataOutput += trackDataString;
     }
-    trackDataOutput += '%0D%0A' + this.track['name'];
+    trackDataOutput += '%0D%0A' + track['name'];
     return trackDataOutput;
   }
 

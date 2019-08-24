@@ -13,12 +13,41 @@ export class LocalStorageService {
 
   /**
    *
-   * @param track
+   * @param first string
+   * @param second string
+   *
+   * Sort track entries by date. First, these need to have hyphens
+   * removed so we can properly parse them and then compare.
+   */
+  private _sortTrackObjectTimeEntriesByDate(first, second): number {
+    const firstString = first.recordedDate.replace(/-/g, '');
+    const secondString = second.recordedDate.replace(/-/g, '');
+    return (parseInt(firstString, 10) - parseInt(secondString, 10));
+  }
+
+  /**
+   *
+   * @param track Track
    *
    * Saves a track to local storage
    */
   public saveTrack(track: Track): void {
+    track.dates.sort(this._sortTrackObjectTimeEntriesByDate);
     localStorage.setItem(track['name'], JSON.stringify(track));
+  }
+
+  /**
+   *
+   * @param track
+   *
+   * Saves a track to local storage
+   */
+  private _saveAllTracks(tracks: Track[]): void {
+    // track.dates.sort(this._sortTrackObjectTimeEntriesByDate);
+    // localStorage.setItem(track['name'], JSON.stringify(track));
+    tracks.forEach( track => {
+      this.saveTrack(track);
+    });
   }
 
   /**
@@ -40,13 +69,14 @@ export class LocalStorageService {
    */
   public findTrackByName(track: string): Track {
     try {
-      for (let i = 0; i < localStorage.length; i++) {
-        let storedTrack = localStorage.getItem(localStorage.key(i));
-        storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === track) {
-          return storedTrack;
+      const allTracks = this.getAllTracks();
+      let trackByName: Track = null;
+      allTracks.forEach ( function(trackInArray, index) {
+        if (trackInArray['name'] === track) {
+          trackByName = trackInArray;
         }
-      }
+      });
+      return trackByName;
     } catch (error) {
       console.log('Unable to find ' + track + ' by name ' + error.message);
     }
@@ -63,15 +93,13 @@ export class LocalStorageService {
     try {
       this.track = track;
       this.deselectTracks();
-      for (let i = 0; i < localStorage.length; i++) {
-        let storedTrack = localStorage.getItem(localStorage.key(i));
-        storedTrack = JSON.parse(storedTrack);
-        if (storedTrack['name'] === track.name) {
-          storedTrack['selected'] = true;
-          localStorage.setItem(storedTrack['name'], JSON.stringify(storedTrack));
-          this.findSelectedTrack();
+      const allTracks = this.getAllTracks();
+      allTracks.forEach ( function(trackInArray, index) {
+        if (trackInArray['name'] === track.name) {
+          trackInArray['selected'] = true;
         }
-      }
+      });
+      this._saveAllTracks(allTracks);
     } catch (error) {
       console.log('Could not change selected track ' + error.message);
     }
@@ -84,14 +112,15 @@ export class LocalStorageService {
    */
   public findSelectedTrack(): Track {
     try {
-      for (let i = 0; i < localStorage.length; i++) {
-        const trackString = localStorage.getItem(localStorage.key(i));
-        const track = JSON.parse(trackString);
+      const allTracks = this.getAllTracks();
+      let selectedTrack: Track = null;
+      allTracks.forEach ( function(track, index) {
         if (track['selected'] === true) {
-          this.track = track;
-          return track;
+          selectedTrack = track;
         }
-      }
+      });
+      this.track = selectedTrack;
+      return selectedTrack;
     } catch (error) {
       console.log('Currently there\'s no selected track. ' + error.message);
     }
@@ -102,12 +131,13 @@ export class LocalStorageService {
    */
   public deselectTracks(): void {
     try {
-      for (let i = 0; i < localStorage.length; i++) {
-        let track = localStorage.getItem(localStorage.key(i));
-        track = JSON.parse(track);
-        track['selected'] = false;
-        localStorage.setItem(track['name'], JSON.stringify(track));
-      }
+      const allTracks = this.getAllTracks();
+      allTracks.forEach ( function(track, index) {
+        if (track['selected'] = true) {
+          track['selected'] = false;
+        }
+      });
+      this._saveAllTracks(allTracks);
     } catch (error) {
       console.log('Deselecting tracks failed. ' + error.message);
     }
@@ -120,9 +150,9 @@ export class LocalStorageService {
     try {
       const allTracks: Track[] = [];
       for (let i = 0; i < localStorage.length; i++) {
-        const track: string = localStorage.getItem(localStorage.key(i));
-        const trackObj: Track  = JSON.parse(track);
-        allTracks.push(trackObj);
+        const storedTrackString = localStorage.getItem(localStorage.key(i));
+        const storedTrack = JSON.parse(storedTrackString);
+        allTracks.push(storedTrack);
       }
       return allTracks;
     } catch (error) {
@@ -138,28 +168,24 @@ export class LocalStorageService {
    */
   public isNameAlreadyTaken(name: string): boolean {
     try {
-      if (name) {
+      if (name && name !== '') {
         if (localStorage.length > 1) {
-          for (let i = 0; i < localStorage.length; i++) {
-            let track = localStorage.getItem(localStorage.key(i));
-            track = JSON.parse(track);
+          const allTracks = this.getAllTracks();
+          allTracks.forEach ( function(track, index) {
             if (name === track['name']) {
               alert('This track already exists. Please choose a different name.');
-              return false;
-            } else if (name === '') {
-              alert('Please choose a name.');
-              return false;
-            } else if (i === (localStorage.length - 1)) {
-              this.deselectTracks();
               return true;
+            } else if (index === (localStorage.length - 1)) {
+              LocalStorageService.prototype.deselectTracks();
+              return false;
             }
-          }
+          });
         } else {
-          this.deselectTracks();
-          return true;
+          return false;
         }
       } else {
         alert('Please enter a name.');
+        return true;
       }
     } catch (error) {
       console.log('Name check failed. ' + error.message);
