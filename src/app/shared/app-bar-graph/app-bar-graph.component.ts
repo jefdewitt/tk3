@@ -22,6 +22,7 @@ export class AppBarGraphComponent implements OnInit {
   public frequency: number;
   public mostTime: any;
   public hasTime: boolean;
+  public hours = false;
 
   @Input() public track;
 
@@ -112,7 +113,7 @@ export class AppBarGraphComponent implements OnInit {
     this.timePeriod = timeInterval;
     this.dailyMinAndPerc(this.track, numberOfDays);
     this.progressBarArray = this.intervalOfDays > (numberOfDays + 1) ?
-                            this.populateProgressBars(30) :
+                            this.populateProgressBars(numberOfDays + 1) :
                             this.populateProgressBars(this.intervalOfDays);
     this.barWidth = this.intervalOfDays >= numberOfDays ? barSize : this.mobileDeviceWidth / this.intervalOfDays;
     this.frequency = this.determineFrequencyOfDateElements(this.progressBarArray);
@@ -188,6 +189,16 @@ export class AppBarGraphComponent implements OnInit {
     } catch (error) {
       console.log('Unable to populate progress bar array ' + error.message);
     }
+  }
+
+  /**
+   *
+   * @param hours boolean
+   */
+  public toggleMinutesOrHours(hours: boolean) {
+    this.hours = !this.hours;
+    this.totalMinutes = this._trackManagerService.changeTimeFrame(this.totalMinutes, !hours);
+    this.dailyMinutes = this._trackManagerService.changeTimeFrame(this.dailyMinutes, !hours);
   }
 
 }

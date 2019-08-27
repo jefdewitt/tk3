@@ -8,7 +8,7 @@
            autocomplete="off"
            min="0"
            max="1440">
-    <img (click)="hours = !hours; updateCal(hours)" src="./assets/twotone-access_time-24px.svg" alt="">
+    <img (click)="hours = !hours; updateCalAndCharts(hours)" src="./assets/twotone-access_time-24px.svg" alt="">
     <img (click)="addMinutes()" src="./assets/twotone-save-24px.svg">
     <img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/twotone-event-24px.svg" alt=""/>
   </form>

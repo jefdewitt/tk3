@@ -342,7 +342,6 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
       setTimeout(() => this.visible = false, 300);
       this.state = 'Open';
     }
-
   }
 
   /**
@@ -378,13 +377,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   public changeTimeFrame(hours: boolean): void {
     this.month.weeks.forEach(element => {
       element.forEach(item => {
-        if (item.minutes > 0 && hours) {
-          const minutes = item.minutes / 60;
-          item.minutes = minutes.toFixed(2);
-        } else {
-          const minutes = item.minutes * 60
-          item.minutes = Math.ceil(minutes);
-        }
+        item.minutes = this._trackManagerService.changeTimeFrame(item.minutes, hours);
       });
     });
   }

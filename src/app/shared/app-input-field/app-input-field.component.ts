@@ -4,6 +4,7 @@ import {AppCalendarComponent} from '../app-calendar/app-calendar.component';
 import {TimeManagerService} from '../../services/time-manager.service';
 import {TrackManagerService} from '../../services/track-manager.service';
 import {LocalStorageService} from '../../services/local-storage.service';
+// import {AppBarGraphComponent} from '../app-bar-graph/app-bar-graph.component';
 
 @Component({
   selector: 'app-input-field',
@@ -17,7 +18,9 @@ export class AppInputFieldComponent {
   public toggle = true;
 
   @ViewChild(AppCalendarComponent) public calendar: AppCalendarComponent;
+  // @ViewChild(AppBarGraphComponent) public barGraph: AppBarGraphComponent;
   @Output() public notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
+  @Output() public changeTimeFrame: EventEmitter<string> = new EventEmitter<string>();
   @Input() public track;
 
   private _dateFromCal: string;
@@ -39,8 +42,9 @@ export class AppInputFieldComponent {
     this._dateFromCal = dataFromCal[1];
   }
 
-  public updateCal(hours: boolean): void {
+  public updateCalAndCharts(hours: boolean): void {
     this.calendar.changeTimeFrame(hours);
+    this.changeTimeFrame.emit('true');
   }
 
   public refreshCal(): void {
@@ -70,7 +74,10 @@ export class AppInputFieldComponent {
         // Check if min > 0 and if there are prev. date entries in dates array
         this.sameDateCheck(timeObject);
 
+        // this.
+
         this._localStorageService.saveTrack(this.track);
+
         this.minutes = null;
         this._dateFromCal = null;
         this.notifyIOComp.emit('update');

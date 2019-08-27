@@ -5,7 +5,7 @@
         {{ timePeriod }} total:
       </td>
       <td>
-        {{ totalMinutes }} minutes
+        {{ totalMinutes }} {{ hours ? 'hour(s)' : 'minute(s)' }}
       </td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
         average:
       </td>
       <td>
-        {{ dailyMinutes.toFixed(0) }} minutes
+        {{ dailyMinutes }} {{ hours ? 'hour(s)' : 'minute(s)' }}
       </td>
     </tr>
     <tr>
