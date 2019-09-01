@@ -377,7 +377,7 @@ export class AppCalendarComponent implements OnInit, AfterViewChecked {
   public changeTimeFrame(hours: boolean): void {
     this.month.weeks.forEach(element => {
       element.forEach(item => {
-        item.minutes = this._trackManagerService.changeTimeFrame(item.minutes, hours);
+        item.minutes = this._trackManagerService.changeTimeFrame(item.minutes, hours, false);
       });
     });
   }

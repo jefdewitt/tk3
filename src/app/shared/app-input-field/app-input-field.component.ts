@@ -4,7 +4,6 @@ import {AppCalendarComponent} from '../app-calendar/app-calendar.component';
 import {TimeManagerService} from '../../services/time-manager.service';
 import {TrackManagerService} from '../../services/track-manager.service';
 import {LocalStorageService} from '../../services/local-storage.service';
-// import {AppBarGraphComponent} from '../app-bar-graph/app-bar-graph.component';
 
 @Component({
   selector: 'app-input-field',
@@ -16,14 +15,13 @@ export class AppInputFieldComponent {
   public minutes: number;
   public hours = false;
   public toggle = true;
+  public dateFromCal: string;
 
   @ViewChild(AppCalendarComponent) public calendar: AppCalendarComponent;
-  // @ViewChild(AppBarGraphComponent) public barGraph: AppBarGraphComponent;
   @Output() public notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
-  @Output() public changeTimeFrame: EventEmitter<string> = new EventEmitter<string>();
+  @Output() public changeTimeFrame: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() public track;
 
-  private _dateFromCal: string;
 
   constructor(
     private _timeManagerService: TimeManagerService,
@@ -39,12 +37,12 @@ export class AppInputFieldComponent {
    */
   public onNotifyClicked(dataFromCal: Array<any>): void {
     this.minutes = dataFromCal[0].minutes;
-    this._dateFromCal = dataFromCal[1];
+    this.dateFromCal = dataFromCal[1];
   }
 
   public updateCalAndCharts(hours: boolean): void {
     this.calendar.changeTimeFrame(hours);
-    this.changeTimeFrame.emit('true');
+    this.changeTimeFrame.emit(hours);
   }
 
   public refreshCal(): void {
@@ -66,20 +64,18 @@ export class AppInputFieldComponent {
         this.minutes = this._trackManagerService.minutesOrHours(this.hours, this.minutes);
 
         let timeObject: TimeObject = new TimeObject();
-        if (!this._dateFromCal) {
+        if (!this.dateFromCal) {
           timeObject = this.setTimeObject(this.minutes, this._timeManagerService.formatDateObjectToString());
         } else {
-          timeObject = this.setTimeObject(this.minutes, this._dateFromCal);
+          timeObject = this.setTimeObject(this.minutes, this.dateFromCal);
         }
         // Check if min > 0 and if there are prev. date entries in dates array
         this.sameDateCheck(timeObject);
 
-        // this.
-
         this._localStorageService.saveTrack(this.track);
 
         this.minutes = null;
-        this._dateFromCal = null;
+        this.dateFromCal = null;
         this.notifyIOComp.emit('update');
       }
 
@@ -132,7 +128,7 @@ export class AppInputFieldComponent {
       if (this.track['dates'][i].recordedDate === timeObject.recordedDate) {
         const oldMinutes = this.track['dates'][i].recordedMinutes;
         const newMinutes = timeObject.recordedMinutes;
-        this.track['dates'][i].recordedMinutes = this._dateFromCal ? +newMinutes : +oldMinutes + +newMinutes;
+        this.track['dates'][i].recordedMinutes = this.dateFromCal ? +newMinutes : +oldMinutes + +newMinutes;
         return;
       }
     }

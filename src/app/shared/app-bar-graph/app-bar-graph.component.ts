@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Track } from '../../interfaces/track.interface';
 import {TimeManagerService} from '../../services/time-manager.service';
 import {TrackManagerService} from '../../services/track-manager.service';
@@ -25,6 +25,7 @@ export class AppBarGraphComponent implements OnInit {
   public hours = false;
 
   @Input() public track;
+  @Output() public changeDateRange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   private dailyAverageMinutesAndIntervalArray: Array<number>;
   private mobileDeviceWidth = 300;
@@ -143,6 +144,8 @@ export class AppBarGraphComponent implements OnInit {
           this.setTableAndChart('6 month', 179, 1.66);
           break;
       }
+
+      this.changeDateRange.emit(this.hours);
     } catch (error) {
       console.log('Changing time frame via buttons is not working ' + error.message);
     }
@@ -183,6 +186,7 @@ export class AppBarGraphComponent implements OnInit {
       //   }
       // }
 
+      // this.toggleMinutesOrHours();
       progressArray.reverse();
 
       return progressArray;
@@ -195,10 +199,11 @@ export class AppBarGraphComponent implements OnInit {
    *
    * @param hours boolean
    */
-  public toggleMinutesOrHours(hours: boolean) {
-    this.hours = !this.hours;
-    this.totalMinutes = this._trackManagerService.changeTimeFrame(this.totalMinutes, !hours);
-    this.dailyMinutes = this._trackManagerService.changeTimeFrame(this.dailyMinutes, !hours);
+  public toggleMinutesOrHours(hours: boolean, fromBarChart?: boolean) {
+    this.hours = hours;
+    this.totalMinutes = this._trackManagerService.changeTimeFrame(this.totalMinutes, hours, fromBarChart);
+    this.dailyMinutes = this._trackManagerService.changeTimeFrame(this.dailyMinutes, hours, fromBarChart);
+    this.mostTime = this._trackManagerService.changeTimeFrame(this.mostTime, hours, fromBarChart);
   }
 
 }

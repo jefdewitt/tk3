@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Track} from '../../interfaces/track.interface';
 import {TrackManagerService} from '../../services/track-manager.service';
+import {LocalStorageService} from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-alert',
@@ -9,7 +10,12 @@ import {TrackManagerService} from '../../services/track-manager.service';
 })
 export class AppAlertComponent implements OnInit {
 
-  constructor(private _trackManagerService: TrackManagerService) { }
+  public alertClass: string;
+
+  constructor(
+    private _trackManagerService: TrackManagerService,
+    private _localStorageService: LocalStorageService
+  ) { }
 
   ngOnInit() {
   }
@@ -18,30 +24,48 @@ export class AppAlertComponent implements OnInit {
     const completedPerc = this._trackManagerService.percentOfTrackCompletedInInterval(track);
 
     switch (true) {
-      case (completedPerc >= 25):
-        this._isAlreadyInCompletionCategoryArray(track, 25);
+      case (completedPerc >= 25 && completedPerc < 50):
+        if ( this._isAlreadyInCompletionCategoryArray(track, 25) ) {
+          this.alertClass = 'alert twenty-five';
+          this._removeClass();
+        }
         break;
 
-      case (completedPerc >= 50):
-        this._isAlreadyInCompletionCategoryArray(track, 50);
+      case (completedPerc >= 50 && completedPerc < 75):
+        if ( this._isAlreadyInCompletionCategoryArray(track, 50) ) {
+          this.alertClass = 'alert fifty';
+          this._removeClass();
+        }
         break;
 
-      case (completedPerc >= 75):
-        this._isAlreadyInCompletionCategoryArray(track, 75);
+      case (completedPerc >= 75 && completedPerc < 100):
+        if ( this._isAlreadyInCompletionCategoryArray(track, 75) ) {
+          this.alertClass = 'alert seventy-five';
+          this._removeClass();
+        }
         break;
 
       case (completedPerc >= 100):
-        this._isAlreadyInCompletionCategoryArray(track, 100);
+        if ( this._isAlreadyInCompletionCategoryArray(track, 100) ) {
+          this.alertClass = 'alert one-hundred';
+          this._removeClass();
+        }
         break;
-      default:
-        console.log('Less than 25% done');
     }
   }
 
-  private _isAlreadyInCompletionCategoryArray(track: Track, percentage: number) {
-    if ( !!track.completionCategory.indexOf(percentage) ) {
+  private _removeClass() {
+    setTimeout( () => {
+      this.alertClass = 'none';
+    }, 3000);
+  }
+
+  private _isAlreadyInCompletionCategoryArray(track: Track, percentage: number): boolean {
+    if ( !track.completionCategory.includes(percentage) ) {
       track.completionCategory.push(percentage);
       console.log('Greater than ' + percentage + '% done');
+      this._localStorageService.saveTrack(track);
+      return true;
     }
   }
 
