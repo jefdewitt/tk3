@@ -53,12 +53,14 @@ export class AppInputFieldComponent {
 // Adds minutes to local storage for submit button clicks
   public addMinutes(): void {
     try {
-      if (this.minutes != null) {
 
-        if (typeof this.minutes === 'string') {
-          const parsedMinutes = parseInt(this.minutes, 10);
-          this.minutes = parsedMinutes;
-        }
+      if (typeof this.minutes === 'string') {
+        const parsedMinutes = parseInt(this.minutes, 10);
+        this.minutes = parsedMinutes;
+      }
+
+      if (this.minutes != null && !Number.isNaN(this.minutes)) {
+
 
         // Check if minutes or hours
         this.minutes = this._trackManagerService.minutesOrHours(this.hours, this.minutes);
