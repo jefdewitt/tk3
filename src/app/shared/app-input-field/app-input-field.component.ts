@@ -18,7 +18,7 @@ export class AppInputFieldComponent {
   public dateFromCal: string;
 
   @ViewChild(AppCalendarComponent) public calendar: AppCalendarComponent;
-  @Output() public notifyIOComp: EventEmitter<string> = new EventEmitter<string>();
+  @Output() public notifyIOComp: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() public changeTimeFrame: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() public track;
 
@@ -76,7 +76,7 @@ export class AppInputFieldComponent {
 
         this.minutes = null;
         this.dateFromCal = null;
-        this.notifyIOComp.emit('update');
+        this.notifyIOComp.emit(this.hours);
       }
 
     } catch (error) {
