@@ -88,8 +88,8 @@ export class TimeManagerService {
     for (let i = 0; i < track['dates'].length; i++) {
       if (track['dates'][i].recordedDate === datePlaceholder) {
         time = track['dates'][i].recordedMinutes;
-        time = time / 60;
-        time = time.toFixed(1);
+        // time = time / 60;
+        // time = time.toFixed(1);
         return time;
       } else {
         time = 0;

@@ -154,6 +154,7 @@ export class LocalStorageService {
         const storedTrack = JSON.parse(storedTrackString);
         allTracks.push(storedTrack);
       }
+      allTracks.sort((a, b) => (a.name > b.name) ? 1 : -1);
       return allTracks;
     } catch (error) {
       console.log('Unable to retrive tracks list. ' + error.message);
@@ -168,27 +169,28 @@ export class LocalStorageService {
    */
   public isNameAlreadyTaken(name: string): boolean {
     try {
-      if (name && name !== '') {
         if (localStorage.length > 1) {
           const allTracks = this.getAllTracks();
-          allTracks.forEach ( function(track, index) {
-            if (name === track['name']) {
-              alert('This track already exists. Please choose a different name.');
-              return true;
-            } else if (index === (localStorage.length - 1)) {
-              LocalStorageService.prototype.deselectTracks();
-              return false;
-            }
-          });
+          // allTracks.forEach ( function(track, index) {
+          //   if (name === track['name']) {
+          //     alert('This track already exists. Please choose a different name.');
+          //     return true;
+          //   } else if (index === (localStorage.length - 1)) {
+          //     LocalStorageService.prototype.deselectTracks();
+          //     return false;
+          //   }
+          // });
+          const isNameTaken = allTracks.filter((item) => item.name === name).shift();
+          return !!isNameTaken;
         } else {
           return false;
         }
-      } else {
-        alert('Please enter a name.');
-        return true;
-      }
     } catch (error) {
       console.log('Name check failed. ' + error.message);
     }
   }
+
+  // private checkName(name1, name2) {
+  //   return name1 === name2;
+  // }
 }

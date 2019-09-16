@@ -56,7 +56,7 @@ export class AppListItemComponent implements OnInit {
 
     let nameIsTaken;
 
-    if (event.type === 'change') {
+    if (newName && event.type === 'change') {
       nameIsTaken = this._localStorageService.isNameAlreadyTaken(newName);
     }
 

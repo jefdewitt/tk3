@@ -5,6 +5,7 @@ export interface Track {
     time: number;
     editName: false;
     editTime: false;
+    completionCategory: number[];
   }
 
 export interface Dates {

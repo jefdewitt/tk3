@@ -20,7 +20,8 @@ export class TrackManagerService {
     selected: true,
     time: 1,
     editName: false,
-    editTime: false
+    editTime: false,
+    completionCategory: []
   };
 
   constructor(
@@ -148,7 +149,7 @@ export class TrackManagerService {
                                 this._timeManagerService.intervalOfDaysBetweenDates(track.dates[0].recordedDate, todaysDateObject) : 0;
     const intervalToComputeAverage = daysSinceFirstEntry > interval ? interval : daysSinceFirstEntry;
     const times = this.totalMinutesInInterval(track, interval);
-    const averageDailyMinutes = intervalToComputeAverage > 0 ? Math.floor(times / intervalToComputeAverage) : times;
+    const averageDailyMinutes = intervalToComputeAverage > 0 ? Math.ceil(times / intervalToComputeAverage) : times;
 
     return [averageDailyMinutes, daysSinceFirstEntry];
   }
@@ -329,55 +330,69 @@ export class TrackManagerService {
    */
   public formatTrackData(track: Track): Object {
     let trackDataOutput = 'Track name = ' + track.name + '%0D%0A%0D%0A';
+    let trackDataString = '';
     const trackDates = track['dates'];
 
-    for (let i = 0; i < trackDates.length; i++) {
+    if (trackDates.length > 1) {
+      for (let i = 0; i < trackDates.length; i++) {
 
-      let trackDataString = '';
+        // Grab 2 entries for date comparison
+        let item1 = trackDates['dates'][i - 1];
+        item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
+        let item2 = trackDates['dates'][i];
+        item2 = item2 ? new Date(item2.recordedDate.replace('-', '/')) : null;
+        let itemDate: string;
+        let itemTime: number;
 
-      // Grab 2 entries for date comparison
-      let item1 = trackDates['dates'][i - 1];
-      item1 = item1 ? new Date(item1.recordedDate.replace('-', '/')) : null;
-      let item2 = trackDates['dates'][i];
-      item2 = item2 ? new Date(item2.recordedDate.replace('-', '/')) : null;
-      let itemDate: string;
-      let itemTime: number;
-
-      /**
-       * Compute how many days are in between entries. If there are any
-       * gaps, create placeholder date objects with 0 minutes to fill them.
-       * This is so the emailed dates are sequential and there are no
-       * missing dates (makes it easier to average out times later).
-       */
-      const numberOfDays = (item2 - item1) / this.oneDay;
-      if ((item1 && item2) && (numberOfDays)) {
-        for (let j = numberOfDays - 1; j > 0 ; j--) {
-          const timePeriod = this.oneDay * j;
-          const adjustedTime = item2 - timePeriod;
-          const placeHolder = new Date(adjustedTime);
-          itemDate = this._timeManagerService.formatDateObjectToString(placeHolder);
-          itemTime = 0;
-          trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
+        /**
+         * Compute how many days are in between entries. If there are any
+         * gaps, create placeholder date objects with 0 minutes to fill them.
+         * This is so the emailed dates are sequential and there are no
+         * missing dates (makes it easier to average out times later).
+         */
+        const numberOfDays = (item2 - item1) / this.oneDay;
+        if ((item1 && item2) && (numberOfDays)) {
+          for (let j = numberOfDays - 1; j > 0; j--) {
+            const timePeriod = this.oneDay * j;
+            const adjustedTime = item2 - timePeriod;
+            const placeHolder = new Date(adjustedTime);
+            itemDate = this._timeManagerService.formatDateObjectToString(placeHolder);
+            itemTime = 0;
+            trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
+          }
+          itemDate = track['dates'][i]['recordedDate'];
+          itemTime = track['dates'][i]['recordedMinutes'];
         }
-        itemDate = track['dates'][i]['recordedDate'];
-        itemTime = track['dates'][i]['recordedMinutes'];
-      }
 
-      trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
-      trackDataOutput += trackDataString;
+        trackDataString += itemDate + ' = ' + itemTime + '%0D%0A';
+        trackDataOutput += trackDataString;
+      }
+    } else {
+      trackDataOutput += track['dates'][0]['recordedDate'] +
+        ' = ' +  track['dates'][0]['recordedMinutes'] + '%0D%0A';
     }
+
     trackDataOutput += '%0D%0A' + track['name'];
     return trackDataOutput;
   }
 
   /**
-   * If there's no selected tracks (i.e., 0 tracks) go the list track view.
+   *
+   * @param itemMinutes number
+   * @param hours boolean
    */
-  public routeToListView() {
-    try {
-      this._router.navigateByUrl('/List Tracks');
-    } catch (error) {
-      console.log('Unable to reroute to List Track view ' + error.message);
+  public changeTimeFrame(itemMinutes: number, hours: boolean, fromBarChart: boolean) {
+    let hoursOrMinutes;
+    if (itemMinutes > 0 && hours) {
+      const minutes = itemMinutes / 60;
+      hoursOrMinutes = minutes.toFixed(2);
+      // hoursOrMinutes = parseInt(formattedMinutes, 10);
+    } else if (fromBarChart && !hours) {
+      hoursOrMinutes = itemMinutes;
+    } else {
+      const notMinutes = itemMinutes * 60;
+      hoursOrMinutes = Math.ceil(notMinutes);
     }
+    return hoursOrMinutes;
   }
 }

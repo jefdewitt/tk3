@@ -15,6 +15,7 @@ import { AppListItemComponent } from './views/app-list/app-list-item/app-list-it
 import {TrackManagerService} from './services/track-manager.service';
 import {TimeManagerService} from './services/time-manager.service';
 import {LocalStorageService} from './services/local-storage.service';
+import { AppAlertComponent } from './shared/app-alert/app-alert.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {LocalStorageService} from './services/local-storage.service';
     AppIoComponent,
     AppInputFieldComponent,
     AppCalendarComponent,
-    AppBarGraphComponent
+    AppBarGraphComponent,
+    AppAlertComponent
   ],
   imports: [
     BrowserModule,
