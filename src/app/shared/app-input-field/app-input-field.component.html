@@ -1,0 +1,20 @@
+<div class="manual-input" [class.active]="modal.state === 'Open'">
+  <form action="">
+    <!--<label for="minutes">{{dateFromCal}}</label>-->
+    <input type="tel"
+           name="minutes"
+           id="minutes"
+           [(ngModel)]="minutes"
+           placeholder="Enter {{ hours ? 'hours' : 'minutes' }}"
+           autocomplete="off"
+           min="0"
+           max="1440">
+    <img (click)="hours = !hours; updateCalAndCharts(hours)" src="./assets/twotone-access_time-24px.svg" alt="">
+    <img (click)="addMinutes()" src="./assets/twotone-save-24px.svg">
+    <img class="cal-button" (click)="modal.showOrHide(toggle); toggle = !toggle" src="./assets/twotone-event-24px.svg" alt=""/>
+  </form>
+
+  <app-calendar #modal [track]="track" (notify)="onNotifyClicked($event)"></app-calendar>
+
+</div>
+

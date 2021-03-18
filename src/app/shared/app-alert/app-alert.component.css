@@ -1,0 +1,90 @@
+.alert {
+  border-radius: 50%;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+  height: 100px;
+  padding: 10%;
+  position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -66%);
+  visibility: hidden;
+  width: 100px;
+}
+
+.twenty-five {
+  animation: blink 3s ease-in-out 1 normal;
+  text-align: center;
+  background: white;
+  box-shadow: 0 0 20px 20px white;
+}
+
+.twenty-five:before {
+  content: '25% Done!';
+  color: black;
+  white-space: nowrap;
+}
+
+.fifty {
+  animation: blink 3s ease-in-out 1 normal;
+  text-align: center;
+  background: white;
+  box-shadow: 0 0 20px 20px white;
+}
+
+.fifty:before {
+  content: '50% Done!';
+  color: black;
+  white-space: nowrap;
+}
+
+.seventy-five {
+  text-align: center;
+  color: black;
+  white-space: nowrap;
+}
+
+.seventy-five:before {
+  content: '75% Done!';
+  color: black;
+  white-space: nowrap;
+}
+
+.one-hundred {
+  animation: blink 3s ease-in-out 1 normal;
+  text-align: center;
+  background: white;
+  box-shadow: 0 0 20px 20px white;
+}
+
+.one-hundred:before {
+  content: '100% Done!';
+  color: black;
+  white-space: nowrap;
+}
+
+@keyframes blink {
+  0% {
+    visibility: visible;
+    padding: 0%;
+    font-size: 0em;
+  }
+  50% {
+    padding: 50%;
+    font-size: 3em;
+  }
+  70% {
+    padding: 40%;
+    font-size: 2em;
+  }
+  90% {
+    padding: 50%;
+    font-size: 3em;
+  }
+  100% {
+    padding: 0%;
+    font-size: 0em;
+    visibility: hidden;
+  }
+}

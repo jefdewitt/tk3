@@ -1,0 +1,82 @@
+
+.percent {
+  color: darkgoldenrod;
+  font-size: 2em;
+}
+
+.track-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.track-details {
+  max-width: 33%;
+}
+
+progress[value] {
+  /*transform: rotate(90deg);*/
+  /*animation: load .5s linear;*/
+  /*transform: rotate(270deg);*/
+  height: 5px;
+  width: 100px;
+  -webkit-appearance: none;
+  border-bottom: 1px solid #ccc;
+
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #fff;
+}
+
+progress::-webkit-progress-value {
+  transition: 1s width ease-in-out;
+  background: #daa520;
+  background-size: 1px 1px, 100% 100%, 100% 100%;
+}
+
+.percentage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.li-img {
+  background-repeat: no-repeat;
+  background-color: #777;
+  background-position: center;
+  background-size: 70%;
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.batt-20 {
+  background-image: url("../../../../assets/twotone_battery_charging_20_white_48dp.png");
+}
+
+.batt-30 {
+  background-image: url("../../../../assets/twotone_battery_charging_30_white_48dp.png");
+}
+
+.batt-50 {
+  background-image: url("../../../../assets/twotone_battery_charging_50_white_48dp.png");
+}
+
+.batt-60 {
+  background-image: url("../../../../assets/twotone_battery_charging_60_white_48dp.png");
+}
+
+.batt-80 {
+  background-image: url("../../../../assets/twotone_battery_charging_80_white_48dp.png");
+}
+
+.batt-90 {
+  background-image: url("../../../../assets/twotone_battery_charging_90_white_48dp.png");
+}
+
+.batt-100 {
+  background-image: url("../../../../assets/twotone_battery_charging_90_white_48dp.png");
+}
+

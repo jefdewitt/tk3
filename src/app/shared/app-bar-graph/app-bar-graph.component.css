@@ -1,0 +1,159 @@
+#progressContainer {
+  margin: 0 auto 2em;
+  position: relative;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#progressContainer > div {
+  border-left: 2px solid #ddd;
+  /*height: 300px;*/
+  transform: rotate(270deg);
+  width: 100px;
+}
+
+@media screen and (min-width: 568px) {
+  #progressContainer > div {
+    height: 300px;
+  }
+}
+
+.top {
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  z-index: 1;
+  left: 33%;
+  top: 80%;
+  transform: rotate(90deg);
+}
+
+.top:before {
+  content: '';
+  background: white;
+  width: 66%;
+  height: 17px;
+  display: inline-block;
+  position: absolute;
+  z-index: -1;
+  right: -1%;
+  opacity: .5;
+}
+
+.bottom {
+  position: absolute;
+  width: 100%;
+  text-align: left;
+  z-index: 1;
+  right: 33%;
+  bottom: 0;
+  bottom: 80%;
+  transform: rotate(90deg);
+}
+
+.bottom:before {
+  content: '';
+  background: white;
+  width: 66%;
+  height: 17px;
+  display: inline-block;
+  position: absolute;
+  z-index: -1;
+  left: -1%;
+  opacity: .5;
+}
+
+#progressHeader {
+  margin: 0 0 1rem;
+}
+
+.progressBar {
+  position: relative;
+}
+
+progress[value] {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  animation: load .5s linear;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #fff;
+}
+
+progress::-webkit-progress-value {
+  transition: 1s width ease-in-out;
+
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25) inset;
+  /*background-image:*/
+    /*-webkit-linear-gradient(-45deg,*/
+    /*transparent 33%, rgba(0, 0, 0, .1) 33%,*/
+    /*rgba(0,0, 0, .1) 66%, transparent 66%),*/
+    /*-webkit-linear-gradient(top,*/
+    /*rgba(255, 255, 255, .25),*/
+    /*rgba(0, 0, 0, .25)),*/
+    /*-webkit-linear-gradient(left, #fff, #daa520);*/
+  background: #daa520;
+  background-size: 1px 1px, 100% 100%, 100% 100%;
+}
+
+form {
+  display: flex;
+  justify-content: space-around;
+}
+
+ul {
+  display: flex;
+}
+
+li {
+  padding: 0;
+  margin: 0;
+  height: 100px;
+  width: 20px;
+}
+
+span.before {
+  content: '';
+  display: inline-block;
+  width: .5em;
+  height: 1px;
+  background:#ddd;
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translatey(-50%);
+}
+
+span.after {
+  content: '';
+  position: absolute;
+  right: 115%;
+  top: 44%;
+  transform: rotate(25deg);
+  font-size: 8px;
+}
+
+@keyframes load {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  width: 33%;
+  border-bottom: 1px solid #ccc;
+}
+
+.right {
+  text-align: right;
+}

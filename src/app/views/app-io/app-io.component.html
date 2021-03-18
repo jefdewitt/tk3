@@ -1,0 +1,17 @@
+<section>
+  <div class="input-view sub-header">
+    <h2>Active: {{ track.name }}</h2>
+  </div>
+
+    <app-input-field [track]="track" (notifyIOComp)="updateDisplays($event)" (changeTimeFrame)="minutesOrHours($event)"></app-input-field>
+
+</section>
+
+<section>
+  <div class="output-view sub-header">
+
+    <app-bar-graph [track]="track" (changeDateRange)="updateGraph($event)"></app-bar-graph>
+
+  </div>
+</section>
+<app-alert></app-alert>

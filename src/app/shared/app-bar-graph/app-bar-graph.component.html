@@ -1,0 +1,56 @@
+<div *ngIf="hasTime; else noGraph">
+  <table>
+    <tr>
+      <td class="right">
+        {{ timePeriod }} total:
+      </td>
+      <td>
+        {{ totalMinutes }} {{ hours ? 'hour(s)' : 'minute(s)' }}
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        {{ percentageDone.toFixed(2) }} %
+      </td>
+    </tr>
+  </table>
+  <table *ngIf="showTotalCompleted">
+    <tr>
+      <td class="right">
+        average:
+      </td>
+      <td>
+        {{ dailyMinutes }} {{ hours ? 'hour(s)' : 'minute(s)' }}
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        {{ dailyPercentage.toFixed(2) }} %
+      </td>
+    </tr>
+  </table>
+  <div id="progressContainer">
+    <div>
+      <span class="top">{{ this.mostTime }} {{ hours ? 'hr(s)' : 'min(s)' }}</span>
+      <div class="progressBar"
+           [style.height.px]="barWidth"
+           *ngFor="let progressBar of progressBarArray; let index = index; let count = count">
+        <progress class="progress-bar"
+                  [style.height.px]="barWidth"
+                  max="{{ this.mostTime }}"
+                  value="{{ hours ? progressBar['time'] / 60 : progressBar['time'] }}"></progress>
+        <span *ngIf="index % frequency === 0" class="before"></span>
+        <span *ngIf="index % frequency === 0" class="after">{{ progressBar['date'] }}</span>
+      </div>
+      <span class="bottom">&nbsp;&nbsp;{{ hours ? 'hr(s)' : 'min(s)' }}</span>
+    </div>
+  </div>
+  <div class="buttons-container">
+    <button value="1-month" type="submit" (click)="changeTimeFrame($event)">30 days</button>
+    <button value="3-month" type="submit" (click)="changeTimeFrame($event)">90 days</button>
+    <button value="6-month" type="submit" (click)="changeTimeFrame($event)">6 months</button>
+  </div>
+</div>
+<ng-template #noGraph><h3 class="alert">Enter time to begin tracking your progress.</h3></ng-template>

@@ -1,0 +1,47 @@
+
+.manual-input a:first-child {
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translatey(-50%);
+}
+
+form {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  margin-bottom: 2em;
+}
+
+form input {
+  border: solid #ccc 2px;
+}
+
+.manual-input.active {
+  opacity: 1;
+  /*pointer-events: initial;*/
+}
+
+.controls img {
+  vertical-align: super;
+}
+
+form div {
+  display: flex;
+}
+
+form div > input {
+  border: #ddd solid 3px;
+  padding: 1em;
+  flex: 4;
+  border-radius: 0;
+  border-top: #ddd solid 1px;
+}
+
+form label {
+  padding-left: 1em;
+}
+
+form button {
+  padding-top: .25em;
+}

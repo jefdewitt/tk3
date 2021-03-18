@@ -1,0 +1,37 @@
+<div class="main"
+     class="modal fade" tabindex="-1"
+     (click)="onContainerClicked($event)"
+     [ngClass]="{'in': visibleAnimate}"
+     [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+  <table class="" cols="7" cellpadding="0" cellspacing="0">
+    <thead>
+      <tr>
+        <th colspan="7"><span class="arrow left" (click)="prevMonth()"></span> {{ displayMonth }} {{ displayYear }}<span class="arrow right" (click)="nextMonth()"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td *ngFor="let day of weekdays">{{ day }}</td>
+      </tr>
+      <tr *ngFor="let week of month.weeks"> 
+          <td *ngFor="let day of week" 
+              class="{{ checkForToday(day.date) }}" 
+              id="date-{{ curYear }}-{{ formatSingleDigitValues(monthToDisplay + 1) }}-{{ formatSingleDigitValues(day.date) }}"
+              (click)="editDateEntryTime([day, curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date)])"
+              >{{ day.date }}
+            <label *ngIf="!day.edit" 
+                   class="timeStamp-{{ day.date }}">{{ day.minutes > 0 ? day.minutes : '' }}
+            </label>
+            <!--<input *ngIf="day.edit" -->
+                   <!--(blur)="updateStorage(curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date), day, time.value)" -->
+                   <!--(keypress)="updateTime($event, curYear + '-' + formatSingleDigitValues(monthToDisplay + 1) + '-' + formatSingleDigitValues(day.date), day, time.value)"-->
+                   <!--tabindex="0" -->
+                   <!--type="text" -->
+                   <!--value="{{ day.minutes ? day.minutes : 0 }}" -->
+                   <!--#time>-->
+          </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

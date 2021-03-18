@@ -1,0 +1,56 @@
+table {
+    position: relative;
+    width: 100%;
+}
+
+tr {
+    text-align: center;
+    height: 3rem;
+}
+
+thead,
+td {
+    position: relative;
+}
+
+.arrow {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    top: 8px;
+    border-top: solid 5px #444;
+    border-left: solid 5px #444;
+    z-index: 1;
+}
+
+.arrow.left {
+    left: 10px;
+    transform: rotate(-45deg);
+}
+
+.arrow.right {
+    right: 10px;
+    transform: rotate(135deg);
+}
+
+label[class^="timeStamp"] {
+    font-size: 8px;
+    color: red;
+    position: absolute;
+        left: 75%;
+}
+
+td input {
+    position: absolute;
+    left: 75%;
+    top: 25%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 4em;
+    opacity: .7;
+}
+
+.hours-button {
+    display: block;
+    text-align: right;
+}
